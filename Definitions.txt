@@ -1,0 +1,24 @@
+Client : 
+        Programme informatique qui se connecte à un socket serveur afin de demander des données ou des services.
+        Le client envoie une requête au serveur via le socket, puis attend une réponse du serveur.
+
+Socket : 
+        Un socket est un point de terminaison logiciel qui établit une communication bidirectionnelle entre un serveur et un client.
+        Les sockets permettent aux applications réseau de communiquer entre elles en échangeant des données via un réseau.
+
+Serveur :
+        Programme informatique qui écoute les connexions entrantes sur un socket serveur et gère les requêtes des clients.
+        Le serveur reçoit les requêtes des clients via le socket, les traite et envoie une réponse au client.
+
+Serveur Socket :
+        Type de socket réseau utilisé pour écouter les connexions entrantes des sockets clients.
+        Lorsqu'un socket serveur est créé, il est lié à une adresse et un numéro de port spécifiques sur l'ordinateur hôte.
+        Cela permet aux sockets clients de se connecter au socket serveur en spécifiant la même adresse et le même numéro de port.
+
+        Une fois qu'un socket serveur est lié à une adresse et un port, il entre dans un état d'écoute.
+        Dans cet état, le socket serveur écoute les connexions entrantes des sockets clients.
+        Lorsqu'un socket client tente de se connecter au socket serveur, le socket serveur accepte la connexion et établitun nouveau socket pour le client.
+        Ce socket est utilisé pour communiquer avec le client et gérer la demande du client.
+
+        Le socket serveur continue à écouter les connexions entrantes même après avoir accepté une connexion client.
+        Cela permet au serveur de gérer plusieurs clients de manière concurrente, chacun ayant son propre socket dédié.
