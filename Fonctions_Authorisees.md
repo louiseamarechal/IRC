@@ -523,22 +523,118 @@ recv() :
 ```cpp
 send() :
 
+    ssize_t send(int sockfd, const void *buf, size_t len, int flags);
 ```
+    Permet d'envoyer des données à travers un socket. Elle prend en paramètre un descripteur de socket,
+    un pointeur vers les données à envoyer, la taille des données en octets et un entier indiquant
+    les options d'envoi. Elle retourne le nombre d'octets envoyés, ou -1 en cas d'erreur.
 
+    Arguments :
+        sockfd : le descripteur de socket par lequel on souhaite envoyer les données.
+        buf : un pointeur vers les données à envoyer.
+        len : la taille des données à envoyer, en octets.
+        flags : un entier indiquant les options d'envoi.
+        
+    La fonction send() est utilisée en conjonction avec les sockets pour envoyer des données à un
+    autre programme sur le réseau. Elle peut être utilisée avec différents protocoles réseau, tels que
+    TCP ou UDP, pour implémenter des applications client-serveur. Par exemple, un client peut utiliser
+    send() pour envoyer une requête au serveur, et le serveur peut utiliser send() pour envoyer une
+    réponse au client.
 
 ```cpp
 setsockopt() :
 
+    int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);
 ```
+    Uilisée pour configurer les options d'un socket afin d'adapter son comportement à différents
+    besoins. Par exemple, on peut utiliser setsockopt() pour activer ou désactiver certaines
+    fonctionnalités du socket, telles que la réutilisation d'une adresse IP et d'un port, l'envoi
+    de paquets de diffusion, etc. Cette fonction est souvent utilisée lors de la création d'un socket
+    pour le configurer avant de l'utiliser.
 
+    Arguments :
+        sockfd : le descripteur de socket dont on souhaite configurer les options.
+        level : le niveau d'option à configurer (par exemple, SOL_SOCKET pour les options
+            générales de socket, IPPROTO_IP pour les options de niveau IP, etc.).
+        optname : l'option à configurer (par exemple, SO_REUSEADDR pour autoriser l'utilisation
+            d'une adresse IP et d'un port déjà utilisés par un autre socket, SO_BROADCAST pour autoriser l'envoi de paquets de diffusion, etc.).
+        optval : un pointeur vers la valeur à utiliser pour l'option spécifiée dans optname.
+        optlen : la taille de la valeur pour l'option, en octets.
 
 ```cpp
 signal() :
-
+    
+    void (*signal(int sig, void (*func)(int)))(int);
 ```
+    La fonction signal() est utilisée pour spécifier une fonction de rappel à exécuter lorsqu'un
+    signal est reçu par un processus. Les signaux sont des événements asynchrones envoyés par le
+    système d'exploitation à un processus pour l'informer d'une situation particulière (par exemple,
+    la réception d'un signal d'interruption SIGINT lorsque l'utilisateur appuie sur Ctrl+C).
+    La fonction de rappel spécifiée avec signal() permet de définir l'action à effectuer lorsqu'un
+    signal est reçu (par exemple, terminer proprement le processus, ignorer le signal, etc.).
+    Cette fonction est souvent utilisée dans les programmes pour gérer les signaux reçus de manière
+    personnalisée.
 
+    Arguments :
+        sig : un entier indiquant le type de signal à traiter (par exemple, SIGINT pour le signal
+            d'interruption, SIGTERM pour le signal de terminaison, etc.).
+        func : une fonction de rappel à exécuter lorsque le signal spécifié dans sig est reçu.
+            Cette fonction doit prendre un entier en paramètre (le type de signal reçu) et retourner void.
+
+    Example d'utilisation :
+```cpp
+        #include <csignal>   // Pour la fonction signal()
+        #include <iostream>  // Pour std::cout, std::endl
+
+        // Fonction de rappel à exécuter lorsque le signal SIGINT est reçu
+        void sigint_handler(int sig)
+        {
+            // Affiche un message et termine proprement le processus
+            std::cout << "SIGINT reçu, arrêt du programme" << std::endl;
+            exit(0);
+        }
+
+        int main()
+        {
+            // Spécifie la fonction de rappel à utiliser pour le signal SIGINT
+            signal(SIGINT, sigint_handler);
+
+            // Boucle infinie pour permettre au processus de recevoir des signaux
+            while (true)
+            {
+                // Attendre un signal
+            }
+
+            return 0;
+        }
+```
+    Dans cet exemple, la fonction sigint_handler() est spécifiée comme fonction de rappel à utiliser
+    pour le signal 'SIGINT' avec la fonction signal(). Lorsque le signal 'SIGINT' est reçu par le
+    processus, cette fonction est automatiquement exécutée et affiche un message avant de
+    terminer proprement le processus.
+
+    Notez que cet exemple utilise une boucle infinie pour permettre au processus de recevoir des
+    signaux. Dans un programme réel, cette boucle infinie serait remplacée par des instructions
+    utiles permettant d'exécuter les tâches voulues par le programme.
 
 ```cpp
 socket() :
 
+    int socket(int domain, int type, int protocol);
 ```
+    La fonction socket() est utilisée pour créer un socket, qui est une interface de communication
+    entre deux programmes sur un réseau. Le domaine, le type et le protocole spécifiés en paramètre
+    déterminent les propriétés du socket créé. Par exemple, un socket de type TCP (SOCK_STREAM) permet
+    de établir une connexion fiable et de transmettre des données en ordre et en totalité, tandis
+    qu'un socket de type UDP (SOCK_DGRAM) permet de transmettre des données en paquets indépendants
+    sans garantie de livraison. Une fois créé, un socket peut être utilisé avec les fonctions bind(),
+    listen(), accept(), connect(), send(), recv(), etc. pour implémenter des applications
+    client-serveur sur un réseau.
+
+    Arguments :
+        domain : un entier indiquant le domaine de communication (par exemple, AF_INET pour IPv4,
+            AF_INET6 pour IPv6, etc.).
+        type : un entier indiquant le type de socket à créer (par exemple, SOCK_STREAM pour un
+            socket de type TCP, SOCK_DGRAM pour un socket de type UDP, etc.).
+        protocol : un entier indiquant le protocole à utiliser pour le socket (par exemple,
+            IPPROTO_TCP pour le protocole TCP, IPPROTO_UDP pour le protocole UDP, etc.).
