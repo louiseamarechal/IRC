@@ -1,5 +1,5 @@
 ```cpp
-(B) accept() :
+- (B) accept() :
     
     int accept(int sockfd, sockaddr *addr, socklen_t *addrlen);
 ```
@@ -20,7 +20,7 @@
             les données de l'adresse client).
 
 ```cpp
-(B) bind() :
+- (B) bind() :
     
     int bind(int sockfd, const sockaddr *addr, socklen_t addrlen);
 ```
@@ -38,7 +38,7 @@
     négatif en cas d'erreur. 
 
 ```cpp
-(B) connect() :
+- (B) connect() :
 
     int connect(int sockfd, const sockaddr *addr, socklen_t addrlen);
 ```
@@ -59,7 +59,7 @@
     d'erreur.
 
 ```cpp
-(B) fcntl() :
+- (B) fcntl() :
 
     int fcntl(int fd, int cmd, ... /* int arg */);
 ```
@@ -78,7 +78,7 @@
     La fonction retourne 0 si l'opération a été effectuée avec succès, ou un entier négatif en cas d'erreur.
 
 ```cpp
-(B) freeaddrinfo() :
+- (B) freeaddrinfo() :
 
     void freeaddrinfo(addrinfo *ai);
 ```
@@ -93,7 +93,7 @@
     toutes ses sous-structures associées.
 
 ```cpp
-fstat() :
+- fstat() :
 
     int fstat(int fd, struct stat *buf);
 ```
@@ -112,7 +112,7 @@ fstat() :
     la date de dernière modification, et le champ st_size contient la taille du fichier en octets.
 
 ```cpp
-(B) getaddrinfo() :
+- (B) getaddrinfo() :
 
     int getaddrinfo(const char *node, const char *service, const addrinfo *hints, addrinfo **res);
 ```
@@ -164,7 +164,7 @@ fstat() :
 ```
 
 ```cpp
-gethostbyname() :
+- gethostbyname() :
 
     struct hostent* gethostbyname(const char *name);
 ```
@@ -188,7 +188,7 @@ gethostbyname() :
     Il est donc recommandé de consulter la documentation de votre compilateur pour plus de détails.
 
 ```cpp
-getprotobyname() :
+- getprotobyname() :
 
     struct protoent* getprotobyname(const char *name);
 ```
@@ -212,7 +212,7 @@ getprotobyname() :
     consulter la documentation de votre compilateur pour plus de détails.
 
 ```cpp
-getsockname() :
+- getsockname() :
 
     int getsockname(int sockfd, struct sockaddr *local_addr, socklen_t *addrlen);
 ```
@@ -236,7 +236,7 @@ getsockname() :
     pour les adresses IPv4 ou sockaddr_in6 pour les adresses IPv6.
 
 ```cpp
-htonl() :
+- htonl() :
 
     uint32_t htonl(uint32_t hostlong);
 ```
@@ -250,7 +250,7 @@ htonl() :
     l'inclure dans votre programme avant de l'utiliser.
 
 ```cpp
-htons() :
+- htons() :
 
     uint16_t htons(uint16_t hostshort);
 ```
@@ -277,7 +277,7 @@ Note sur htonl() et htons() :
     petit-endian ou en big-endian) de leur processeur.
 
 ```cpp
-inet_ntoa() :
+- inet_ntoa() :
 
     char* inet_ntoa(struct in_addr in);
 ```
@@ -298,7 +298,7 @@ inet_ntoa() :
     fonction n'est pas thread-safe et peut poser des problèmes de portabilité.
 
 ```cpp
-inet_addr() :
+- inet_addr() :
     
     in_addr_t inet_addr(const char *cp);
 ```
@@ -319,7 +319,7 @@ inet_addr() :
     n'est pas thread-safe et peut poser des problèmes de portabilité.
 
 ```cpp
-listen() :
+- listen() :
 
     #include <sys/types.h>
     #include <sys/socket.h>
@@ -380,7 +380,7 @@ listen() :
 ```
 
 ```cpp
-lseek() :
+- lseek() :
 
     off_t lseek(int fildes, off_t offset, int whence);
 ```
@@ -398,7 +398,7 @@ lseek() :
         SEEK_END : déplace le curseur à partir de la fin du fichier en ajoutant offset
 
 ```cpp
-ntohl() :
+- ntohl() :
 
     #include <arpa/inet.h>
 
@@ -413,7 +413,7 @@ ntohl() :
     ce qui correspond au type utilisé pour représenter les nombres entiers sur un réseau.
 
 ```cpp
-ntohs() :
+- ntohs() :
 
     uint16_t ntohs(uint16_t netshort);
 ```
@@ -436,7 +436,7 @@ Note sur le format hote :
     Dans ce cas, les données doivent être converties du format réseau au format hôte avant d'être utilisées par le programme.
 
 ```cpp
-poll() :
+- poll() :
 
     int poll(struct pollfd *fds, nfds_t nfds, int timeout);
 ```
@@ -500,7 +500,7 @@ poll() :
             }
 ```
 ```cpp
-recv() :
+- recv() :
 
     ssize_t recv(int sockfd, void *buf, size_t len, int flags);
 ```
@@ -521,7 +521,7 @@ recv() :
     utiliser recv() pour recevoir les réponses du serveur.
 
 ```cpp
-send() :
+- send() :
 
     ssize_t send(int sockfd, const void *buf, size_t len, int flags);
 ```
@@ -542,7 +542,7 @@ send() :
     réponse au client.
 
 ```cpp
-setsockopt() :
+- setsockopt() :
 
     int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);
 ```
@@ -562,7 +562,7 @@ setsockopt() :
         optlen : la taille de la valeur pour l'option, en octets.
 
 ```cpp
-signal() :
+- signal() :
     
     void (*signal(int sig, void (*func)(int)))(int);
 ```
@@ -618,7 +618,7 @@ signal() :
     utiles permettant d'exécuter les tâches voulues par le programme.
 
 ```cpp
-socket() :
+- socket() :
 
     int socket(int domain, int type, int protocol);
 ```
