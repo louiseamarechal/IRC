@@ -5,12 +5,20 @@
 #include <string>
 #include <stdio.h>
 #include <unistd.h>
+#include <cstring>
+#include <csignal>
+#include <iostream>
 
 
 // Ce code crée un socket serveur en appelant la fonction socket, 
 // le lie à un port spécifié en appelant la fonction bind et démarre l'écoute des connexions entrantes
 // en appelant la fonction listen. Il entre ensuite dans une boucle
-
+ void sigint_handler(int sig)
+        {
+            // Affiche un message et termine proprement le processus
+            std::cout << "SIGINT reçu, arrêt du programme" << std::endl;
+            exit(0);
+        }
 int main()
 {
     // Create a socket
@@ -20,10 +28,11 @@ int main()
         return 1;
     }
 
+    signal(SIGINT, sigint_handler);
     // Bind the socket to a port
     sockaddr_in server_address;
     server_address.sin_family = AF_INET;
-    server_address.sin_port = htons(8081);
+    server_address.sin_port = htons(6668);
     server_address.sin_addr.s_addr = INADDR_ANY;
     int bind_result = bind(server_socket, (sockaddr*)&server_address, sizeof(server_address));
     if (bind_result < 0) {
@@ -37,7 +46,7 @@ int main()
         std::cerr << "Failed to listen for incoming connections" << std::endl;
         return 1;
     }
-
+    
     // Accept incoming connections and handle them
     while (true) {
         sockaddr_in client_address;
@@ -57,12 +66,25 @@ int main()
         std::cout<< "client socket = " << client_socket<<std::endl;
         // Handle the incoming connection here
         char buffer[100];
+        // strcpy(buffer, "Hello\n");
         // std::getline(client_socket, buffer);
         // fscanf(*client_socket, "%s", buffer);
-        read(client_socket, buffer, 100);
+        // read(client_socket, buffer, 100);
         // std::cout<<buffer<<std::endl;
-        send(client_socket, buffer, 100, 0);
-        recv(client_socket, buffer, 100, 0);
+        // send(client_socket, &buffer, 100, 0);
+        // read(client_socket, &buffer, 100);
+        // send(client_socket, &buffer, 100, 0);
+        // send(client_socket, &buffer, 100, 0);
+        // read(client_socket, buffer, 100);
+        std::cout<<recv(client_socket, buffer, 100, 0)<<std::endl;
+        std::cout<<buffer<<std::endl;
+        std::cout<<recv(client_socket, buffer, 100, 0)<<std::endl;
+        std::cout<<buffer<<std::endl;
+         std::cout<<recv(client_socket, buffer, 100, 0)<<std::endl;
+        std::cout<<buffer<<std::endl;
+         std::cout<<recv(client_socket, buffer, 100, 0)<<std::endl;
+        std::cout<<buffer<<std::endl;
+
         // buffer[0] = '\0';
             // send(client_socket, buffer, 100, 0);
     }
