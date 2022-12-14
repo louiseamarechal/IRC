@@ -8,6 +8,7 @@
 #include <cstring>
 #include <csignal>
 #include <iostream>
+ #include <poll.h>
 
 
 // Ce code crée un socket serveur en appelant la fonction socket, 
@@ -32,7 +33,7 @@ int main()
     // Bind the socket to a port
     sockaddr_in server_address;
     server_address.sin_family = AF_INET;
-    server_address.sin_port = htons(6668);
+    server_address.sin_port = htons(6669);
     server_address.sin_addr.s_addr = INADDR_ANY;
     int bind_result = bind(server_socket, (sockaddr*)&server_address, sizeof(server_address));
     if (bind_result < 0) {
@@ -46,10 +47,10 @@ int main()
         std::cerr << "Failed to listen for incoming connections" << std::endl;
         return 1;
     }
-    
     // Accept incoming connections and handle them
     while (true) {
         sockaddr_in client_address;
+        struct pollfd fds[200];
         // client_address.sin_family = AF_INET;
         // client_address.sin_port = htons(6667);
         // client_address.sin_addr.s_addr = INADDR_ANY;
@@ -57,6 +58,7 @@ int main()
         // bind()
 
         // std::cout<<client_address.sin_port<<std::endl;
+        
         socklen_t client_address_size = sizeof(client_address);
         int client_socket = accept(server_socket, (sockaddr*)&client_address, &client_address_size);
         if (client_socket < 0) {
@@ -65,24 +67,35 @@ int main()
         }
         std::cout<< "client socket = " << client_socket<<std::endl;
         // Handle the incoming connection here
-        char buffer[100];
+
+        fds[0].fd = client_socket;
+        fds[0].events = POLLIN; 
+
+        int nready = poll(fds, 2, 100);
+        char buffer[1024];
+
+        // char buffer2[1024];
         // strcpy(buffer, "Hello\n");
         // std::getline(client_socket, buffer);
         // fscanf(*client_socket, "%s", buffer);
-        // read(client_socket, buffer, 100);
+        // read(client_socket, buffer, 1024);
         // std::cout<<buffer<<std::endl;
         // send(client_socket, &buffer, 100, 0);
         // read(client_socket, &buffer, 100);
         // send(client_socket, &buffer, 100, 0);
         // send(client_socket, &buffer, 100, 0);
         // read(client_socket, buffer, 100);
-        std::cout<<recv(client_socket, buffer, 100, 0)<<std::endl;
-        std::cout<<buffer<<std::endl;
-        std::cout<<recv(client_socket, buffer, 100, 0)<<std::endl;
-        std::cout<<buffer<<std::endl;
-         std::cout<<recv(client_socket, buffer, 100, 0)<<std::endl;
-        std::cout<<buffer<<std::endl;
-         std::cout<<recv(client_socket, buffer, 100, 0)<<std::endl;
+        while(1){
+        if(fds[0].revents & POLLIN) {
+            std::cout<<"coucou\n";
+        std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl; 
+        std::cout<<buffer<<std::endl; }}
+
+        // std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
+        // std::cout<<buffer<<std::endl;
+        //  std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
+        // std::cout<<buffer<<std::endl;
+         std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
         std::cout<<buffer<<std::endl;
 
         // buffer[0] = '\0';
