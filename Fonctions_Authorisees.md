@@ -162,6 +162,15 @@
     }
 
 ```
+    Structure addrinfo est utilise pour representer une adresse socket :
+        - ai_flags: A set of flags that specify options for the address information.
+        - ai_family: The address family of the socket, such as AF_INET for IPv4 or AF_INET6 for IPv6.
+        - ai_socktype: The type of socket, such as SOCK_STREAM for a stream socket or SOCK_DGRAM for a datagram socket.
+        - ai_protocol: The protocol to be used with the socket, such as IPPROTO_TCP for TCP or IPPROTO_UDP for UDP.
+        - ai_addrlen: The size of the socket address, in bytes.
+        - ai_addr: A pointer to a sockaddr structure that contains the socket address.
+        - ai_canonname: A pointer to a null-terminated string that contains the canonical name of the host.
+        - ai_next: A pointer to the next addrinfo structure in a linked list of addresses.
 
 ```cpp
 - gethostbyname() :
@@ -638,3 +647,5 @@ Note sur le format hote :
             socket de type TCP, SOCK_DGRAM pour un socket de type UDP, etc.).
         protocol : un entier indiquant le protocole à utiliser pour le socket (par exemple,
             IPPROTO_TCP pour le protocole TCP, IPPROTO_UDP pour le protocole UDP, etc.).
+
+    La fonction retourne un entier, appelé descripteur de socket, qui représente une socket ouverte. Si la fonction échoue, elle retourne -1 et lève une erreur. Le descripteur de socket peut être utilisé pour configurer les options de la socket, se connecter à un autre hôte, envoyer et recevoir des données, et fermer la socket.
