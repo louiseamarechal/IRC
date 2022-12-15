@@ -1,0 +1,26 @@
+// To configure your IRC server to accept connections from IRSSI, you will need to edit the server's configuration file
+// and specify the details of the IRC network and the server's listening port. The exact steps for doing this will vary
+// depending on the IRC server software you are using, but here are the general steps you can follow:
+
+    // Locate the configuration file for your IRC server. This is typically a file named ircd.conf or ircd.ini 
+        // and is located in the server's installation directory.
+
+    // Open the configuration file in a text editor and locate the section where you can specify the network name,
+        // server name, and listening port for your IRC server. This section may be labeled NETWORK, SERVER, or something similar.
+
+    // Edit the network and server name to match the name of your IRC network and the name of your server.
+    // For example, you might set the network name to irc.example.com and the server name to irc.example.com:6667.
+
+    // Edit the listening port to match the port you want your IRC server to listen on.
+    // The default IRC port is 6667, but you can choose a different port if you prefer.
+
+    // Save the configuration file and restart your IRC server to apply the changes.
+
+// Once your IRC server is configured and running, IRSSI and other clients should be able to connect to it by specifying the network name and port in their connection settings. For example, in IRSSI you can use the /connect command to connect to your IRC server:
+
+    /connect irc.example.com 6667
+
+// To send a RPL (Reply) message to a client using IRSSI, you can use the /quote command. 
+// For example, to send the RPL 001 message to a client, you would use the following command:
+
+    /quote RPL 001 :Welcome to the IRC network <client_name>!
