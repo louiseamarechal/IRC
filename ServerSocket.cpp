@@ -71,7 +71,7 @@ int main()
             continue;
         }
         std::cout<< "client socket = " << client_socket<<std::endl;
-        connect(client_socket,(sockaddr*)&server_address, sizeof(server_address));
+        // connect(client_socket,(sockaddr*)&server_address, sizeof(server_address));
         // Handle the incoming connection here
 
         fds[0].fd = client_socket;
@@ -81,7 +81,7 @@ int main()
         char buffer[1024];
 
         char buffer2[3];
-        strcpy(buffer2, "302");
+        // strcpy(buffer2, "hellooooo");
         // std::getline(client_socket, buffer);
         // fscanf(*client_socket, "%s", buffer);
         // read(client_socket, buffer, 1024);
@@ -89,29 +89,46 @@ int main()
         // send(client_socket, &buffer, 100, 0);
         // read(client_socket, &buffer, 100);
         // send(client_socket, &buffer, 100, 0);
-        send(client_socket, buffer2, 100, 0);
+        // send(client_socket, buffer2, 100, 0);
         // read(client_socket, buffer, 100);
+        send(client_socket, "001 coucou :Welcome to the JLA.com Network, jbouyer \r\n", 60, 0);
+        // send(client_socket, "002 coucou :Your host is JLA.com, running version <version> \r\n", 60, 0);
+        // send(client_socket, "003  coucou :This server was created 12/10 \r\n", 60, 0);
+        // send(client_socket, "311 coucou jbouyer JLA.com * : Jacinthe \r\n", 60, 0);
+
         if(fds[0].revents & POLLIN) {
             std::cout<<"coucou\n";
         std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl; 
         std::cout<<buffer<<std::endl; 
         // send(client_socket, "302", 3, 0);
-        send(client_socket, "<client> :Welcome to the <networkname> Network, <nick>[!<user>@<host>]", 3, 0);
-        send(client_socket, "coucou", 3, 0);
-        send(client_socket, "002", 3, 0);
-        send(client_socket, "003", 3, 0);
-        send(client_socket, "004", 3, 0);
-        send(client_socket, "005", 3, 0);
-        send(client_socket, "461", 3, 0);
-        send(client_socket, "221", 3, 0);
+        // send(client_socket, "001 coucou :Welcome to the JLA.com Network, jbouyer \r\n", 60, 0);
+        // send(client_socket, "<client> :Welcome to the <networkname> Network, <nick>[!<user>@<host>]", 100, 0);
+        // send(client_socket, "002", 3, 0);
+        // send(client_socket, "003", 3, 0);
+        // send(client_socket, "004", 3, 0);
+        // send(client_socket, "005", 3, 0);
+        // send(client_socket, "251", 3, 0);
+        // send(client_socket, "252", 3, 0);
+        // send(client_socket, "253", 3, 0);
+        // send(client_socket, "254", 3, 0);
+        // send(client_socket, "255", 3, 0);
+        // send(client_socket, "221", 3, 0);
+        // send(client_socket, "422", 3, 0);
+        // send(client_socket, "265", 3, 0);
+        // send(client_socket, "266", 3, 0);
+        // send(client_socket, "461", 3, 0);
+        // send(client_socket, "221", 3, 0);
         }
 
-        // std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
-        // std::cout<<buffer<<std::endl;
-        //  std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
-        // std::cout<<buffer<<std::endl;
-        // send(client_socket, &buffer, 100, 0);
+        std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
+        std::cout<<buffer<<std::endl;
          std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
+        std::cout<<buffer<<std::endl;
+         std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
+        std::cout<<buffer<<std::endl;
+        std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
+        std::cout<<buffer<<std::endl;
+        std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
         std::cout<<buffer<<std::endl;
 
         // buffer[0] = '\0';
