@@ -1,0 +1,5 @@
+Creer fonction d'erreurs
+Faire les define des RPL
+Faire les define messages d'erreurs du protocole
+Faire les define des infos USER ( tbc infos SERVER )
+Revoir la fonction server::execute

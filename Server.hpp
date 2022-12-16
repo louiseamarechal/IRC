@@ -1,3 +1,6 @@
+# ifndef SERVER_HPP
+# define SERVER_HPP
+
 #include <iostream>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -11,21 +14,27 @@
 #include <poll.h>
 #include <sys/socket.h>
 #include <fcntl.h>
-#include <User.hpp>
+#include <vector>
+#include "User.hpp"
 
+class User;
 
 class Server {
-
-    Class User;
 
     public :
         Server( void );
         ~Server( void );
 
-    private :
-        sockaddr_in     server_address;
-        int             server_socket;
-        struct pollfd   fds[200];
+        void    execute( void );
 
-        
-}
+    // private :
+        sockaddr_in         _serverAddress; // (AF_INET, PORT, etc)
+        int                 _serverSocket; // retour de socket()
+        unsigned int        _nbFds;             
+        struct pollfd       _fds[200];
+        std::string         _serverName; //JLA
+
+        std::vector< User > _Users;        
+};
+
+#endif
