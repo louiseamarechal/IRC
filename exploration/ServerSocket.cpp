@@ -8,9 +8,9 @@
 #include <cstring>
 #include <csignal>
 #include <iostream>
- #include <poll.h>
- #include <sys/socket.h>
- #include <fcntl.h>
+#include <poll.h>
+#include <sys/socket.h>
+#include <fcntl.h>
 
 
 // Ce code crée un socket serveur en appelant la fonction socket, 
@@ -18,10 +18,12 @@
 // en appelant la fonction listen. Il entre ensuite dans une boucle
  void sigint_handler(int sig)
         {
+            (void)sig;
             // Affiche un message et termine proprement le processus
             std::cout << "SIGINT reçu, arrêt du programme" << std::endl;
             exit(0);
         }
+
 int main()
 {
     int enable = 1;
@@ -37,7 +39,7 @@ int main()
     // Bind the socket to a port
     sockaddr_in server_address;
     server_address.sin_family = AF_INET;
-    server_address.sin_port = htons(6667);
+    server_address.sin_port = htons(55555);
     server_address.sin_addr.s_addr = INADDR_ANY;
     int bind_result = bind(server_socket, (sockaddr*)&server_address, sizeof(server_address));
     if (bind_result < 0) {
@@ -54,7 +56,8 @@ int main()
     // Accept incoming connections and handle them
     while (true) {
         sockaddr_in client_address;
-        struct pollfd fds[200];
+        // struct pollfd fds[200];
+        struct pollfd fds;
         // client_address.sin_family = AF_INET;
         // client_address.sin_port = htons(6667);
         // client_address.sin_addr.s_addr = INADDR_ANY;
@@ -64,8 +67,9 @@ int main()
         // std::cout<<client_address.sin_port<<std::endl;
         
         socklen_t client_address_size = sizeof(client_address);
-        
+        std::cout << "hey \r\n";
         int client_socket = accept(server_socket, (sockaddr*)&client_address, &client_address_size);
+        std::cout << "hey2  \r\n";
         if (client_socket < 0) {
             std::cerr << "Failed to accept incoming connection" << std::endl;
             continue;
@@ -74,20 +78,21 @@ int main()
         // connect(client_socket,(sockaddr*)&server_address, sizeof(server_address));
         // Handle the incoming connection here
 
-        fds[0].fd = client_socket;
-        fds[0].events = POLLIN; 
+        fds.fd = client_socket;
+        fds.events = POLLIN; 
 
-        int nready = poll(fds, 2, 100);
+        int nready = poll(&fds, 1, 100);
+        if (nready < 0)
+            std::cout << "Poll error" << std::endl;
         char buffer[1024];
 
-        char buffer2[3];
+        // char buffer2[3];
         // strcpy(buffer2, "hellooooo");
         // std::getline(client_socket, buffer);
         // fscanf(*client_socket, "%s", buffer);
         // read(client_socket, buffer, 1024);
         // std::cout<<buffer<<std::endl;
         // send(client_socket, &buffer, 100, 0);
-        // read(client_socket, &buffer, 100);
         // send(client_socket, &buffer, 100, 0);
         // send(client_socket, buffer2, 100, 0);
         // read(client_socket, buffer, 100);
@@ -95,12 +100,19 @@ int main()
         // send(client_socket, "002 coucou :Your host is JLA.com, running version <version> \r\n", 60, 0);
         // send(client_socket, "003  coucou :This server was created 12/10 \r\n", 60, 0);
         // send(client_socket, "311 coucou jbouyer JLA.com * : Jacinthe \r\n", 60, 0);
+        std::cout << "salut \r\n";
 
-        if(fds[0].revents & POLLIN) {
-            std::cout<<"coucou\n";
-        std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl; 
-        std::cout<<buffer<<std::endl; 
-        // send(client_socket, "302", 3, 0);
+        // if(fds[0].revents & POLLIN) {
+        //     std::cout<<"coucou \r\n";
+        // std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl; 
+        // std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl; 
+        // std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl; 
+        // std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl; 
+        // std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl; 
+        // std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl; 
+        // std::cout<<buffer<<std::endl;
+        read(client_socket, buffer, 100);
+        send(client_socket, buffer, 100, 0);
         // send(client_socket, "001 coucou :Welcome to the JLA.com Network, jbouyer \r\n", 60, 0);
         // send(client_socket, "<client> :Welcome to the <networkname> Network, <nick>[!<user>@<host>]", 100, 0);
         // send(client_socket, "002", 3, 0);
@@ -118,18 +130,18 @@ int main()
         // send(client_socket, "266", 3, 0);
         // send(client_socket, "461", 3, 0);
         // send(client_socket, "221", 3, 0);
-        }
+        // }
 
-        std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
-        std::cout<<buffer<<std::endl;
-         std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
-        std::cout<<buffer<<std::endl;
-         std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
-        std::cout<<buffer<<std::endl;
-        std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
-        std::cout<<buffer<<std::endl;
-        std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
-        std::cout<<buffer<<std::endl;
+        // std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
+        // std::cout<<buffer<<std::endl;
+        //  std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
+        // std::cout<<buffer<<std::endl;
+        //  std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
+        // std::cout<<buffer<<std::endl;
+        // std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
+        // std::cout<<buffer<<std::endl;
+        // std::cout<<recv(client_socket, buffer, 1024, 0)<<std::endl;
+        // std::cout<<buffer<<std::endl;
 
         // buffer[0] = '\0';
             // send(client_socket, buffer, 100, 0);
