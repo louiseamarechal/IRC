@@ -5,6 +5,7 @@ void   sendError( std::string message ) {
 }
 
 void sigintHandler(int sig) {
+        (void)sig;
         // Affiche un message et termine proprement le processus
         std::cout << "SIGINT reçu, arrêt du programme" << std::endl;
         exit(0);

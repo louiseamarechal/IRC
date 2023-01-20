@@ -15,9 +15,9 @@
 #include <sys/socket.h>
 #include <fcntl.h>
 #include <vector>
-#include "User.hpp"
+// #include "User.hpp"
 
-class User;
+// class User;
 
 class Server {
 
@@ -28,27 +28,30 @@ class Server {
 
         int                 getPort( void ) const;
         int                 getNbUsers( void ) const;
+        int                 getMaxUsers( void ) const;
         std::string         getServerName( void ) const;
         std::string         getPassword( void ) const;
 
         void                setPort(int port);
         void                setServerName(std::string serverName);
         void                setPassword(std::string password);
-        void                setNbUsers(int nbUsers);
+        void                setNbUsers( void );
         
-        void                runServer( void );
+        int                 runServer( void );
         int                 createSocket( void );
         sockaddr_in         bindSocket( int serverSocket );
+        void                removeFds( struct pollfd fds[], int i, int *nbUsers );
 
     private :
              
-        int                 _port;
-        std::string         _serverName; //JLA
-        std::string         _password;
-        struct pollfd       _fds[200];
+        int                     _port;
+        std::string             _serverName; //JLA
+        std::string             _password;
+        struct pollfd           _fds[200];
 
-        std::vector< User >     _Users;
+        // std::vector< User >     _Users;
         int                     _nbUsers;
+        int                     _maxUsers;
         // std::vector< Channel >  _Channels;
 
 };

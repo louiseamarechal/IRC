@@ -2,46 +2,54 @@
 #include "User.hpp"
 #include "Utils.hpp"
 
-Server::Server( void ) : _port(""), 
+Server::Server( void ) : _port(0), 
                         _serverName(""),
                         _password(""),
-                        _nbUsers(0)
+                        _nbUsers(0),
+                        _maxUsers(10)
 {
     return ;
 }
 
 Server::~Server( void ) { return ; }
 
-int Server::getPort() const { return (this->_port); }
+int Server::getPort() const { return (_port); }
 
-int Server::getNbUsers() const { return (this->_nbUsers); }
+int Server::getNbUsers() const { return (_nbUsers); }
+int Server::getMaxUsers() const { return (_maxUsers); }
 
-std::string Server::getServerName() const { return (this->_serverName); }
+std::string Server::getServerName() const { return (_serverName); }
 
-std::string Server::getPassword() const { return (this->_password); }
+std::string Server::getPassword() const { return (_password); }
 
-void    Server::setPort( int port ) { this->_port = port; }
+void    Server::setPort( int port ) { _port = port; }
 
-void    Server::setServerName( std::string serverName ) { this->_serverName = serverName; }
+void    Server::setServerName( std::string serverName ) { _serverName = serverName; }
 
-void    Server::setPassword( std::string password ) { this->_password = password };
+void    Server::setPassword( std::string password ) { _password = password; }
 
-void    Server::setNbUsers( int nbUsers ) { this->_nbUsers += 1; }
+void    Server::setNbUsers( void ) { if (_nbUsers < _maxUsers ) { _nbUsers++; } }
+
+void    Server::removeFds( struct pollfd fds[], int i, int *nbUsers ) { 
+    
+    fds[i] = fds[*nbUsers -  1];
+    (*nbUsers)--;
+}
 
 int Server::createSocket( void ) {
 
+    int enable = 1;
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-    if (serverSocket < 0) {
+
+    if (serverSocket < 0)
         sendError("Failed to create socket");
-        return 1;
-    }
     else
         std::cout << "Socket created !" << std::endl;
    
     setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &enable, sizeof(enable));
     
-    // fcntl(serverSocket, F_GETFL, O_NONBLOCK);
-    // signal(SIGINT, sigintHandler);
+    fcntl(serverSocket, F_GETFL, O_NONBLOCK);
+    signal(SIGINT, sigintHandler);
 
     return ( serverSocket );
 }
@@ -52,14 +60,14 @@ sockaddr_in Server::bindSocket( int serverSocket ) {
     int         bindResult;
 
     serverAddress.sin_family = AF_INET;
-    serverAddress.sin_port = htons(this->_port);
+    serverAddress.sin_port = htons(_port);
     serverAddress.sin_addr.s_addr = INADDR_ANY;
     
     bindResult = bind(serverSocket, (sockaddr*)&serverAddress, sizeof(serverAddress));
     
     if (bindResult < 0) {
         sendError("Failed to bind socket to port");
-        return (1);
+        // return (1);
     }
     else
         std::cout << "Success, socket binded !" << std::endl;
@@ -67,15 +75,22 @@ sockaddr_in Server::bindSocket( int serverSocket ) {
     return ( serverAddress );
 } 
 
-void    Server::runServer( void ) {
+int    Server::runServer( void ) {
 
+    sockaddr_in clientAddress;
+    int         clientSocket;
+    int         pollCount;
+    int         senderFd;
+    int         destFd;
+    char        buffer[1024];
+    int         nBytes;
     int         serverSocket = createSocket();
-    sockaddr_in serverAdress = bindSocket( serverSocket );
+    sockaddr_in serverAddress = bindSocket( serverSocket );
     
-
+    
     // Listen for incoming connections
-    int listen_result = listen(serverSocket, serverAddress.sin_port);
-    if (listen_result < 0) {
+    int listenResult = listen(serverSocket, serverAddress.sin_port);
+    if (listenResult < 0) {
         sendError("Failed to listen for incoming connections");
         return 1;
     }
@@ -83,34 +98,64 @@ void    Server::runServer( void ) {
         std::cout << "Listening for incoming connections ..." << std::endl;
 
     // Accept and handle connections
-     while (true) {
-
-        sockaddr_in clientAddress;
-        // struct pollfd fds;
+    while ( _nbUsers < _maxUsers) {
 
         socklen_t clientAddressSize = sizeof(clientAddress);
-        this->_fds[_nbUsers].fd = accept(serverSocket, (sockaddr*)&clientAddress, &clientAddressSize);
+        clientSocket = accept(serverSocket, (sockaddr*)&clientAddress, &clientAddressSize);
         
-        if (this->_fds[_nbUsers].fd < 0)
+        if (clientSocket < 0)
             sendError("Failed to accept incoming connection");
         else
         {
-            std::cout<< "Accepted connection to fd#" << this->_fds[_nbUsers].fd <<std::endl;
-            this->fds[_nbUsers].events = POLLIN; 
-            this->_nbUsers ++;
+            std::cout<< "Accepted connection: fd #" << clientSocket <<std::endl;
+            _fds[_nbUsers].fd = clientSocket; 
+            _fds[_nbUsers].events = POLLIN; 
+            send(clientSocket, "001 coucou :Welcome to the JLA.com Network, jbouyer \r\n", 60, 0);
+            setNbUsers();
         }
 
-        
-        // Server.fds[getNbUsers()].fd = client_socket;
+        pollCount = poll(_fds, _nbUsers, 1000);
 
-        // int nready = poll(&fds, 1, 100);
-        // if (nready < 0)
-        //     std::cout << "Poll error" << std::endl;
-        // char buffer[1024];
+        if ( pollCount <= 0 ) {
 
-        // send(client_socket, "001 coucou :Welcome to the JLA.com Network, jbouyer \r\n", 60, 0);
+            if ( pollCount < 0 )
+                sendError("Poll error !");
+            else if ( pollCount == 0 )
+                sendError("Times up");
 
-        // read(client_socket, buffer, 100);
-        // send(client_socket, buffer, 100, 0);
+            std::cout << pollCount << std::endl;
+        }
+
+        for ( int i = 0; i < _nbUsers; i++ ) {
+
+            if ( _fds[i].revents & POLLIN ) { // on a des donnees a lire
+
+                nBytes = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
+                senderFd = _fds[i].fd;
+
+                if (nBytes <= 0) {
+
+                    sendError("Recv Error");
+                    close(_fds[i].fd);
+                    removeFds(_fds, i, &_nbUsers);
+                }
+                else {
+                    for( int j = 0; j < _nbUsers; j++ ) {
+                        
+                        destFd = _fds[j].fd;
+
+                        if (destFd != serverSocket && destFd != senderFd) {
+                            if (send(destFd, buffer, nBytes, 0) == -1) {
+                                    sendError("Send Error");
+                                }
+                            }
+                        }
+                    // // handle the information
+                    // read(_fds[i].fd, buffer, 100);
+                    // send(_fds[i].fd, buffer, 100, 0);
+                }
+            }
+        }
     }
+    return (0);
 }
