@@ -1,6 +1,6 @@
 #include "Utils.hpp"
 
-void   errorMessage( std::string message ) {
+void   sendError( std::string message ) {
     std::cerr << message << std::endl;
 }
 

@@ -3,7 +3,7 @@
 
 #include "Server.hpp"
 
-void    errorMessage( std::string message );
+void    sendError( std::string message );
 void    sigintHandler(int sig);
 
 #endif
