@@ -73,9 +73,12 @@ int main(void){
             std::cout << "Poll error" << std::endl;
         char buffer[1024];
 
-        send(client_socket, "001 coucou :Welcome to the JLA.com Network, jbouyer \r\n", 60, 0);
+        send(client_socket, "001 coucou :Welcome to the JLA.com Network, jbouyer \r\n", 60, 0); //  a mettre dans le constructeur Server ?
 
-        read(client_socket, buffer, 100);
-        send(client_socket, buffer, 100, 0);
+        if (fds[0].revents && POLLIN) {
+            read(client_socket, buffer, 100);
+            send(client_socket, buffer, 100, 0);
+            recv(client_socket, buffer, 100, 0);
+        }
     }
 }

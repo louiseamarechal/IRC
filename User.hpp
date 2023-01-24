@@ -17,25 +17,28 @@
 
 class User {
 
+    class Server;
+
     public :
         User( void );
+        User( int fd );
         ~User( void );
 
-        int         getUserSocket() const;
+        int         getUserFd() const;
         std::string getUserNick() const;
         std::string getUserLoggin() const;
         std::string getUserFullName() const;
 
-        void        setUserSocket();
-        void        setUserNick();
-        void        setUserLoggin();
-        void        setUserFullName();
+        void        setUserFd( int fd );
+        void        setUserNick( std::string nick );
+        void        setUserLoggin( std::string loggin );
+        void        setUserFullName( std::string fullName );
 
     private :
-        std::string userLoggin; // jbouyer
-        std::string userFullName; // Jacinthe Bouyer
-        std::string userNick; // coucou
-        int         clientSocket; // user fd -> return de accept()
+        std::string _userLoggin; // jbouyer
+        std::string _userFullName; // Jacinthe Bouyer
+        std::string _userNick; // coucou
+        int         _userFd; // user fd -> return de accept()
         
 };
 

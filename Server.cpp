@@ -2,6 +2,10 @@
 #include "User.hpp"
 #include "Utils.hpp"
 
+/*************************************************************************************/
+/*                              CONSTRUCTORS                                         */
+/*************************************************************************************/
+
 Server::Server( void ) : _port(0), 
                         _serverName(""),
                         _password(""),
@@ -13,6 +17,10 @@ Server::Server( void ) : _port(0),
 
 Server::~Server( void ) { return ; }
 
+/*************************************************************************************/
+/*                              GETTERS                                              */
+/*************************************************************************************/
+
 int Server::getPort() const { return (_port); }
 
 int Server::getNbUsers() const { return (_nbUsers); }
@@ -22,13 +30,26 @@ std::string Server::getServerName() const { return (_serverName); }
 
 std::string Server::getPassword() const { return (_password); }
 
+/*************************************************************************************/
+/*                              SETTERS                                              */
+/*************************************************************************************/
+
 void    Server::setPort( int port ) { _port = port; }
 
 void    Server::setServerName( std::string serverName ) { _serverName = serverName; }
 
 void    Server::setPassword( std::string password ) { _password = password; }
 
-void    Server::setNbUsers( void ) { if (_nbUsers < _maxUsers ) { _nbUsers++; } }
+void    Server::setNbUsers( void ) { 
+    if (_nbUsers < _maxUsers ) 
+        _nbUsers++;
+    else
+        std::cout << "Too many users" << std::endl; 
+}
+
+/*************************************************************************************/
+/*                              FUNCTIONS                                            */
+/*************************************************************************************/
 
 void    Server::removeFds( struct pollfd fds[], int i, int *nbUsers ) { 
     
@@ -114,7 +135,7 @@ int    Server::runServer( void ) {
             setNbUsers();
         }
 
-        pollCount = poll(_fds, _nbUsers, 1000);
+        pollCount = poll(_fds, _nbUsers, 700);
 
         if ( pollCount <= 0 ) {
 
@@ -123,10 +144,12 @@ int    Server::runServer( void ) {
             else if ( pollCount == 0 )
                 sendError("Times up");
 
-            std::cout << pollCount << std::endl;
+            // std::cout << pollCount << std::endl;
         }
+        else
+            std::cout << "Poll is a success !" << std::endl;
 
-        for ( int i = 0; i < _nbUsers; i++ ) {
+        for ( int i = 0; i < _nbUsers; i++ ) { // send a message to all people connected to the server
 
             if ( _fds[i].revents & POLLIN ) { // on a des donnees a lire
 
@@ -148,6 +171,7 @@ int    Server::runServer( void ) {
                             if (send(destFd, buffer, nBytes, 0) == -1) {
                                     sendError("Send Error");
                                 }
+                                // recv(destFd, buffer, nBytes, 0);
                             }
                         }
                     // // handle the information
