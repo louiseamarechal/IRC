@@ -129,8 +129,9 @@ int    Server::runServer( void ) {
         else
         {
             std::cout<< "Accepted connection: fd #" << clientSocket <<std::endl;
-            _fds[_nbUsers].fd = clientSocket; 
-            _fds[_nbUsers].events = POLLIN; 
+            _fds[_nbUsers].fd = clientSocket;
+            _fds[_nbUsers].events = POLLIN;
+            _userMap[_nbUsers] = new User(clientSocket);
             send(clientSocket, "001 coucou :Welcome to the JLA.com Network, jbouyer \r\n", 60, 0);
             setNbUsers();
         }
@@ -155,6 +156,7 @@ int    Server::runServer( void ) {
 
                 nBytes = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
                 senderFd = _fds[i].fd;
+                // _userMap[clientSocket].handleBuffer(buffer);
 
                 if (nBytes <= 0) {
 
