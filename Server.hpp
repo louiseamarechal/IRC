@@ -35,7 +35,11 @@ class Server {
         // std::vector< User* >    getUsers( void ) const;
 
         void                    setPort( int port) ;
+<<<<<<< HEAD
         void                    setServerName( std::string serverName );
+=======
+        // void                    setServerName( std::string serverName );
+>>>>>>> 8bf2f5bc76af6179addc6a3ce78d5ffeda6e947e
         void                    setPassword( std::string password );
         void                    setNbUsers( void );
         // void                    setUsers( std::string strUser, int fd );
@@ -63,6 +67,9 @@ class Server {
 
 };
 
+<<<<<<< HEAD
 // _userMap[42] = new User(42, "Bob");
 
+=======
+>>>>>>> 8bf2f5bc76af6179addc6a3ce78d5ffeda6e947e
 #endif
