@@ -34,11 +34,11 @@ std::string Server::getPassword() const { return (_password); }
 /*                              SETTERS                                              */
 /*************************************************************************************/
 
-// void    Server::setPort( int port ) { _port = port; }
+void    Server::setPort( int port ) { _port = port; }
 
-// void    Server::setServerName( std::string serverName ) { _serverName = serverName; }
+void    Server::setServerName( std::string serverName ) { _serverName = serverName; }
 
-// void    Server::setPassword( std::string password ) { _password = password; }
+void    Server::setPassword( std::string password ) { _password = password; }
 
 void    Server::setNbUsers( void ) { 
     if (_nbUsers < _maxUsers ) 
@@ -131,7 +131,7 @@ int    Server::runServer( void ) {
             std::cout<< "Accepted connection: fd #" << clientSocket <<std::endl;
             _fds[_nbUsers].fd = clientSocket;
             _fds[_nbUsers].events = POLLIN;
-            _userMap[_nbUsers] = new User(clientSocket);
+            // _userMap[_nbUsers] = new User(clientSocket);
             send(clientSocket, "001 coucou :Welcome to the JLA.com Network, jbouyer \r\n", 60, 0);
             setNbUsers();
         }
