@@ -33,3 +33,21 @@ void    User::setUserNick( std::string nick ) { _userNick = nick; }
 void    User::setUserLoggin( std::string loggin ) { _userLoggin = loggin; }
 
 void    User::setUserFullName( std::string fullName ) { _userFullName = fullName; }
+
+/*************************************************************************************/
+/*                              FUNCTIONS                                            */
+/*************************************************************************************/
+
+std::map< std::string, std::string > User::commandParser( std::string buffer ) {
+    
+    std::map< std::string, std::string >    commandMap;
+    std::string                             whitespace = " ";
+    int                                     position;
+
+    position = buffer.find(whitespace); // retourne premier espace trouve
+
+    commandMap["command"] = buffer.substr(0, position); // copie la commande
+    commandMap["parameters"] = buffer.substr(position + 1); // copie tout le reste de la string
+    
+    return(commandMap);
+}

@@ -56,6 +56,7 @@
         "csignal": "cpp",
         "complex": "cpp",
         "span": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "map": "cpp"
     }
 }
