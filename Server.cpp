@@ -34,11 +34,11 @@ std::string Server::getPassword() const { return (_password); }
 /*                              SETTERS                                              */
 /*************************************************************************************/
 
-void    Server::setPort( int port ) { _port = port; }
+// void    Server::setPort( int port ) { _port = port; }
 
-void    Server::setServerName( std::string serverName ) { _serverName = serverName; }
+// void    Server::setServerName( std::string serverName ) { _serverName = serverName; }
 
-void    Server::setPassword( std::string password ) { _password = password; }
+// void    Server::setPassword( std::string password ) { _password = password; }
 
 void    Server::setNbUsers( void ) { 
     if (_nbUsers < _maxUsers ) 

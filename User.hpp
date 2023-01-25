@@ -34,8 +34,6 @@ class User {
         void        setUserLoggin( std::string loggin );
         void        setUserFullName( std::string fullName );
 
-        // Command     handleBuffer( std::string buffer );
-
     private :
         std::string _userLoggin; // jbouyer
         std::string _userFullName; // Jacinthe Bouyer
