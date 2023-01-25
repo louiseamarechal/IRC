@@ -26,7 +26,7 @@ std::string User::getUserFullName( void ) const { return( _userFullName ); }
 /*                              SETTERS                                              */
 /*************************************************************************************/
 
-void    User::setUserFd( int fd ) { _userFd = fd; }
+// void    User::setUserFd( int fd ) { _userFd = fd; }
 
 void    User::setUserNick( std::string nick ) { _userNick = nick; }
 

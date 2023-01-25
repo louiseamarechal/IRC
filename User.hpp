@@ -21,7 +21,7 @@ class User {
 
     public :
         User( void );
-        User( int fd );
+        User( int fd ); // strUser a parser avec toutes les param prives
         ~User( void );
 
         int         getUserFd() const;
@@ -29,7 +29,7 @@ class User {
         std::string getUserLoggin() const;
         std::string getUserFullName() const;
 
-        void        setUserFd( int fd );
+        // void        setUserFd( int fd );
         void        setUserNick( std::string nick );
         void        setUserLoggin( std::string loggin );
         void        setUserFullName( std::string fullName );
