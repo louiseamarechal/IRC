@@ -6,7 +6,8 @@
 /*                              CONSTRUCTORS                                         */
 /*************************************************************************************/
 
-Server::Server( void ) : _port(0), 
+Server::Server( void ) : _port(0),
+                        _version("2.0"),
                         _serverName(""),
                         _password(""),
                         _nbUsers(0),
@@ -22,6 +23,7 @@ Server::~Server( void ) { return ; }
 /*************************************************************************************/
 
 int Server::getPort() const { return (_port); }
+std::string Server::getVersion() const { return (_version); }
 
 int Server::getNbUsers() const { return (_nbUsers); }
 int Server::getMaxUsers() const { return (_maxUsers); }

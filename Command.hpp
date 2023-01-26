@@ -1,6 +1,8 @@
 # ifndef COMMANDS_HPP
 # define COMMANDS_HPP
 
+#include "User.hpp"
+#include "Server.hpp"
 
 /************************************************/
 /*                    RPL                       */
@@ -104,23 +106,9 @@
 
 /**/ # define ERR_TOOMANYMATCHES() () // (NAMES, LIST)
 
-    // INVITE
-    // JOIN
-    // LIST
-    // MOTD
-    // NAMES
-    // NICK
-    // OPER
-    // PART
-    // PASS
-    // PING
-    // PONG
-    // PRIVMSG
-    // TOPIC
-    // USER
-    // USERS
-    // WHO
-    // WHOIS
-    // WHOWAS
+class Server;
+class User;
+
+std::string    formatMessage(int code, Server &server, User &user);
 
 #endif
