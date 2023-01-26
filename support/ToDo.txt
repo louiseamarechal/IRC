@@ -3,3 +3,5 @@ Faire les define des RPL
 Faire les define messages d'erreurs du protocole
 Faire les define des infos USER ( tbc infos SERVER )
 Revoir la fonction server::execute
+
+checker si il y a des RPL pour les commandes non set up
