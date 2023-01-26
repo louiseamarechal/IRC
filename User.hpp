@@ -14,31 +14,36 @@
 #include <poll.h>
 #include <sys/socket.h>
 #include <fcntl.h>
+#include <vector>
+#include <map>
 
 class User {
 
     class Server;
+
+    class Command;
 
     public :
         User( void );
         User( int fd ); // strUser a parser avec toutes les param prives
         ~User( void );
 
-        int         getUserFd() const;
-        std::string getUserNick() const;
-        std::string getUserLoggin() const;
-        std::string getUserFullName() const;
+        int                                     getUserFd() const;
+        std::string                             getUserNick() const;
+        std::string                             getUserLoggin() const;
+        std::string                             getUserFullName() const;
 
         // void        setUserFd( int fd );
-        void        setUserNick( std::string nick );
-        void        setUserLoggin( std::string loggin );
-        void        setUserFullName( std::string fullName );
+        void                                    setUserNick( std::string nick );
+        void                                    setUserLoggin( std::string loggin );
+        void                                    setUserFullName( std::string fullName );
+        std::map< std::string, std::string >    commandParser( std::string buffer );
 
     private :
-        std::string _userLoggin; // jbouyer
-        std::string _userFullName; // Jacinthe Bouyer
-        std::string _userNick; // coucou
-        int         _userFd; // user fd -> return de accept()
+        std::string                             _userLoggin; // jbouyer
+        std::string                             _userFullName; // Jacinthe Bouyer
+        std::string                             _userNick; // coucou
+        int                                     _userFd; // user fd -> return de accept()
         
 };
 
