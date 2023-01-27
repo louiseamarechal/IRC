@@ -12,6 +12,11 @@ Server::Server( void ) : _port(0),
                         _nbUsers(0),
                         _maxUsers(10)
 {
+    _commandMap['NICK'] = &setNick(std::string nick);
+    _commandMap['USER'] = &setUser(std::string user);
+    _commandMap['JOIN'] = &joinChannel(std::string join);
+    _commandMap['PASS'] = &checkPass(std::string password);
+    _commandMap['PRIVMSG'] = &sendPrivMsg(std::string message);
     return ;
 }
 
@@ -29,6 +34,8 @@ int Server::getMaxUsers() const { return (_maxUsers); }
 std::string Server::getServerName() const { return (_serverName); }
 
 std::string Server::getPassword() const { return (_password); }
+
+std::vector<std::string> Server::getNickList() const { return (_nickList); }
 
 /*************************************************************************************/
 /*                              SETTERS                                              */
@@ -184,4 +191,9 @@ int    Server::runServer( void ) {
         }
     }
     return (0);
+}
+
+void    setNick(std::string nick)
+{
+
 }
