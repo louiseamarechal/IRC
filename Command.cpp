@@ -1,135 +1,188 @@
 #include "Command.hpp"
 
-std::string    formatMessage(int code, Server &server, User &user) {
+std::string    formatMessage(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4 ) {
+
+    std::string strCode = std::to_string(code);
+    std::string nickName = user.getUserNick();
+    std::string prefix;
+
+    if (nickName.empty() == true)
+        nickName = "*";
+
+    if (code < 10)
+        prefix = ":" + server.getServerName() + " " + "00" + strCode + " " + nickName + " "; // :JLA.irc.fr 001 :Welcome....
+    else
+        prefix = ":" + server.getServerName() + " " + strCode + " " + nickName + " "; // :JLA.irc.fr 001 :Welcome....
 
     switch (code)
 	{
-		case 001:
-			return RPL_WELCOME(user.getUserNick());
-		case 002:
-            return RPL_YOURHOST(server.getServerName(), server.getVersion());
-        case 003:
-            return RPL_CREATED(server.getCreationDate());
-        case 004:
-            return RPL_MYINFO(server.getServerName(), server.getVersion(), );
+		case 1:
+			return (prefix + RPL_WELCOME(str1));
+		case 2:
+            return (prefix + RPL_YOURHOST(str1, str2));
+        case 3:
+            return (prefix + RPL_CREATED(str1));
+        case 4:
+            return (prefix + RPL_MYINFO(str1, str2, str3, str4));
         // case 301:
-        //     return 
+        //     return (prefix +) 
         case 311:
-            return RPL_WHOISUSER(nick, user, host, real_name);
+            return (prefix + RPL_WHOISUSER(str1, str2, str3, str4));
+            // return (prefix + RPL_WHOISUSER(nick, user, host, real_name));
         case 312:
-            return RPL_WHOISSERVER(nick, server, server_info);
+            return (prefix + RPL_WHOISSERVER(str1, str2, str3));
+            // return (prefix + RPL_WHOISSERVER(nick, server, server_info));
         case 313:
-            return RPL_WHOISOPERATOR(nick);
+            return (prefix + RPL_WHOISOPERATOR(str1));
+            // return (prefix + RPL_WHOISOPERATOR(nick));
         case 314:
-            return RPL_WHOWASUSER(nick, user, host, real_name);
+            return (prefix + RPL_WHOWASUSER(str1, str2, str3, str4));
+            // return (prefix + RPL_WHOWASUSER(nick, user, host, real_name));
         case 315:
-            return RPL_ENDOFWHO(name);
+            return (prefix + RPL_ENDOFWHO(str1));
+            // return (prefix + RPL_ENDOFWHO(name));
         case 317:
-            return RPL_WHOISIDLE(nick, integer);
+            return (prefix + RPL_WHOISIDLE(str1, str2));
+            // return (prefix + RPL_WHOISIDLE(nick, integer));
         case 318:
-            return RPL_ENDOFWHOIS(nick);
-        case 319:
-            return RPL_WHOISCHANNELS(nick);
+            return (prefix + RPL_ENDOFWHOIS(str1));
+            // return (prefix + RPL_ENDOFWHOIS(nick));
+        // case 319:
+        //     return (prefix + RPL_WHOISCHANNELS(str1));
+            // return (prefix + RPL_WHOISCHANNELS(nick));
         // case 322:
         //     return
         case 323:
-            return RPL_LISTEND();
+            return (prefix + RPL_LISTEND());
         case 331:
-            return RPL_NOTOPIC(channel);
+            return (prefix + RPL_NOTOPIC(str1));
+            // return (prefix + RPL_NOTOPIC(channel));
         case 332:
-            return RPL_TOPIC(channel, topic);
+            return (prefix + RPL_TOPIC(str1, str2));
+            // return (prefix + RPL_TOPIC(channel, topic));
         case 341:
-            return RPL_INVITING(channel, nick);
+            return (prefix + RPL_INVITING(str1, str2));
+            // return (prefix + RPL_INVITING(channel, nick));
         // case 352:
-        //     return RPL_WHOREPLY()
+        //     return (prefix + RPL_WHOREPLY())
         // case 353:
-        //     return RPL_NAMREPLY()
+        //     return (prefix + RPL_NAMREPLY())
         case 366:
-            return RPL_ENDOFNAMES(channel);
+            return (prefix + RPL_ENDOFNAMES(str1));
+            // return (prefix + RPL_ENDOFNAMES(channel));
         case 369:
-            return RPL_ENDOFWHOWAS(nick);
+            return (prefix + RPL_ENDOFWHOWAS(str1));
+            // return (prefix + RPL_ENDOFWHOWAS(nick));
         case 372:
-            return RPL_ENDOFMOTD(text);
+            return (prefix + RPL_ENDOFMOTD(str1));
+            // return (prefix + RPL_ENDOFMOTD(text));
         case 375:
-            return RPL_MOTDSTART(server);
+            return (prefix + RPL_MOTDSTART(str1));
+            // return (prefix + RPL_MOTDSTART(server));
         case 376:
-            return RPL_MOTD();
+            return (prefix + RPL_MOTD());
         case 381:
-            return RPL_YOUREOPER();
+            return (prefix + RPL_YOUREOPER());
         case 392:
-            return RPL_USERSSTART();
+            return (prefix + RPL_USERSSTART());
         case 393:
-            return RPL_USERS(username, ttyline, hostname);
+            return (prefix + RPL_USERS(str1, str2, str3));
+            // return (prefix + RPL_USERS(username, ttyline, hostname));
         case 394:
-            return RPL_ENDOFUSERS();
+            return (prefix + RPL_ENDOFUSERS());
         case 395:
-            return RPL_NOUSERS();
+            return (prefix + RPL_NOUSERS());
         case 401:
-            return ERR_NOSUCHNICK(nickname);
+            return (prefix + ERR_NOSUCHNICK(str1));
+            // return (prefix + ERR_NOSUCHNICK(nickname));
         case 402:
-            return ERR_NOSUCHSERVER(server_name);
+            return (prefix + ERR_NOSUCHSERVER(str1));
+            // return (prefix + ERR_NOSUCHSERVER(server_name));
         case 403:
-            return ERR_NOSUCHCHANNEL(channel_name);
+            return (prefix + ERR_NOSUCHCHANNEL(str1));
+            // return (prefix + ERR_NOSUCHCHANNEL(channel_name));
         case 404:
-            return ERR_CANNOTSENDTOCHAN(channel_name);
+            return (prefix + ERR_CANNOTSENDTOCHAN(str1));
+            // return (prefix + ERR_CANNOTSENDTOCHAN(channel_name));
         case 405:
-            return ERR_TOOMANYCHANNELS(channel_name);
+            return (prefix + ERR_TOOMANYCHANNELS(str1));
+            // return (prefix + ERR_TOOMANYCHANNELS(channel_name));
         case 406:
-            return ERR_WASNOSUCHNICK(nickname);
+            return (prefix + ERR_WASNOSUCHNICK(str1));
+            // return (prefix + ERR_WASNOSUCHNICK(nickname));
         case 407:
-            return ERR_TOOMANYTARGETS(target, error_code, message);
+            return (prefix + ERR_TOOMANYTARGETS(str1, str2, str3));
+            // return (prefix + ERR_TOOMANYTARGETS(target, error_code, message));
         case 409:
-            return ERR_NOORIGIN();
+            return (prefix + ERR_NOORIGIN());
         case 411:
-            return ERR_NORECIPIENT(command);
+            return (prefix + ERR_NORECIPIENT(str1));
+            // return (prefix + ERR_NORECIPIENT(command));
         case 412:
-            return ERR_NOTEXTTOSEND();
+            return (prefix + ERR_NOTEXTTOSEND());
         case 413:
-            return ERR_NOTOPLEVEL(mask);
+            return (prefix + ERR_NOTOPLEVEL(str1));
+            // return (prefix + ERR_NOTOPLEVEL(mask));
         case 414:
-            return ERR_WILDTOPLEVEL(mask);
+            return (prefix + ERR_WILDTOPLEVEL(str1));
+            // return (prefix + ERR_WILDTOPLEVEL(mask));
         case 422:
-            return ERR_NOMOTD();
-        case 424:
-            return ERR_FILEERROR(file_operation, file);
+            return (prefix + ERR_NOMOTD());
+        // case 424:
+        //     return (prefix + ERR_FILEERROR(file_operation, file));
         case 431:
-            return ERR_NONICKNAMEGIVEN();
+            return (prefix + ERR_NONICKNAMEGIVEN());
         case 432:
-            return ERR_ERRONEUSNICKNAME(nick);
+            return (prefix + ERR_ERRONEUSNICKNAME(str1));
+            // return (prefix + ERR_ERRONEUSNICKNAME(nick));
         case 433:
-            return ERR_NICKNAMEINUSE(nick);
+            return (prefix + ERR_NICKNAMEINUSE(str1));
+            // return (prefix + ERR_NICKNAMEINUSE(nick));
         // case 436:
         //     return
         case 437:
-            return ERR_UNAVAILRESOURCE(nick_channel);
+            return (prefix + ERR_UNAVAILRESOURCE(str1));
+            // return (prefix + ERR_UNAVAILRESOURCE(nick/channel));
         case 442:
-            return ERR_NOTONCHANNEL(channel);
+            return (prefix + ERR_NOTONCHANNEL(str1));
+            // return (prefix + ERR_NOTONCHANNEL(channel));
         case 443:
-            return ERR_USERONCHANNEL(user, channel);
+            return (prefix + ERR_USERONCHANNEL(str1, str2));
+            // return (prefix + ERR_USERONCHANNEL(user, channel));
         case 446:
-            return ERR_USERSDISABLED();
+            return (prefix + ERR_USERSDISABLED());
         case 451:
-            return ERR_NOTREGISTERED();
+            return (prefix + ERR_NOTREGISTERED());
         case 461:
-            return ERR_NEEDMOREPARAMS(command);
+            return (prefix + ERR_NEEDMOREPARAMS(str1));
+            // return (prefix + ERR_NEEDMOREPARAMS(command));
         case 462:
-            return ERR_ALREADYREGISTRED();
+            return (prefix + ERR_ALREADYREGISTRED());
         case 464:
-            return ERR_PASSWDMISMATCH();
+            return (prefix + ERR_PASSWDMISMATCH());
         case 471:
-            return ERR_CHANNELISFULL(channel);
+            return (prefix + ERR_CHANNELISFULL(str1));
+            // return (prefix + ERR_CHANNELISFULL(channel));
         case 473:
-            return ERR_INVITEONLYCHAN(channel);
+            return (prefix + ERR_INVITEONLYCHAN(str1));
+            // return (prefix + ERR_INVITEONLYCHAN(channel));
         case 474:
-            return ERR_BANNEDFROMCHAN(channel);
+            return (prefix + ERR_BANNEDFROMCHAN(str1));
+            // return (prefix + ERR_BANNEDFROMCHAN(channel));
         case 475:
-            return ERR_BADCHANNELKEY(channel);
+            return (prefix + ERR_BADCHANNELKEY(str1));
+            // return (prefix + ERR_BADCHANNELKEY(channel));
         case 476:
-            return ERR_BADCHANMASK(channel);
+            return (prefix + ERR_BADCHANMASK(str1));
+            // return (prefix + ERR_BADCHANMASK(channel));
         case 477:
-            return  ERR_NOCHANMODES(channel);
+            return (prefix +  ERR_NOCHANMODES(str1));
+            // return (prefix +  ERR_NOCHANMODES(channel));
         // case 484:
-        //     return ERR_RESTRICTED();
+        //     return (prefix + ERR_RESTRICTED());
         case 491:
-            return ERR_NOOPERHOST();
+            return (prefix + ERR_NOOPERHOST());
+    }
+
+    return (NULL);
 }

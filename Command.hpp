@@ -11,7 +11,7 @@
 /* 001 */ # define RPL_WELCOME(nick) (":Welcome to the Internet Relay Network " + nick + "\r\n")
 /* 002 */ # define RPL_YOURHOST(servername, version) (":Your host is " + servername + ", running version " + version + "\r\n")
 /* 003 */ # define RPL_CREATED(date) (":This server was created " + date + "\r\n")
-/* 004 */ # define RPL_MYINFO(servername, version, userModes, channelModes) (servername + " " + version + " " + userModes + " " + channelModes)
+/* 004 */ # define RPL_MYINFO(servername, version, userModes, channelModes) (servername + " " + version + " " + userModes + " " + channelModes + "\r\n")
 
 /* 301 */ // RPL_AWAY(nick, message) (nick + " :" + message + "\r\n") // (PRIVMSG, INVITE, WHOIS)
 
@@ -23,7 +23,7 @@
 /* 315 */ # define RPL_ENDOFWHO(name) (name + " :End of WHO list \r\n") // (WHO)
 /* 317 */ # define RPL_WHOISIDLE(nick, integer) (nick, integer + " :seconds idle \r\n") // (WHOIS)
 /* 318 */ # define RPL_ENDOFWHOIS(nick) (nick + " :End of WHOIS list \r\n") // (WHOIS)
-/* 319 */ # define RPL_WHOISCHANNELS(nick) (nick + " :*( ( "@" / "+" ) <channel> " " )\r\n") // (WHOIS) The ’@’ and ’+’ characters next to the channel name indicate whether a client is a channel operator or has been granted permission to speak on a moderated channel
+// /* 319 */ # define RPL_WHOISCHANNELS(nick) (nick + " :*( ( "@" / "+" ) <channel> " " )\r\n") // (WHOIS) The ’@’ and ’+’ characters next to the channel name indicate whether a client is a channel operator or has been granted permission to speak on a moderated channel
 
 /* 322 */ # define RPL_LIST() //  (LIST)
 /* 323 */ # define RPL_LISTEND() (":End of LIST\r\n") //  (LIST)
@@ -67,7 +67,7 @@
 /* 411 */ # define ERR_NORECIPIENT(command) (":No recipient given " + command + "\r\n") // (PRIVMSG)
 /* 412 */ # define ERR_NOTEXTTOSEND() (":No text to send \r\n") // (PRIVMSG)
 /* 413 */ # define ERR_NOTOPLEVEL(mask) (mask + " :No toplevel domain specified \r\n") // (PRIVMSG)
-/* 414 */ # define ERR_WILDTOPLEVEL(mask) (maks + " :Wildcard in toplevel domain \r\n") // (PRIVMSG)
+/* 414 */ # define ERR_WILDTOPLEVEL(mask) (mask + " :Wildcard in toplevel domain \r\n") // (PRIVMSG)
 
 /* 422 */ # define ERR_NOMOTD() (":MOTD File is missing \r\n") // (MOTD)
 
@@ -109,6 +109,6 @@
 class Server;
 class User;
 
-std::string    formatMessage(int code, Server &server, User &user);
+std::string    formatMessage(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4 );
 
 #endif

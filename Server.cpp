@@ -8,7 +8,7 @@
 
 Server::Server( void ) : _port(0),
                         _version("2.0"),
-                        _serverName(""),
+                        _serverName("JLA.irc.com"),
                         _password(""),
                         _nbUsers(0),
                         _maxUsers(10)
