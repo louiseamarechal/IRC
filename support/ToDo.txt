@@ -3,3 +3,29 @@ Faire les define des RPL
 Faire les define messages d'erreurs du protocole
 Faire les define des infos USER ( tbc infos SERVER )
 Revoir la fonction server::execute
+
+COMMANDES :
+ - checker si il y a des RPL pour les commandes non set up
+ - ajouter server.getCreationDate()
+ - ajouter manuellement userModes, channelModes pour RPL004
+
+Commandes utilisees pour les RPL et ERR :
+
+    // INVITE
+    // JOIN
+    // LIST
+    // MOTD
+    // NAMES
+    // NICK
+    // OPER
+    // PART
+    // PASS
+    // PING
+    // PONG
+    // PRIVMSG
+    // TOPIC
+    // USER
+    // USERS
+    // WHO
+    // WHOIS
+    // WHOWAS
