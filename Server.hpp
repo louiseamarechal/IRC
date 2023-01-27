@@ -34,31 +34,27 @@ class Server {
         std::string                 getServerName( void ) const;
         std::string                 getPassword( void ) const;
         std::vector<std::string>    getNickList(void)   const;
-        // std::vector< User* >    getUsers( void ) const;
 
-        void                    setPort( int port) ;
-        // void                    setServerName( std::string serverName );
-        void                    setPassword( std::string password );
-        void                    setNbUsers( void );
-        // void                    setUsers( std::string strUser, int fd );
+        void                        setPort( int port) ;
+        void                        setPassword( std::string password );
+        void                        setNbUsers( void );
         
-        int                     runServer( void );
-        int                     createSocket( void );
-        sockaddr_in             bindSocket( int serverSocket );
-        void                    removeFds( struct pollfd fds[], int i, int *nbUsers );
+        int                         runServer( void );
+        int                         createSocket( void );
+        sockaddr_in                 bindSocket( int serverSocket );
+        void                        removeFds( struct pollfd fds[], int i, int *nbUsers );
 
     private :
              
-        int                     _port;
-        std::string             _version;
-        std::string             _serverName; //JLA
-        std::string             _password;
-        struct pollfd           _fds[200];
+        int                         _port;
+        std::string                 _version;
+        std::string                 _serverName; //JLA
+        std::string                 _password;
+        struct pollfd               _fds[200];
 
-        // std::vector< User* >    _Users;
-        // std::map< int, User* >  _userMap;
-        int                     _nbUsers;
-        int                     _maxUsers;
+        std::map< int, User* >      _userMap;
+        int                         _nbUsers;
+        int                         _maxUsers;
         // std::vector< Channel >  _Channels;
 
         //Commands

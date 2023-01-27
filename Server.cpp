@@ -27,17 +27,17 @@ Server::~Server( void ) { return ; }
 /*                              GETTERS                                              */
 /*************************************************************************************/
 
-int Server::getPort() const { return (_port); }
-std::string Server::getVersion() const { return (_version); }
+int                         Server::getPort() const { return (_port); }
+std::string                 Server::getVersion() const { return (_version); }
 
-int Server::getNbUsers() const { return (_nbUsers); }
-int Server::getMaxUsers() const { return (_maxUsers); }
+int                         Server::getNbUsers() const { return (_nbUsers); }
+int                         Server::getMaxUsers() const { return (_maxUsers); }
 
-std::string Server::getServerName() const { return (_serverName); }
+std::string                 Server::getServerName() const { return (_serverName); }
 
-std::string Server::getPassword() const { return (_password); }
+std::string                 Server::getPassword() const { return (_password); }
 
-std::vector<std::string> Server::getNickList() const { return (_nickList); }
+std::vector<std::string>    Server::getNickList() const { return (_nickList); }
 
 /*************************************************************************************/
 /*                              SETTERS                                              */
@@ -66,7 +66,7 @@ void    Server::removeFds( struct pollfd fds[], int i, int *nbUsers ) {
     (*nbUsers)--;
 }
 
-int Server::createSocket( void ) {
+int     Server::createSocket( void ) {
 
     int enable = 1;
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -141,7 +141,7 @@ int    Server::runServer( void ) {
             _fds[_nbUsers].fd = clientSocket;
             _fds[_nbUsers].events = POLLIN;
             // _userMap[_nbUsers] = new User(clientSocket);
-            send(clientSocket, "001 coucou :Welcome to the JLA.com Network, jbouyer \r\n", 60, 0);
+            // send(clientSocket, "001 coucou :Welcome to the JLA.com Network, jbouyer \r\n", 60, 0);
             setNbUsers();
         }
 
@@ -153,7 +153,6 @@ int    Server::runServer( void ) {
                 sendError("Poll error !");
             else if ( pollCount == 0 )
                 sendError("Times up");
-
             // std::cout << pollCount << std::endl;
         }
         else
