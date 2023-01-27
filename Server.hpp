@@ -30,6 +30,7 @@ class Server {
         int                         getPort( void ) const;
         int                         getNbUsers( void ) const;
         int                         getMaxUsers( void ) const;
+        std::string                 getVersion( void ) const;
         std::string                 getServerName( void ) const;
         std::string                 getPassword( void ) const;
         std::vector<std::string>    getNickList(void)   const;
@@ -49,6 +50,7 @@ class Server {
     private :
              
         int                     _port;
+        std::string             _version;
         std::string             _serverName; //JLA
         std::string             _password;
         struct pollfd           _fds[200];
