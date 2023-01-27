@@ -35,7 +35,7 @@ std::string Server::getServerName() const { return (_serverName); }
 
 std::string Server::getPassword() const { return (_password); }
 
-std::vector<std::string> Server::getNickList() const { return (_nickList); }
+std::vector<std::string> Server::getNickList() const { return (&_nickList); }
 
 /*************************************************************************************/
 /*                              SETTERS                                              */

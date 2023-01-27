@@ -14,17 +14,21 @@ User::~User( void ) { return ; } // supprimer les users ?
 /*                              GETTERS                                              */
 /*************************************************************************************/
 
-int User::getUserFd( void ) const { return (_userFd); }
+int         User::getUserFd( void ) const { return (_userFd); }
 
 std::string User::getUserNick( void ) const { return (_userNick); }
 
 std::string User::getUserLoggin( void ) const { return ( _userLoggin ); }
 
 std::string User::getUserFullName( void ) const { return( _userFullName ); }
-bool    User::getIsUserRegistered() const {return (_isUserRegistered);}
-bool    User::getIsNickSet() const{return(_isNickSet);}
-bool    User::getIsUserSet() const{return(_isUserSet);}
-Server*  User::getServer() const{return(*_server);}
+
+bool        User::getIsUserRegistered() const {return (_isUserRegistered);}
+
+bool        User::getIsNickSet() const{return(_isNickSet);}
+
+bool        User::getIsUserSet() const{return(_isUserSet);}
+
+Server*     User::getServer() const{return(*_server);}
 
 
 
