@@ -15,8 +15,8 @@
 #include <sys/socket.h>
 #include <fcntl.h>
 #include <map>
-// #include <vector>
-// #include "User.hpp"
+#include <vector>
+#include "User.hpp"
 
 class User;
 
@@ -27,12 +27,13 @@ class Server {
         ~Server( void );
 
 
-        int                     getPort( void ) const;
-        std::string             getVersion( void ) const;
-        int                     getNbUsers( void ) const;
-        int                     getMaxUsers( void ) const;
-        std::string             getServerName( void ) const;
-        std::string             getPassword( void ) const;
+        int                         getPort( void ) const;
+        int                         getNbUsers( void ) const;
+        int                         getMaxUsers( void ) const;
+        std::string                 getVersion( void ) const;
+        std::string                 getServerName( void ) const;
+        std::string                 getPassword( void ) const;
+        std::vector<std::string>    getNickList(void)   const;
         // std::vector< User* >    getUsers( void ) const;
 
         void                    setPort( int port) ;
@@ -60,6 +61,11 @@ class Server {
         int                     _maxUsers;
         // std::vector< Channel >  _Channels;
 
+        //Commands
+        std::map<std::string, void (*)(std::string params)> _commandMap;
+
+        //checknick
+        std::vector<std::string>         _nickList;
 };
 
 #endif
