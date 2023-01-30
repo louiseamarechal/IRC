@@ -5,9 +5,9 @@
 /*                              CONSTRUCTORS                                         */
 /*************************************************************************************/
 
-User::User(Server &server) : _isNickSet(false), _isUserSet(false) _isUserRegistered(false), _server(server) { return ; }
+User::User(int fd, Server &server) : _isNickSet(false), _isUserSet(false), _isUserRegistered(false), _server(server), _userFd( fd ) { return ; }
 
-User::User ( int fd, Server* server) : _userFd( fd ), _server(server) { return ; }
+// User::User ( int fd, Server* server) : _userFd( fd ), _server(server) { return ; }
 
 User::~User( void ) { return ; } // supprimer les users ?
 
@@ -29,7 +29,7 @@ bool        User::getIsNickSet() const{return(_isNickSet);}
 
 bool        User::getIsUserSet() const{return(_isUserSet);}
 
-Server*     User::getServer() const{return(_server);}
+Server&     User::getServer() const{return(_server);}
 
 
 

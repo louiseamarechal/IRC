@@ -42,7 +42,8 @@ class Server {
         int                         runServer( void );
         int                         createSocket( void );
         sockaddr_in                 bindSocket( int serverSocket );
-        void                        removeFds( struct pollfd fds[], int i, int *nbUsers );
+        void                        removeUser( int i );
+        void                        addUser( int fd, Server& server);
 
     private :
              

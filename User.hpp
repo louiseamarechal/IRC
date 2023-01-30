@@ -27,8 +27,8 @@ class User {
    
 
     public :
-        User( void );
-        User( int fd, Server* server); // strUser a parser avec toutes les param prives
+        User( int fd, Server &server );
+        // User( int fd, Server* server); // strUser a parser avec toutes les param prives
         ~User( void );
 
         int                                     getUserFd() const;
@@ -38,7 +38,7 @@ class User {
         bool                                    getIsUserRegistered() const;
         bool                                    getIsNickSet() const;
         bool                                    getIsUserSet() const;
-        Server*                                 getServer() const;
+        Server&                                 getServer() const;
 
         // void        setUserFd( int fd );
         void                                    setUserNick( std::string nick );
@@ -58,7 +58,7 @@ class User {
         bool                                    _isNickSet;
         bool                                    _isUserSet;
         bool                                    _isUserRegistered;
-        Server*                                  _server;
+        Server&                                  _server;
 };
 
 #endif
