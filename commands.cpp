@@ -6,7 +6,7 @@
 /*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 16:10:56 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/01/27 16:36:21 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/01/30 11:32:14 by jbouyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,11 @@ void    setNick(std::string nick, User &user)
         {
              user.setIsNickSet(true);
              user.setUserNick(nick);
-             user.getServer()->getNickList().push_back(nick);
+             user.*getServer().getNickList()->push_back(nick);
              if (user.getIsUserSet() == true)
                 user.setIsUserRegistered(true);
         }
-        else
+        // else
             // erreur ne peux pas modif car pas enregistre.
     }
     // else 
@@ -59,8 +59,8 @@ bool    isNickDispo(std::string nick, User &User)
     else
         return (false);
     //verif si existe deja le meme.
-    std::vector<std::string>::iterator it = User.getServer()->getNickList().begin();
-    while (it != User.getServer()->getNickList().end())
+    std::vector<std::string>::iterator it = User.*getServer().getNickList().begin();
+    while (it != User.*getServer().getNickList().end())
     {
         if (nick == *it)
            return(false);
