@@ -1,5 +1,5 @@
-# ifndef COMMANDS_HPP
-# define COMMANDS_HPP
+# ifndef REPLY_HPP
+# define REPLY_HPP
 
 #include "User.hpp"
 #include "Server.hpp"

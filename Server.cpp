@@ -13,11 +13,11 @@ Server::Server( void ) : _port(0),
                         _nbUsers(0),
                         _maxUsers(10)
 {
-    _commandMap['NICK'] = &setNick(std::string nick);
-    _commandMap['USER'] = &setUser(std::string user);
-    _commandMap['JOIN'] = &joinChannel(std::string join);
-    _commandMap['PASS'] = &checkPass(std::string password);
-    _commandMap['PRIVMSG'] = &sendPrivMsg(std::string message);
+    // _commandMap['NICK'] = &setNick(std::string nick);
+    // _commandMap['USER'] = &setUser(std::string user);
+    // _commandMap['JOIN'] = &joinChannel(std::string join);
+    // _commandMap['PASS'] = &checkPass(std::string password);
+    // _commandMap['PRIVMSG'] = &sendPrivMsg(std::string message);
     return ;
 }
 
@@ -27,17 +27,17 @@ Server::~Server( void ) { return ; }
 /*                              GETTERS                                              */
 /*************************************************************************************/
 
-int Server::getPort() const { return (_port); }
-std::string Server::getVersion() const { return (_version); }
+int                         Server::getPort() const { return (_port); }
+std::string                 Server::getVersion() const { return (_version); }
 
-int Server::getNbUsers() const { return (_nbUsers); }
-int Server::getMaxUsers() const { return (_maxUsers); }
+int                         Server::getNbUsers() const { return (_nbUsers); }
+int                         Server::getMaxUsers() const { return (_maxUsers); }
 
-std::string Server::getServerName() const { return (_serverName); }
+std::string                 Server::getServerName() const { return (_serverName); }
 
-std::string Server::getPassword() const { return (_password); }
+std::string                 Server::getPassword() const { return (_password); }
 
-std::vector<std::string> Server::getNickList() const { return (_nickList); }
+std::vector<std::string>    Server::getNickList() const { return (_nickList); }
 
 /*************************************************************************************/
 /*                              SETTERS                                              */
@@ -45,28 +45,33 @@ std::vector<std::string> Server::getNickList() const { return (_nickList); }
 
 void    Server::setPort( int port ) { _port = port; }
 
-void    Server::setServerName( std::string serverName ) { _serverName = serverName; }
-
 void    Server::setPassword( std::string password ) { _password = password; }
-
-void    Server::setNbUsers( void ) { 
-    if (_nbUsers < _maxUsers ) 
-        _nbUsers++;
-    else
-        std::cout << "Too many users" << std::endl; 
-}
 
 /*************************************************************************************/
 /*                              FUNCTIONS                                            */
 /*************************************************************************************/
 
-void    Server::removeFds( struct pollfd fds[], int i, int *nbUsers ) { 
+void    Server::removeUser( int i ) { 
     
-    fds[i] = fds[*nbUsers -  1];
-    (*nbUsers)--;
+    _userMap.erase(_fds[i].fd);
+    _fds[i] = _fds[_nbUsers -  1];
+
+    _nbUsers--;
 }
 
-int Server::createSocket( void ) {
+void    Server::addUser( int fd, Server& server) {
+    
+    if ( _nbUsers < _maxUsers )
+    {
+        User  newUser = User(fd, *this);
+        _userMap.insert( std::pair<int, User*>( fd, &newUser ) );
+        _nbUsers++;
+    }
+    else
+        std::cout << "Too many users ! " << std::endl;
+}
+
+int     Server::createSocket( void ) {
 
     int enable = 1;
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -140,9 +145,7 @@ int    Server::runServer( void ) {
             std::cout<< "Accepted connection: fd #" << clientSocket <<std::endl;
             _fds[_nbUsers].fd = clientSocket;
             _fds[_nbUsers].events = POLLIN;
-            // _userMap[_nbUsers] = new User(clientSocket);
-            send(clientSocket, "001 coucou :Welcome to the JLA.com Network, jbouyer \r\n", 60, 0);
-            setNbUsers();
+            addUser(clientSocket, *this);
         }
 
         pollCount = poll(_fds, _nbUsers, 700);
@@ -153,8 +156,6 @@ int    Server::runServer( void ) {
                 sendError("Poll error !");
             else if ( pollCount == 0 )
                 sendError("Times up");
-
-            // std::cout << pollCount << std::endl;
         }
         else
             std::cout << "Poll is a success !" << std::endl;
@@ -171,7 +172,7 @@ int    Server::runServer( void ) {
 
                     sendError("Recv Error");
                     close(_fds[i].fd);
-                    removeFds(_fds, i, &_nbUsers);
+                    // removeUser(i);
                 }
                 else {
                     for( int j = 0; j < _nbUsers; j++ ) {

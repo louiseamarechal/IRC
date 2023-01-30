@@ -27,8 +27,8 @@ class User {
    
 
     public :
-        User( void );
-        User( int fd, Server* server); // strUser a parser avec toutes les param prives
+        User( int fd, Server &server );
+        // User( int fd, Server* server); // strUser a parser avec toutes les param prives
         ~User( void );
 
         int                                     getUserFd() const;
@@ -38,15 +38,15 @@ class User {
         bool                                    getIsUserRegistered() const;
         bool                                    getIsNickSet() const;
         bool                                    getIsUserSet() const;
-        Server*                                 getServer() const;
+        Server&                                 getServer() const;
 
         // void        setUserFd( int fd );
         void                                    setUserNick( std::string nick );
         void                                    setUserLoggin( std::string loggin );
         void                                    setUserFullName( std::string fullName );
         // std::map< std::string, std::string >    commandParser( std::string buffer );
-        bool                                    setIsNickSet(bool value);
-        bool                                    setIsUserRegistered(bool value);
+        void                                    setIsNickSet(bool value);
+        void                                    setIsUserRegistered(bool value);
 
         void                                     handleCommand(std::string buffer);
 
@@ -58,7 +58,7 @@ class User {
         bool                                    _isNickSet;
         bool                                    _isUserSet;
         bool                                    _isUserRegistered;
-        Server*                                  _server;
+        Server&                                  _server;
 };
 
 #endif

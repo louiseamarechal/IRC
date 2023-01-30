@@ -1,4 +1,4 @@
-#include "Command.hpp"
+#include "Reply.hpp"
 
 std::string    formatMessage(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4 ) {
 
