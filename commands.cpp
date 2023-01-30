@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 16:10:56 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/01/30 14:33:12 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/01/30 15:54:19 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ void    setNick(std::string nick, User &user)
         //erreur car pas deja pris.
 }
 
+void    setUser(std::string params, User &user) {
 
+    
+}
 
 
 

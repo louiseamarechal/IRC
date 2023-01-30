@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 15:58:26 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/01/30 14:53:51 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/01/30 15:53:16 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 class User;
 
 void                    setNick(std::string nick, User &user);
-void                    setUser(std::string User);
+void                    setUser(std::string params, User &user);
 void                    joinchannel(std::string join);
 void                    checkPass(std::string password);
 void                    sendprivmsg(std::string message);
