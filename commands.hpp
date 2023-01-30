@@ -6,7 +6,7 @@
 /*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 15:58:26 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/01/27 14:58:13 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/01/30 14:53:51 by jbouyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 class User;
 
-void                    setNick(std::string nick);
+void                    setNick(std::string nick, User &user);
 void                    setUser(std::string User);
 void                    joinchannel(std::string join);
 void                    checkPass(std::string password);

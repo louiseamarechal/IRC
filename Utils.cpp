@@ -1,4 +1,6 @@
 #include "Utils.hpp"
+#include <unistd.h>
+#include <signal.h>
 
 void   sendError( std::string message ) {
     std::cerr << message << std::endl;

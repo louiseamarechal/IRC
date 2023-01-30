@@ -5,7 +5,7 @@
 /*                              CONSTRUCTORS                                         */
 /*************************************************************************************/
 
-User::User(int fd, Server &server) : _isNickSet(false), _isUserSet(false), _isUserRegistered(false), _server(server), _userFd( fd ) { 
+User::User(int fd, Server &server) :  _userFd( fd ), _isNickSet(false), _isUserSet(false),  _isUserRegistered(false), _server(server) { 
     
     std::cout << "New User created : fd = " << _userFd << std::endl;
     return ;
@@ -83,6 +83,7 @@ void User::handleCommand(std::string buffer)
     position = buffer.find(whitespace); // retourne premier espace trouve
     s1 = buffer.substr(0, position); // copie la commande
     s2 = buffer.substr(position + 1); // copie tout le reste de la string
+
 
 //     if (_server.commandMap[s1] != NULL)
 //         _server.commandMap[s1](s2, this);
