@@ -13,6 +13,7 @@
 #include <fcntl.h>
 
 
+
 // Ce code crée un socket serveur en appelant la fonction socket, 
 // le lie à un port spécifié en appelant la fonction bind et démarre l'écoute des connexions entrantes
 // en appelant la fonction listen. Il entre ensuite dans une boucle

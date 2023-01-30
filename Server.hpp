@@ -17,6 +17,7 @@
 #include <map>
 #include <vector>
 #include "User.hpp"
+#include "commands.hpp"
 
 class User;
 
@@ -43,7 +44,7 @@ class Server {
         int                         createSocket( void );
         sockaddr_in                 bindSocket( int serverSocket );
         void                        removeUser( int i );
-        void                        addUser( int fd, Server& server);
+        void                        addUser( int fd);
 
     private :
              
@@ -59,10 +60,11 @@ class Server {
         // std::vector< Channel >  _Channels;
 
         //Commands
-        std::map<std::string, void (*)(std::string params)> _commandMap;
+        std::map<std::string, void (*)(std::string params, User &user)> _commandMap;
 
         //checknick
         std::vector<std::string>         _nickList;
+
 };
 
 #endif

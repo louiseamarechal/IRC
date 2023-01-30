@@ -6,7 +6,7 @@
 /*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 16:10:56 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/01/30 11:32:14 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/01/30 14:33:12 by jbouyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void    setNick(std::string nick, User &user)
         if(isNickDispo(nick, user) == true)
         {
             // user.getServer()->getNickList().erase(user.getUserNick()); faire fonction qui enleve le nick
-            user.getServer()->getNickList().push_back(nick);  //rajoutera la list de nick.
+            user.getServer().getNickList().push_back(nick);  //rajoutera la list de nick.
             user.setUserNick(nick);
         }
         // else
@@ -34,7 +34,7 @@ void    setNick(std::string nick, User &user)
         {
              user.setIsNickSet(true);
              user.setUserNick(nick);
-             user.*getServer().getNickList()->push_back(nick);
+             user.getServer().getNickList().push_back(nick);
              if (user.getIsUserSet() == true)
                 user.setIsUserRegistered(true);
         }
@@ -52,6 +52,7 @@ void    setNick(std::string nick, User &user)
 bool    isNickDispo(std::string nick, User &User)
 {
     //verif Format
+    std::vector<std::string> malist = User.getServer().getNickList();
     if (nick.size() > 9)
         return (false); //et RPL correspondant ?;
     if (strspn( nick.c_str(), "-_qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM" ) == nick.size())
@@ -59,8 +60,8 @@ bool    isNickDispo(std::string nick, User &User)
     else
         return (false);
     //verif si existe deja le meme.
-    std::vector<std::string>::iterator it = User.*getServer().getNickList().begin();
-    while (it != User.*getServer().getNickList().end())
+    std::vector<std::string>::iterator it = malist.begin();
+    while (it != malist.end())
     {
         if (nick == *it)
            return(false);

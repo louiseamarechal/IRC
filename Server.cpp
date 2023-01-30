@@ -13,11 +13,11 @@ Server::Server( void ) : _port(0),
                         _nbUsers(0),
                         _maxUsers(10)
 {
-    // _commandMap['NICK'] = &setNick(std::string nick);
-    // _commandMap['USER'] = &setUser(std::string user);
-    // _commandMap['JOIN'] = &joinChannel(std::string join);
-    // _commandMap['PASS'] = &checkPass(std::string password);
-    // _commandMap['PRIVMSG'] = &sendPrivMsg(std::string message);
+    _commandMap["NICK"] = &setNick;
+    // _commandMap['USER'] = &setUser;
+    // _commandMap['JOIN'] = &joinChannel;
+    // _commandMap['PASS'] = &checkPass;
+    // _commandMap['PRIVMSG'] = &sendPrivMsg;
     return ;
 }
 
@@ -59,7 +59,7 @@ void    Server::removeUser( int i ) {
     _nbUsers--;
 }
 
-void    Server::addUser( int fd, Server& server) {
+void    Server::addUser( int fd) {
     
     if ( _nbUsers < _maxUsers )
     {
@@ -145,7 +145,7 @@ int    Server::runServer( void ) {
             std::cout<< "Accepted connection: fd #" << clientSocket <<std::endl;
             _fds[_nbUsers].fd = clientSocket;
             _fds[_nbUsers].events = POLLIN;
-            addUser(clientSocket, *this);
+            addUser(clientSocket);
         }
 
         pollCount = poll(_fds, _nbUsers, 700);
@@ -196,7 +196,3 @@ int    Server::runServer( void ) {
     return (0);
 }
 
-void    setNick(std::string nick)
-{
-
-}
