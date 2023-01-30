@@ -111,4 +111,10 @@ class User;
 
 std::string    formatMessage(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4 );
 
+const char    *sendMessage(int code, User &user, Server &server);
+const char    *sendMessage1(int code, User &user, Server &server, std::string str1);
+const char    *sendMessage2(int code, User &user, Server &server, std::string str1, std::string str2);
+const char    *sendMessage3(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3);
+const char    *sendMessage4(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4);
+
 #endif
