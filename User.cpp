@@ -1,12 +1,13 @@
 #include "User.hpp"
+#include "Server.hpp"
 
 /*************************************************************************************/
 /*                              CONSTRUCTORS                                         */
 /*************************************************************************************/
 
-User::User(Server *server) : _isNickSet(false), _isUserSet(false) _isUserRegistered(false), _server(server) { return ; }
+User::User(Server &server) : _isNickSet(false), _isUserSet(false) _isUserRegistered(false), _server(server) { return ; }
 
-User::User ( int fd ) : _userFd( fd ) { return ; }
+User::User ( int fd, Server* server) : _userFd( fd ), _server(server) { return ; }
 
 User::~User( void ) { return ; } // supprimer les users ?
 
@@ -21,10 +22,14 @@ std::string User::getUserNick( void ) const { return (_userNick); }
 std::string User::getUserLoggin( void ) const { return ( _userLoggin ); }
 
 std::string User::getUserFullName( void ) const { return( _userFullName ); }
+
 bool        User::getIsUserRegistered() const {return (_isUserRegistered);}
+
 bool        User::getIsNickSet() const{return(_isNickSet);}
+
 bool        User::getIsUserSet() const{return(_isUserSet);}
-Server*     User::getServer() const{return(*_server);}
+
+Server*     User::getServer() const{return(_server);}
 
 
 

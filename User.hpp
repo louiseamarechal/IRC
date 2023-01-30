@@ -28,7 +28,7 @@ class User {
 
     public :
         User( void );
-        User( int fd ); // strUser a parser avec toutes les param prives
+        User( int fd, Server* server); // strUser a parser avec toutes les param prives
         ~User( void );
 
         int                                     getUserFd() const;
