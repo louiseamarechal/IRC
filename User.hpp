@@ -45,8 +45,8 @@ class User {
         void                                    setUserLoggin( std::string loggin );
         void                                    setUserFullName( std::string fullName );
         // std::map< std::string, std::string >    commandParser( std::string buffer );
-        bool                                    setIsNickSet(bool value);
-        bool                                    setIsUserRegistered(bool value);
+        void                                    setIsNickSet(bool value);
+        void                                    setIsUserRegistered(bool value);
 
         void                                     handleCommand(std::string buffer);
 

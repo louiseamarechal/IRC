@@ -13,11 +13,11 @@ Server::Server( void ) : _port(0),
                         _nbUsers(0),
                         _maxUsers(10)
 {
-    _commandMap['NICK'] = &setNick(std::string nick);
-    _commandMap['USER'] = &setUser(std::string user);
-    _commandMap['JOIN'] = &joinChannel(std::string join);
-    _commandMap['PASS'] = &checkPass(std::string password);
-    _commandMap['PRIVMSG'] = &sendPrivMsg(std::string message);
+    // _commandMap['NICK'] = &setNick(std::string nick);
+    // _commandMap['USER'] = &setUser(std::string user);
+    // _commandMap['JOIN'] = &joinChannel(std::string join);
+    // _commandMap['PASS'] = &checkPass(std::string password);
+    // _commandMap['PRIVMSG'] = &sendPrivMsg(std::string message);
     return ;
 }
 
@@ -45,16 +45,7 @@ std::vector<std::string>    Server::getNickList() const { return (_nickList); }
 
 void    Server::setPort( int port ) { _port = port; }
 
-// void    Server::setServerName( std::string serverName ) { _serverName = serverName; }
-
 void    Server::setPassword( std::string password ) { _password = password; }
-
-// void    Server::setNbUsers( void ) { 
-//     if (_nbUsers < _maxUsers ) 
-//         _nbUsers++;
-//     else
-//         std::cout << "Too many users" << std::endl; 
-// }
 
 /*************************************************************************************/
 /*                              FUNCTIONS                                            */
@@ -72,7 +63,8 @@ void    Server::addUser( int fd, Server& server) {
     
     if ( _nbUsers < _maxUsers )
     {
-        _userMap.insert( std::make_pair( fd, &User(fd, *this) ) );
+        User  newUser = User(fd, *this);
+        _userMap.insert( std::pair<int, User*>( fd, &newUser ) );
         _nbUsers++;
     }
     else
@@ -154,9 +146,6 @@ int    Server::runServer( void ) {
             _fds[_nbUsers].fd = clientSocket;
             _fds[_nbUsers].events = POLLIN;
             addUser(clientSocket, *this);
-            // _userMap[_nbUsers] = new User(clientSocket);
-            // send(clientSocket, "001 coucou :Welcome to the JLA.com Network, jbouyer \r\n", 60, 0);
-            // setNbUsers();
         }
 
         pollCount = poll(_fds, _nbUsers, 700);
@@ -167,7 +156,6 @@ int    Server::runServer( void ) {
                 sendError("Poll error !");
             else if ( pollCount == 0 )
                 sendError("Times up");
-            // std::cout << pollCount << std::endl;
         }
         else
             std::cout << "Poll is a success !" << std::endl;
@@ -184,7 +172,7 @@ int    Server::runServer( void ) {
 
                     sendError("Recv Error");
                     close(_fds[i].fd);
-                    removeUser(i);
+                    // removeUser(i);
                 }
                 else {
                     for( int j = 0; j < _nbUsers; j++ ) {

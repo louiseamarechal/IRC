@@ -5,7 +5,11 @@
 /*                              CONSTRUCTORS                                         */
 /*************************************************************************************/
 
-User::User(int fd, Server &server) : _isNickSet(false), _isUserSet(false), _isUserRegistered(false), _server(server), _userFd( fd ) { return ; }
+User::User(int fd, Server &server) : _isNickSet(false), _isUserSet(false), _isUserRegistered(false), _server(server), _userFd( fd ) { 
+    
+    std::cout << "New User created : fd = " << _userFd << std::endl;
+    return ;
+}
 
 // User::User ( int fd, Server* server) : _userFd( fd ), _server(server) { return ; }
 
@@ -46,9 +50,9 @@ void    User::setUserLoggin( std::string loggin ) { _userLoggin = loggin; }
 
 void    User::setUserFullName( std::string fullName ) { _userFullName = fullName; }
 
-bool    User::setIsUserRegistered(bool value) {_isUserRegistered = value;}
+void    User::setIsUserRegistered(bool value) {_isUserRegistered = value;}
 
-bool    User::setIsNickSet(bool value) {_isNickSet = value;}
+void    User::setIsNickSet(bool value) {_isNickSet = value;}
 
 /*************************************************************************************/
 /*                              FUNCTIONS                                            */
@@ -80,6 +84,6 @@ void User::handleCommand(std::string buffer)
     s1 = buffer.substr(0, position); // copie la commande
     s2 = buffer.substr(position + 1); // copie tout le reste de la string
 
-    if (User._server.commandMap[s1] != NULL)
-        User._server.commandMap[s1](s2, this);
+//     if (_server.commandMap[s1] != NULL)
+//         _server.commandMap[s1](s2, this);
 }
