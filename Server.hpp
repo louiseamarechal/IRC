@@ -35,8 +35,9 @@ class Server {
         std::string                 getServerName( void ) const;
         std::string                 getPassword( void ) const;
         std::vector<std::string>    getNickList(void)   const;
+        std::map<std::string, void (*)(std::string params, User &user)>    getCommandMap(void)   const;
 
-        void                        setPort( int port) ;
+        void                        setPort( int port);
         void                        setPassword( std::string password );
         void                        setNbUsers( void );
         

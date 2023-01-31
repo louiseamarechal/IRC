@@ -95,8 +95,8 @@ int main()
         // std::cout<<buffer<<std::endl;
         // send(client_socket, &buffer, 100, 0);
         // send(client_socket, &buffer, 100, 0);
-        // send(client_socket, buffer2, 100, 0);
-        // read(client_socket, buffer, 100);
+        // send(client_socket,, 100, 0);
+        // read(client_socket, buffer, 10 buffer20);
         send(client_socket, "001 coucou :Welcome to the JLA.com Network, jbouyer \r\n", 60, 0);
         // send(client_socket, "002 coucou :Your host is JLA.com, running version <version> \r\n", 60, 0);
         // send(client_socket, "003  coucou :This server was created 12/10 \r\n", 60, 0);

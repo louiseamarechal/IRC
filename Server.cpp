@@ -39,6 +39,8 @@ std::string                 Server::getPassword() const { return (_password); }
 
 std::vector<std::string>    Server::getNickList() const { return (_nickList); }
 
+std::map<std::string, void (*)(std::string params, User &user)>    Server::getCommandMap(void)   const { return (_commandMap);}
+
 /*************************************************************************************/
 /*                              SETTERS                                              */
 /*************************************************************************************/
