@@ -13,7 +13,15 @@ Server::Server( void ) : _port(0),
                         _nbUsers(0),
                         _maxUsers(10)
 {
-    // _commandMap["NICK"] = &setNick;
+    _userMap = std::map<int, User*>();
+    _commandMap = std::map<std::string, void (*)(std::string, User &)>();
+    _nickList = std::vector<std::string>();
+
+    for (int i = 0; i < 200; i++) {
+        _fds[i].fd = -1;
+    }
+    
+    _commandMap["NICK"] = &setNick;
     // _commandMap['USER'] = &setUser;
     // _commandMap['JOIN'] = &joinChannel;
     // _commandMap['PASS'] = &checkPass;
@@ -55,7 +63,7 @@ void    Server::setPassword( std::string password ) { _password = password; }
 
 void    Server::removeUser( int i ) { 
     
-    _userMap.erase(_fds[i].fd);
+    delete _userMap[_fds[i].fd];
     _fds[i] = _fds[_nbUsers -  1];
 
     _nbUsers--;
@@ -63,10 +71,10 @@ void    Server::removeUser( int i ) {
 
 void    Server::addUser( int fd) {
     
-    if ( _nbUsers < _maxUsers )
+    if ( _nbUsers < _maxUsers && _userMap[fd] == NULL)
     {
-        User  newUser = User(fd, *this);
-        _userMap.insert( std::pair<int, User*>( fd, &newUser ) );
+        User  *newUser = new User(fd, this);
+        _userMap[fd] = newUser;
         _nbUsers++;
     }
     else
@@ -119,8 +127,8 @@ int    Server::runServer( void ) {
     int         pollCount;
     // int         senderFd;
     // int         destFd;
-    // char        buffer[1024];
-    // int         nBytes;
+    char        buffer[1024];
+    int         nBytes;
     int         serverSocket = createSocket();
     sockaddr_in serverAddress = bindSocket( serverSocket );
     
@@ -135,7 +143,7 @@ int    Server::runServer( void ) {
         std::cout << "Listening for incoming connections ..." << std::endl;
 
     // Accept and handle connections
-    while ( _nbUsers < _maxUsers) {
+    while ( true ) {
 
         socklen_t clientAddressSize = sizeof(clientAddress);
         clientSocket = accept(serverSocket, (sockaddr*)&clientAddress, &clientAddressSize);
@@ -150,26 +158,53 @@ int    Server::runServer( void ) {
             addUser(clientSocket);
         }
 
-        pollCount = poll(_fds, _nbUsers, 700);
+        while ( _nbUsers > 0 ){
+            pollCount = poll(_fds, _nbUsers, 700);
 
-        if ( pollCount <= 0 ) {
+            if ( pollCount <= 0 ) {
 
-            if ( pollCount < 0 )
-                sendError("Poll error !");
-            else if ( pollCount == 0 )
-                sendError("Times up");
-        } 
-        else
-            std::cout << "Poll is a success !" << std::endl;
-        std::cout<< "client socket == " << clientSocket << std::endl;
-        std::cout<< "user fd via map  == " << _userMap[clientSocket]->getUserFd() << std::endl;
-        // _userMap[clientSocket]->handleCommand(buffer);
+                if ( pollCount < 0 )
+                    sendError("Poll error !");
+                // else if ( pollCount == 0 )
+                //     sendError("Times up");
+            } 
+            else
+                std::cout << "Poll is a success !" << std::endl;
 
-        // for ( int i = 0; i < _nbUsers; i++ ) { // send a message to all people connected to the server
+            // std::cout<< "user fd via map  == " << _userMap[clientSocket]->getUserFd() << std::endl;
+            // std::cout<< "user server  == " << _userMap[clientSocket]->getServer().getServerName() << std::endl;
 
-        //     if ( _fds[i].revents & POLLIN ) { // on a des donnees a lire
+            for ( int i = 0; i <= _nbUsers; i++ ) {
+                if ( _fds[i].revents & POLLIN ) { // on a des donnees a lire
+                    nBytes = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
+                    std::cout << "Buffer Server = " << buffer << std::endl;
+                    _userMap[i]->handleCommand(buffer);
 
-        //         nBytes = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
+/********************************TEST HANDLECOMMAND FROM SERVER********************************/
+            // std::string     tempBuff = buffer;
+            // std::string     whitespace = " ";
+            // std::string     s1;
+            // std::string     s2;
+            // int             position;
+
+            // std::cout << "Handle Command -- Buffer = " << tempBuff << std::endl;
+
+            // position = tempBuff.find(whitespace); // retourne premier espace trouve
+            // s1 = tempBuff.substr(0, position); // copie la commande
+            // position++;
+            // if (position == *s1.end())
+            //     s2 = "";
+            // else
+            //     s2 = tempBuff.substr(position); // copie tout le reste de la string
+
+            // _commandMap[s1](s2, *_userMap[clientSocket]);
+
+            // std::cout << "User Nick : " << _userMap[clientSocket]->getUserNick() << std::endl;
+/**************************************************************************************/
+                }
+            }
+    }
+
         //         senderFd = _fds[i].fd;
         //         _userMap[clientSocket]->handleCommand(buffer);
 

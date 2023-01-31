@@ -1,13 +1,10 @@
-Creer fonction d'erreurs
-Faire les define des RPL
-Faire les define messages d'erreurs du protocole
-Faire les define des infos USER ( tbc infos SERVER )
-Revoir la fonction server::execute
-
-COMMANDES :
+Reply :
  - checker si il y a des RPL pour les commandes non set up
  - ajouter server.getCreationDate()
  - ajouter manuellement userModes, channelModes pour RPL004
+
+Commandes :
+    - Revoir le parser pour elever les whitespaces de s1 et s2 
 
 Commandes utilisees pour les RPL et ERR :
 
