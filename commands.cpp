@@ -6,7 +6,7 @@
 /*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 16:10:56 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/01/31 13:43:34 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/01/31 14:56:52 by jbouyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@
 void    setNick(std::string nick, User &user)
 {
    std::vector<std::string> nicklist = user.getServer().getNickList();
-//    if (isNickformatok(nick) == 1)
-//         return(ERR_ERRONEUSNICKNAME 432)
+   if (isNickformatok(nick) == 1)
+        send(user.getUserFd(), sendMessage1(432, user, user.getServer(), nick).c_str(), 60, 0);
     if (user.getIsUserRegistered() == true)
     {
         if(std::find(nicklist.begin(), nicklist.end(), nick) != nicklist.end())
