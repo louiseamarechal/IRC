@@ -1,8 +1,31 @@
 #include "Reply.hpp"
 
+std::string    sendMessage(int code, User &user, Server &server) {
+    return (formatMessage(code, user, server, "", "", "", ""));
+}
+
+std::string    sendMessage1(int code, User &user, Server &server, std::string str1) {
+    return (formatMessage(code, user, server, str1, "", "", ""));
+}
+
+std::string    sendMessage2(int code, User &user, Server &server, std::string str1, std::string str2) {
+    return (formatMessage(code, user, server, str1, str2, "", ""));
+}
+
+std::string    sendMessage3(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3) {
+    return (formatMessage(code, user, server, str1, str2, str3, ""));
+}
+
+std::string    sendMessage4(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4) {
+    return (formatMessage(code, user, server, str1, str2, str3, str4));
+}
+
+
 std::string    formatMessage(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4 ) {
 
-    std::string strCode = std::to_string(code);
+    std::stringstream tempStr;
+    tempStr << code;
+    std::string strCode = tempStr.str();
     std::string nickName = user.getUserNick();
     std::string prefix;
 

@@ -13,7 +13,7 @@ Server::Server( void ) : _port(0),
                         _nbUsers(0),
                         _maxUsers(10)
 {
-    _commandMap["NICK"] = &setNick;
+    // _commandMap["NICK"] = &setNick;
     // _commandMap['USER'] = &setUser;
     // _commandMap['JOIN'] = &joinChannel;
     // _commandMap['PASS'] = &checkPass;
