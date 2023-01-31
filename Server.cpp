@@ -117,10 +117,10 @@ int    Server::runServer( void ) {
     sockaddr_in clientAddress;
     int         clientSocket;
     int         pollCount;
-    int         senderFd;
-    int         destFd;
-    char        buffer[1024];
-    int         nBytes;
+    // int         senderFd;
+    // int         destFd;
+    // char        buffer[1024];
+    // int         nBytes;
     int         serverSocket = createSocket();
     sockaddr_in serverAddress = bindSocket( serverSocket );
     
@@ -158,42 +158,45 @@ int    Server::runServer( void ) {
                 sendError("Poll error !");
             else if ( pollCount == 0 )
                 sendError("Times up");
-        }
+        } 
         else
             std::cout << "Poll is a success !" << std::endl;
+        std::cout<< "client socket == " << clientSocket << std::endl;
+        std::cout<< "user fd via map  == " << _userMap[clientSocket]->getUserFd() << std::endl;
+        // _userMap[clientSocket]->handleCommand(buffer);
 
-        for ( int i = 0; i < _nbUsers; i++ ) { // send a message to all people connected to the server
+        // for ( int i = 0; i < _nbUsers; i++ ) { // send a message to all people connected to the server
 
-            if ( _fds[i].revents & POLLIN ) { // on a des donnees a lire
+        //     if ( _fds[i].revents & POLLIN ) { // on a des donnees a lire
 
-                nBytes = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
-                senderFd = _fds[i].fd;
-                // _userMap[clientSocket].handleBuffer(buffer);
+        //         nBytes = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
+        //         senderFd = _fds[i].fd;
+        //         _userMap[clientSocket]->handleCommand(buffer);
 
-                if (nBytes <= 0) {
+        //         if (nBytes <= 0) {
 
-                    sendError("Recv Error");
-                    close(_fds[i].fd);
-                    // removeUser(i);
-                }
-                else {
-                    for( int j = 0; j < _nbUsers; j++ ) {
+        //             sendError("Recv Error");
+        //             close(_fds[i].fd);
+        //             // removeUser(i);
+        //         }
+        //         else {
+        //             for( int j = 0; j < _nbUsers; j++ ) {
                         
-                        destFd = _fds[j].fd;
+        //                 destFd = _fds[j].fd;
 
-                        if (destFd != serverSocket && destFd != senderFd) {
-                            if (send(destFd, buffer, nBytes, 0) == -1) {
-                                    sendError("Send Error");
-                                }
-                                // recv(destFd, buffer, nBytes, 0);
-                            }
-                        }
-                    // // handle the information
-                    // read(_fds[i].fd, buffer, 100);
-                    // send(_fds[i].fd, buffer, 100, 0);
-                }
-            }
-        }
+        //                 if (destFd != serverSocket && destFd != senderFd) {
+        //                     if (send(destFd, buffer, nBytes, 0) == -1) {
+        //                             sendError("Send Error");
+        //                         }
+        //                         // recv(destFd, buffer, nBytes, 0);
+        //                     }
+        //                 }
+        //             // // handle the information
+        //             // read(_fds[i].fd, buffer, 100);
+        //             // send(_fds[i].fd, buffer, 100, 0);
+        //         }
+        //     }
+        // }
     }
     return (0);
 }

@@ -5,7 +5,7 @@
 /*                              CONSTRUCTORS                                         */
 /*************************************************************************************/
 
-User::User(int fd, Server &server) :  _userFd( fd ), _isNickSet(false), _isUserSet(false),  _isUserRegistered(false), _server(server) { 
+User::User(int fd, Server &server) :  _userFd(fd), _isNickSet(false), _isUserSet(false),  _isUserRegistered(false), _server(server) { 
     
     std::cout << "New User created : fd = " << _userFd << std::endl;
     return ;
