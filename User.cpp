@@ -85,6 +85,6 @@ void User::handleCommand(std::string buffer)
     s2 = buffer.substr(position + 1); // copie tout le reste de la string
 
 
-//     if (_server.commandMap[s1] != NULL)
-//         _server.commandMap[s1](s2, this);
+    if (getServer().getCommandMap()[s1] != NULL)
+        getServer().getCommandMap()[s1](s2, *this);
 }
