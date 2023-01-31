@@ -3,6 +3,8 @@
 
 #include "User.hpp"
 #include "Server.hpp"
+#include <sstream>
+#include <ostream>
 
 /************************************************/
 /*                    RPL                       */
@@ -21,7 +23,7 @@
 /* 313 */ # define RPL_WHOISOPERATOR(nick) (nick + " :is an IRC operator \r\n") // (WHOIS)
 /* 314 */ # define RPL_WHOWASUSER(nick, user, host, real_name) (nick + " " + user + " " + host + "  * :" + real_name + "\r\n") // (WHOWAS)
 /* 315 */ # define RPL_ENDOFWHO(name) (name + " :End of WHO list \r\n") // (WHO)
-/* 317 */ # define RPL_WHOISIDLE(nick, integer) (nick, integer + " :seconds idle \r\n") // (WHOIS)
+/* 317 */ # define RPL_WHOISIDLE(nick, integer) (nick + integer + " :seconds idle \r\n") // (WHOIS)
 /* 318 */ # define RPL_ENDOFWHOIS(nick) (nick + " :End of WHOIS list \r\n") // (WHOIS)
 // /* 319 */ # define RPL_WHOISCHANNELS(nick) (nick + " :*( ( "@" / "+" ) <channel> " " )\r\n") // (WHOIS) The ’@’ and ’+’ characters next to the channel name indicate whether a client is a channel operator or has been granted permission to speak on a moderated channel
 
@@ -111,10 +113,10 @@ class User;
 
 std::string    formatMessage(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4 );
 
-const char    *sendMessage(int code, User &user, Server &server);
-const char    *sendMessage1(int code, User &user, Server &server, std::string str1);
-const char    *sendMessage2(int code, User &user, Server &server, std::string str1, std::string str2);
-const char    *sendMessage3(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3);
-const char    *sendMessage4(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4);
+std::string sendMessage(int code, User &user, Server &server);
+std::string sendMessage1(int code, User &user, Server &server, std::string str1);
+std::string sendMessage2(int code, User &user, Server &server, std::string str1, std::string str2);
+std::string sendMessage3(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3);
+std::string sendMessage4(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4);
 
 #endif

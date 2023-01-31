@@ -1,30 +1,31 @@
 #include "Reply.hpp"
 
-const char    *sendMessage(int code, User &user, Server &server) {
-    return (formatMessage(code, user, server, "", "", "", "").c_str());
+std::string    sendMessage(int code, User &user, Server &server) {
+    return (formatMessage(code, user, server, "", "", "", ""));
 }
 
-const char    *sendMessage1(int code, User &user, Server &server, std::string str1) {
-    const char *str = formatMessage(code, user, server, str1, "", "", "").c_str();
-    return (str);
+std::string    sendMessage1(int code, User &user, Server &server, std::string str1) {
+    return (formatMessage(code, user, server, str1, "", "", ""));
 }
 
-const char    *sendMessage2(int code, User &user, Server &server, std::string str1, std::string str2) {
-    return (formatMessage(code, user, server, str1, str2, "", "").c_str());
+std::string    sendMessage2(int code, User &user, Server &server, std::string str1, std::string str2) {
+    return (formatMessage(code, user, server, str1, str2, "", ""));
 }
 
-const char    *sendMessage3(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3) {
-    return (formatMessage(code, user, server, str1, str2, str3, "").c_str());
+std::string    sendMessage3(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3) {
+    return (formatMessage(code, user, server, str1, str2, str3, ""));
 }
 
-const char    *sendMessage4(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4) {
-    return (formatMessage(code, user, server, str1, str2, str3, str4).c_str());
+std::string    sendMessage4(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4) {
+    return (formatMessage(code, user, server, str1, str2, str3, str4));
 }
 
 
 std::string    formatMessage(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4 ) {
 
-    std::string strCode = std::to_string(code);
+    std::stringstream tempStr;
+    tempStr << code;
+    std::string strCode = tempStr.str();
     std::string nickName = user.getUserNick();
     std::string prefix;
 
