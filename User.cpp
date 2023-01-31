@@ -5,13 +5,31 @@
 /*                              CONSTRUCTORS                                         */
 /*************************************************************************************/
 
-User::User(int fd, Server &server) :  _userFd(fd), _isNickSet(false), _isUserSet(false),  _isUserRegistered(false), _server(server) { 
+User::User(int fd, Server &server) : _userLoggin(""), _userFullName(""), _userNick(""), _userFd(fd), _isNickSet(false), _isUserSet(false),  _isUserRegistered(false), _server(server) { 
     
     std::cout << "New User created : fd = " << _userFd << std::endl;
     return ;
 }
 
 // User::User ( int fd, Server* server) : _userFd( fd ), _server(server) { return ; }
+
+User&   User::operator=( User const & rhs ) {
+
+	if (this != &rhs)
+    {
+        _userFd = rhs.getUserFd();
+        _userFullName = rhs.getUserFullName();
+        _userNick = rhs.getUserNick();
+        _userLoggin = rhs.getUserLoggin();
+        _isNickSet = rhs.getIsNickSet();
+        _isUserSet = rhs.getIsUserSet();
+        _isUserRegistered = rhs.getIsUserRegistered();
+        _server = rhs.getServer();
+    }
+
+	return (*this);
+}
+
 
 User::~User( void ) { return ; } // supprimer les users ?
 
