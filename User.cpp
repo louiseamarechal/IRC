@@ -5,13 +5,32 @@
 /*                              CONSTRUCTORS                                         */
 /*************************************************************************************/
 
-User::User(int fd, Server &server) :  _userFd(fd), _isNickSet(false), _isUserSet(false),  _isUserRegistered(false), _server(server) { 
+User::User(int fd, Server *server) : _userLoggin(""), _userFullName(""), _userNick(""), _userFd(fd), _isNickSet(false), _isUserSet(false),  _isUserRegistered(false), _server(server) { 
     
     std::cout << "New User created : fd = " << _userFd << std::endl;
+    std::cout << "Server Name from User constructor : " << _server->getServerName() << std::endl;
     return ;
 }
 
 // User::User ( int fd, Server* server) : _userFd( fd ), _server(server) { return ; }
+
+User&   User::operator=( User const & rhs ) {
+
+	if (this != &rhs)
+    {
+        _userFd = rhs.getUserFd();
+        _userFullName = rhs.getUserFullName();
+        _userNick = rhs.getUserNick();
+        _userLoggin = rhs.getUserLoggin();
+        _isNickSet = rhs.getIsNickSet();
+        _isUserSet = rhs.getIsUserSet();
+        _isUserRegistered = rhs.getIsUserRegistered();
+        _server = rhs.getServer();
+    }
+
+	return (*this);
+}
+
 
 User::~User( void ) { return ; } // supprimer les users ?
 
@@ -33,7 +52,7 @@ bool        User::getIsNickSet() const{return(_isNickSet);}
 
 bool        User::getIsUserSet() const{return(_isUserSet);}
 
-Server&     User::getServer() const{return(_server);}
+Server*     User::getServer() const{return(_server);}
 
 
 
@@ -80,11 +99,28 @@ void User::handleCommand(std::string buffer)
     std::string     s2;
     int             position;
 
+    std::cout << "Handle Command -- Buffer = " << buffer << std::endl;
+
     position = buffer.find(whitespace); // retourne premier espace trouve
     s1 = buffer.substr(0, position); // copie la commande
-    s2 = buffer.substr(position + 1); // copie tout le reste de la string
+    position++;
+    if (position == *s1.end())
+        s2 = "";
+    else
+        s2 = buffer.substr(position); // copie tout le reste de la string
 
+    std::cout << "Handle Command -- Command = " << s1 << std::endl;
+    std::cout << "Handle Command -- Params = " << s2 << std::endl;
 
-    if (getServer().getCommandMap()[s1] != NULL)
-        getServer().getCommandMap()[s1](s2, *this);
+    // if (getServer().getCommandMap()[s1] != NULL)
+
+    // std::cout << getServer().getCommandMap().count(s1) << std::endl;
+
+    // std::cout << "_server.getPort()" << _server->getPort() << std::endl;
+    // std::cout << "Server Name via _server->getServerName()" << _server->getServerName() << std::endl;
+    // if (getServer().getCommandMap().count(s1) > 0)
+    // {
+    //     std::cout << "je suis dans le if" << std::endl;
+    //     getServer().getCommandMap()[s1](s2, *this);
+    // }
 }
