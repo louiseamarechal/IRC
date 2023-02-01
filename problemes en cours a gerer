@@ -16,6 +16,9 @@
 *** PB avec le parser qu'on doit repenser ! par exemle dans la command NIck il isole bien la commande du reste mais dans la partie params il reste a la fin des espaces et/ou de \n qui apres font buger ma fnction, je ne sais pas ou corriger le probleme soit on le gere vraiment au cas par cas soit on generalise dans la fonction ? je vais tenter de supprimer juste le denrier caractere pour le moment, comme solution temporaire.
 Ne marche pas le systeme de decoupe avec la commande recue ar irssi en revanche cafonctionne avec nc... (permet au moins pour le moment de tester les fonctions...)
 
+*** QUand plusierus connexions en meme temps, ca pete.
+
+*** A revoir/faire la partie de check si le nick est deja utilise, ca ne marchepas correctement.
 
 
 <!-- Pense bete :  -->
