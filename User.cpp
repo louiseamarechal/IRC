@@ -1,5 +1,6 @@
 #include "User.hpp"
 #include "Server.hpp"
+#include <string.h>
 
 /*************************************************************************************/
 /*                              CONSTRUCTORS                                         */
@@ -73,24 +74,55 @@ void    User::setIsNickSet(bool value) {_isNickSet = value;}
 /*                              FUNCTIONS                                            */
 /*************************************************************************************/
 
+// void User::handleCommand(std::string buffer)
+// {
+//     std::string     whitespace = " ";
+//     std::string     s1;
+//     std::string     s2;
+//     int             position;
+
+//     std::cout << "Handle Command -- Buffer = " << buffer << std::endl;
+
+//     position = buffer.find(whitespace); // retourne premier espace trouve
+//     s1 = buffer.substr(0, position); // copie la commande
+//     position++;
+//     if (position == *s1.end())
+//         s2 = "";
+//     else
+//         s2 = buffer.substr(position, buffer.size()-s1.size()-3); // copie tout le reste de la string
+//     std::cout << "Handle Command -- Command = " << s1 << std::endl;
+//     std::cout << "Handle Command -- Params = " << s2 << "fini params";
+//     if (getServer()->getCommandMap().count(s1) > 0)
+//         getServer()->getCommandMap()[s1](s2, *this);
+// }
+
 void User::handleCommand(std::string buffer)
 {
-    std::string     whitespace = " ";
-    std::string     s1;
-    std::string     s2;
-    int             position;
+    std::string         whitespace = " ";
+    std::string         s1;
+    std::string         s2;
+    std::string         tmp;
+    size_t              pos = 0;
+    size_t              endlinepos;
 
     std::cout << "Handle Command -- Buffer = " << buffer << std::endl;
 
-    position = buffer.find(whitespace); // retourne premier espace trouve
-    s1 = buffer.substr(0, position); // copie la commande
-    position++;
-    if (position == *s1.end())
-        s2 = "";
-    else
-        s2 = buffer.substr(position, buffer.size()-s1.size()-3); // copie tout le reste de la string
-    std::cout << "Handle Command -- Command = " << s1 << std::endl;
-    std::cout << "Handle Command -- Params = " << s2 ;
-    if (getServer()->getCommandMap().count(s1) > 0)
-        getServer()->getCommandMap()[s1](s2, *this);
+    while(pos != buffer.size())
+    {
+        pos = buffer.find(whitespace);// retourne premier espace trouve
+        endlinepos = buffer.find("\n");// retourne premier \n trouve
+        s1 = buffer.substr(0, pos); // copie la commande
+        pos++;
+        s2 = buffer.substr(pos, endlinepos - pos - 1);
+        if (endlinepos != buffer.size())
+        {  
+            tmp = buffer.substr(endlinepos + 1, buffer.size());
+            buffer = tmp;
+        }
+        pos = s2.size();
+        std::cout << "Handle Command -- Command = " << s1 << std::endl;
+        std::cout << "Handle Command -- Params = " << s2 <<std::endl;
+        if (getServer()->getCommandMap().count(s1) > 0)
+            getServer()->getCommandMap()[s1](s2, *this);
+    }
 }

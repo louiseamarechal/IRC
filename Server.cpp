@@ -209,7 +209,7 @@ int    Server::runServer( void )
                         std::cout << "Buffer Server = " << buffer << std::endl;
                         // std::cout << "i = " << i << std::endl;
                         _userMap[clientSocket]->handleCommand(buffer);
-                        memset(buffer, 0, sizeof(buffer));
+                        // memset(buffer, 0, sizeof(buffer));
                     }
                 }
             }
