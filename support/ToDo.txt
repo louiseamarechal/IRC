@@ -5,8 +5,7 @@ Reply :
 
 Commandes utilisees pour les RPL et ERR :
 
-    // NICK
-    - NOTICE
+    - NICK
     - MOTD
     - OPER
     - PASS
@@ -22,6 +21,7 @@ Commandes utilisees pour les RPL et ERR :
     - JOIN
     - LIST
     - NAMES
+    - NOTICE
     - PART
     - PRIVMSG
     - TOPIC
