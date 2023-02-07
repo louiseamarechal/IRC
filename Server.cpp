@@ -200,7 +200,7 @@ int    Server::runServer( void )
                     nBytes = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
                     if (nBytes <= 0)
                     {
-                        removeUser(clientSocket);
+                        removeUser(_fds[i].fd);
                         continue;
                     }
                     if (nBytes > 0)
@@ -208,7 +208,7 @@ int    Server::runServer( void )
                         buffer[nBytes] = '\0';
                         std::cout << "Buffer Server = " << buffer << std::endl;
                         // std::cout << "i = " << i << std::endl;
-                        _userMap[clientSocket]->handleCommand(buffer);
+                        _userMap[_fds[i].fd]->handleCommand(buffer);
                         // memset(buffer, 0, sizeof(buffer));
                     }
                 }

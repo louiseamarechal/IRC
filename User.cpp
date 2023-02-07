@@ -119,10 +119,12 @@ void User::handleCommand(std::string buffer)
             tmp = buffer.substr(endlinepos + 1, buffer.size());
             buffer = tmp;
         }
-        pos = s2.size();
+        pos = pos + s2.size();
         std::cout << "Handle Command -- Command = " << s1 << std::endl;
         std::cout << "Handle Command -- Params = " << s2 <<std::endl;
         if (getServer()->getCommandMap().count(s1) > 0)
             getServer()->getCommandMap()[s1](s2, *this);
+        std::cout<<"pos =" << pos << std::endl;
+        std::cout<<"buffer size ==" << buffer.size()<<std::endl;
     }
 }
