@@ -5,16 +5,17 @@
 /*                              CONSTRUCTORS                                         */
 /*************************************************************************************/
 
-User::User(int fd, Server *server) : _userLoggin(""), _userFullName(""), _userNick(""), _userFd(fd), _isNickSet(false), _isUserSet(false),  _isUserRegistered(false), _server(server) { 
+User::User(int fd, Server *server) : _userLoggin(""), _userFullName(""), _userNick(""), _userFd(fd), _isNickSet(false), _isUserSet(false),  _isUserRegistered(false), _server(server)
+{ 
     
     std::cout << "New User created : fd = " << _userFd << std::endl;
-    std::cout << "Server Name from User constructor : " << _server->getServerName() << std::endl;
+    std::cout << "Server Name from User constructor : " << this->getServer()->getServerName() << std::endl;
     return ;
 }
 
-// User::User ( int fd, Server* server) : _userFd( fd ), _server(server) { return ; }
 
-User&   User::operator=( User const & rhs ) {
+User&   User::operator=( User const & rhs ) 
+{
 
 	if (this != &rhs)
     {
@@ -54,14 +55,9 @@ bool        User::getIsUserSet() const{return(_isUserSet);}
 
 Server*     User::getServer() const{return(_server);}
 
-
-
-
 /*************************************************************************************/
 /*                              SETTERS                                              */
 /*************************************************************************************/
-
-// void    User::setUserFd( int fd ) { _userFd = fd; }
 
 void    User::setUserNick( std::string nick ) { _userNick = nick; }
 
@@ -76,21 +72,6 @@ void    User::setIsNickSet(bool value) {_isNickSet = value;}
 /*************************************************************************************/
 /*                              FUNCTIONS                                            */
 /*************************************************************************************/
-
-// std::map< std::string, std::string > User::commandParser( std::string buffer ) {
-    
-//     std::map< std::string, std::string >    commandMap;
-//     std::string                             whitespace = " ";
-//     int                                     position;
-
-//     position = buffer.find(whitespace); // retourne premier espace trouve
-
-//     commandMap["command"] = buffer.substr(0, position); // copie la commande
-//     commandMap["parameters"] = buffer.substr(position + 1); // copie tout le reste de la string
-    
-//     return(commandMap);
-// }
-
 
 void User::handleCommand(std::string buffer)
 {
@@ -107,20 +88,9 @@ void User::handleCommand(std::string buffer)
     if (position == *s1.end())
         s2 = "";
     else
-        s2 = buffer.substr(position); // copie tout le reste de la string
-
+        s2 = buffer.substr(position, buffer.size()-s1.size()-3); // copie tout le reste de la string
     std::cout << "Handle Command -- Command = " << s1 << std::endl;
-    std::cout << "Handle Command -- Params = " << s2 << std::endl;
-
-    // if (getServer().getCommandMap()[s1] != NULL)
-
-    // std::cout << getServer().getCommandMap().count(s1) << std::endl;
-
-    // std::cout << "_server.getPort()" << _server->getPort() << std::endl;
-    // std::cout << "Server Name via _server->getServerName()" << _server->getServerName() << std::endl;
-    // if (getServer().getCommandMap().count(s1) > 0)
-    // {
-    //     std::cout << "je suis dans le if" << std::endl;
-    //     getServer().getCommandMap()[s1](s2, *this);
-    // }
+    std::cout << "Handle Command -- Params = " << s2 ;
+    if (getServer()->getCommandMap().count(s1) > 0)
+        getServer()->getCommandMap()[s1](s2, *this);
 }
