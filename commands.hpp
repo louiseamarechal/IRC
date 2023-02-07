@@ -6,7 +6,7 @@
 /*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 15:58:26 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/01/30 15:53:16 by lmarecha         ###   ########.fr       */
+/*   Updated: 2023/02/07 13:23:07 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,18 @@
 #include <vector>
 #include "Server.hpp"
 #include "User.hpp"
+#include <sys/socket.h>
+#include <sys/types.h>
+#include "Reply.hpp"
+
 
 class User;
 
 void                    setNick(std::string nick, User &user);
-void                    setUser(std::string params, User &user);
+void                    setUser(std::string buffer, User &user);
 void                    joinchannel(std::string join);
 void                    checkPass(std::string password);
 void                    sendprivmsg(std::string message);
-bool                    isNickDispo(std::string nick, User &User);
+bool                    isNickformatok(std::string nick);
 
 #endif

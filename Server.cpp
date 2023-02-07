@@ -13,8 +13,16 @@ Server::Server( void ) : _port(0),
                         _nbUsers(0),
                         _maxUsers(10)
 {
+    _userMap = std::map<int, User*>();
+    _commandMap = std::map<std::string, void (*)(std::string, User &)>();
+    _nickList = std::vector<std::string>();
+
+    for (int i = 0; i < 200; i++) {
+        _fds[i].fd = -1;
+    }
+    
     _commandMap["NICK"] = &setNick;
-    // _commandMap['USER'] = &setUser;
+    // _commandMap["USER"] = &setUser;
     // _commandMap['JOIN'] = &joinChannel;
     // _commandMap['PASS'] = &checkPass;
     // _commandMap['PRIVMSG'] = &sendPrivMsg;
@@ -39,6 +47,8 @@ std::string                 Server::getPassword() const { return (_password); }
 
 std::vector<std::string>    Server::getNickList() const { return (_nickList); }
 
+std::map<std::string, void (*)(std::string params, User &user)>    Server::getCommandMap(void)   const { return (_commandMap);}
+
 /*************************************************************************************/
 /*                              SETTERS                                              */
 /*************************************************************************************/
@@ -50,29 +60,55 @@ void    Server::setPassword( std::string password ) { _password = password; }
 /*************************************************************************************/
 /*                              FUNCTIONS                                            */
 /*************************************************************************************/
-
+ 
 void    Server::removeUser( int i ) { 
-    
-    _userMap.erase(_fds[i].fd);
+    //ICI FAIRE BLOC TRY AND CATCH pourjeter une exception si on trouve pas le fd dans la mapde user utiliser Map.at() pour etre sure qu ca existe et que ca cree pas un truc random u'on supprime apres.
+        delete _userMap[_fds[i].fd];
     _fds[i] = _fds[_nbUsers -  1];
 
     _nbUsers--;
 }
 
-void    Server::addUser( int fd) {
-    
-    if ( _nbUsers < _maxUsers )
+// PROPOSITON DE LEA :
+// void Server::removeUser(int clientFd) {
+//     // Trouver l'identifiant du client dans la table de hachage
+//     auto userIter = _userMap.find(clientFd);
+//     if (userIter == _userMap.end())
+//         return;
+
+//     // Supprimer l'entrée associée à ce client dans la table de hachage
+//     _userMap.erase(userIter);
+
+//     // Réduire le compteur de clients connectés
+//     _nbUsers--;
+
+//     // Fermer la socket associée au client déconnecté
+//     close(clientFd);
+
+//     // Mettre à jour la liste des descripteurs de fichiers pollfd
+//     for (int i = 0; i < _nbUsers; i++) {
+//         if (_fds[i].fd == clientFd) {
+//             for (int j = i; j < _nbUsers - 1; j++)
+//                 _fds[j] = _fds[j + 1];
+//             break;
+//         }
+//     }
+// }
+
+void    Server::addUser( int fd) 
+{  
+    if ( _nbUsers < _maxUsers && _userMap[fd] == NULL)
     {
-        User  newUser = User(fd, *this);
-        _userMap.insert( std::pair<int, User*>( fd, &newUser ) );
+        User  *newUser = new User(fd, this);
+        _userMap[fd] = newUser;
         _nbUsers++;
     }
     else
         std::cout << "Too many users ! " << std::endl;
 }
 
-int     Server::createSocket( void ) {
-
+int     Server::createSocket( void )
+{
     int enable = 1;
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -89,8 +125,8 @@ int     Server::createSocket( void ) {
     return ( serverSocket );
 }
 
-sockaddr_in Server::bindSocket( int serverSocket ) {
-
+sockaddr_in Server::bindSocket( int serverSocket ) 
+{
     sockaddr_in serverAddress;
     int         bindResult;
 
@@ -110,13 +146,11 @@ sockaddr_in Server::bindSocket( int serverSocket ) {
     return ( serverAddress );
 } 
 
-int    Server::runServer( void ) {
-
+int    Server::runServer( void ) 
+{
     sockaddr_in clientAddress;
     int         clientSocket;
     int         pollCount;
-    int         senderFd;
-    int         destFd;
     char        buffer[1024];
     int         nBytes;
     int         serverSocket = createSocket();
@@ -133,8 +167,8 @@ int    Server::runServer( void ) {
         std::cout << "Listening for incoming connections ..." << std::endl;
 
     // Accept and handle connections
-    while ( _nbUsers < _maxUsers) {
-
+    while ( true ) 
+    {
         socklen_t clientAddressSize = sizeof(clientAddress);
         clientSocket = accept(serverSocket, (sockaddr*)&clientAddress, &clientAddressSize);
         
@@ -147,48 +181,36 @@ int    Server::runServer( void ) {
             _fds[_nbUsers].events = POLLIN;
             addUser(clientSocket);
         }
-
-        pollCount = poll(_fds, _nbUsers, 700);
-
-        if ( pollCount <= 0 ) {
-
-            if ( pollCount < 0 )
-                sendError("Poll error !");
-            else if ( pollCount == 0 )
-                sendError("Times up");
-        }
-        else
-            std::cout << "Poll is a success !" << std::endl;
-
-        for ( int i = 0; i < _nbUsers; i++ ) { // send a message to all people connected to the server
-
-            if ( _fds[i].revents & POLLIN ) { // on a des donnees a lire
-
-                nBytes = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
-                senderFd = _fds[i].fd;
-                // _userMap[clientSocket].handleBuffer(buffer);
-
-                if (nBytes <= 0) {
-
-                    sendError("Recv Error");
-                    close(_fds[i].fd);
-                    // removeUser(i);
-                }
-                else {
-                    for( int j = 0; j < _nbUsers; j++ ) {
-                        
-                        destFd = _fds[j].fd;
-
-                        if (destFd != serverSocket && destFd != senderFd) {
-                            if (send(destFd, buffer, nBytes, 0) == -1) {
-                                    sendError("Send Error");
-                                }
-                                // recv(destFd, buffer, nBytes, 0);
-                            }
-                        }
-                    // // handle the information
-                    // read(_fds[i].fd, buffer, 100);
-                    // send(_fds[i].fd, buffer, 100, 0);
+        while ( _nbUsers > 0 )
+        {
+            pollCount = poll(_fds, _nbUsers, 700);
+            if ( pollCount <= 0 ) 
+            {
+                if ( pollCount < 0 )
+                    sendError("Poll error !");
+                // else if ( pollCount == 0 )
+                //     sendError("Times up");
+            } 
+            else
+                std::cout << "Poll is a success !" << std::endl;
+            for ( int i = 0; i <= _nbUsers; i++ ) 
+            {
+                if ( _fds[i].revents & POLLIN ) 
+                { // on a des donnees a lire
+                    nBytes = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
+                    if (nBytes <= 0)
+                    {
+                        removeUser(clientSocket);
+                        continue;
+                    }
+                    if (nBytes > 0)
+                    {
+                        buffer[nBytes] = '\0';
+                        std::cout << "Buffer Server = " << buffer << std::endl;
+                        // std::cout << "i = " << i << std::endl;
+                        _userMap[clientSocket]->handleCommand(buffer);
+                        memset(buffer, 0, sizeof(buffer));
+                    }
                 }
             }
         }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Server.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/01 15:48:44 by jbouyer           #+#    #+#             */
+/*   Updated: 2023/02/01 15:48:48 by jbouyer          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 # ifndef SERVER_HPP
 # define SERVER_HPP
 
@@ -21,8 +33,8 @@
 
 class User;
 
-class Server {
-
+class Server 
+{
     public :
         Server( void );
         ~Server( void );
@@ -35,8 +47,9 @@ class Server {
         std::string                 getServerName( void ) const;
         std::string                 getPassword( void ) const;
         std::vector<std::string>    getNickList(void)   const;
+        std::map<std::string, void (*)(std::string params, User &user)>    getCommandMap(void)   const;
 
-        void                        setPort( int port) ;
+        void                        setPort( int port);
         void                        setPassword( std::string password );
         void                        setNbUsers( void );
         
