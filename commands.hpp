@@ -6,7 +6,7 @@
 /*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 15:58:26 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/02/07 13:23:07 by lmarecha         ###   ########.fr       */
+/*   Updated: 2023/02/07 14:11:41 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 class User;
 
 void                    setNick(std::string nick, User &user);
-void                    setUser(std::string buffer, User &user);
+void                    setUser(std::string params, User &user);
 void                    joinchannel(std::string join);
 void                    checkPass(std::string password);
 void                    sendprivmsg(std::string message);

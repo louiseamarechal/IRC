@@ -6,7 +6,7 @@
 /*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 16:10:56 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/02/07 13:25:28 by lmarecha         ###   ########.fr       */
+/*   Updated: 2023/02/07 14:47:46 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,18 @@ bool    isNickformatok(std::string nick)
 
 //rajouter les RPL si ca se passe bien aussi !
 
-void    setUser(std::string buffer, User &user)
-{
-    std::string     fullName;
-    std::string     UserNick; //ici il faudra voir en cas de conflit lequel on priorise...
-}
+// USER <username> <mode> <unused> <realname>
+// void    setUser(std::string params, User &user)
+// {
+//     int             position;
+//     char            whitespace = 32;
+//     std::string     username;
+//     std::string     mode;
+//     std::string     unused;
+//     std::string     realname; //ici il faudra voir en cas de conflit lequel on priorise...
+
+//     position = params.find(whitespace);
+//     username = params.substr(0, position);
+//     for ( std::string::iterator it = params.begin(); *it == whitespace; it++)
+//         position++;
+// }

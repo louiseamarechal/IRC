@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <signal.h>
 
-void    sendError( std::string message );
-void    sigintHandler(int sig);
-
+void        sendError( std::string message );
+void        sigintHandler( int sig );
+std::string removeConsecutiveWhitespace( std::string buffer );
 #endif
