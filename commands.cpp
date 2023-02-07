@@ -6,7 +6,7 @@
 /*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 16:10:56 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/02/07 13:21:07 by lmarecha         ###   ########.fr       */
+/*   Updated: 2023/02/07 13:25:28 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,8 @@ bool    isNickformatok(std::string nick)
 
 //rajouter les RPL si ca se passe bien aussi !
 
-// void    SetUser(std::string buffer, User &user)
-// {
-//     std::string     fullName;
-//     std::string     UserNick; //ici il faudra voir en cas de conflit lequel on priorise...
-// }
+void    setUser(std::string buffer, User &user)
+{
+    std::string     fullName;
+    std::string     UserNick; //ici il faudra voir en cas de conflit lequel on priorise...
+}
