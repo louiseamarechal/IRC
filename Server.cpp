@@ -9,7 +9,7 @@
 Server::Server( void ) : _port(0),
                         _version("2.0"),
                         _serverName("JLA.irc.com"),
-                        _password(""),
+                        _password("password"),
                         _nbUsers(0),
                         _maxUsers(10)
 {
@@ -24,7 +24,7 @@ Server::Server( void ) : _port(0),
     _commandMap["NICK"] = &setNick;
     // _commandMap["USER"] = &setUser;
     // _commandMap['JOIN'] = &joinChannel;
-    // _commandMap['PASS'] = &checkPass;
+    _commandMap["PASS"] = &checkPass;
     // _commandMap['PRIVMSG'] = &sendPrivMsg;
     return ;
 }

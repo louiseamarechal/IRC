@@ -6,7 +6,7 @@
 /*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 16:10:56 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/02/07 14:48:29 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/02/07 16:09:07 by jbouyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,15 @@
 #include <string>         
 #include <cstddef>
 
+static bool    isNickformatok(std::string nick)
+{
+    std::cout<<"nick = "<< nick;
+    if (nick.size() > 9)
+        return (false);
+    if (nick.find_first_not_of("-_qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM") == std::string::npos)
+        return(true);
+    return (false);
+}
 
 // penser a verifier si ca existe deja ou pas comme surnom c'est mieux ...
 void    setNick(std::string nick, User &user)
@@ -59,15 +68,7 @@ void    setNick(std::string nick, User &user)
     }
 }
 
-bool    isNickformatok(std::string nick)
-{
-    std::cout<<"nick = "<< nick;
-    if (nick.size() > 9)
-        return (false);
-    if (nick.find_first_not_of("-_qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM") == std::string::npos)
-        return(true);
-    return (false);
-}   
+   
 
 //rajouter les RPL si ca se passe bien aussi !
 
@@ -76,3 +77,13 @@ bool    isNickformatok(std::string nick)
 //     std::string     fullName;
 //     std::string     UserNick; //ici il faudra voir en cas de conflit lequel on priorise...
 // }
+
+// PASS
+//    464    ERR_PASSWDMISMATCH
+
+void    checkPass(std::string password, User &user)
+{
+    if (password != user.getServer()->getPassword())
+        send(user.getUserFd(), sendMessage1(464, user, *(user.getServer()), password).c_str(), 60, 0);
+        // 464    ERR_PASSWDMISMATCH
+}
