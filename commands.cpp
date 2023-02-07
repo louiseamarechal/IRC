@@ -6,7 +6,7 @@
 /*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 16:10:56 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/02/07 14:47:46 by lmarecha         ###   ########.fr       */
+/*   Updated: 2023/02/07 17:02:37 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void    setNick(std::string nick, User &user)
    std::vector<std::string> nicklist = user.getServer()->getNickList();
    if (isNickformatok(nick) == false)
         {send(user.getUserFd(), sendMessage1(432, user, *(user.getServer()), nick).c_str(), 60, 0);
-        std::cout<<"NICKNAME ===== FALSE"<<std::endl;}
+        std::cout<<"NICKNAME == FALSE"<<std::endl;}
     if (user.getIsUserRegistered() == true)
     {
         if(std::find(nicklist.begin(), nicklist.end(), nick) != nicklist.end())
@@ -62,13 +62,10 @@ void    setNick(std::string nick, User &user)
 bool    isNickformatok(std::string nick)
 {
     std::cout<<"nick = "<< nick;
-    std::cout<<"nick size= "<< nick.size();
     if (nick.size() > 9)
         return (false);
     if (nick.find_first_not_of("-_qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM") == std::string::npos)
         return(true);
-    std::cout << "retour de nick first " << nick.find_first_not_of("-_qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM\n")<< std::endl;
-    std::cout<<std::string::npos<<std::endl;
     return (false);
 }   
 
