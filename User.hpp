@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   User.hpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/02/01 15:48:57 by jbouyer           #+#    #+#             */
+/*   Updated: 2023/02/01 17:05:51 by jbouyer          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 # ifndef USER_HPP
 # define USER_HPP
 
@@ -22,10 +34,8 @@
 class Server;
 
 class Command;
-class User {
-
-   
-
+class User 
+{
     public :
         User( int fd, Server *server );
         User&	operator=( User const & rhs );
@@ -40,15 +50,13 @@ class User {
         bool                                    getIsUserSet() const;
         Server*                                 getServer() const;
 
-        // void        setUserFd( int fd );
         void                                    setUserNick( std::string nick );
         void                                    setUserLoggin( std::string loggin );
         void                                    setUserFullName( std::string fullName );
-        // std::map< std::string, std::string >    commandParser( std::string buffer );
         void                                    setIsNickSet(bool value);
         void                                    setIsUserRegistered(bool value);
 
-        void                                     handleCommand(std::string buffer);
+        void                                    handleCommand(std::string buffer);
 
     private :
         std::string                             _userLoggin; // jbouyer
