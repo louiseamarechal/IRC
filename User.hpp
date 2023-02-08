@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 15:48:57 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/02/01 17:05:51 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/02/08 14:35:31 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ class User
         void                                    setUserFullName( std::string fullName );
         void                                    setIsNickSet(bool value);
         void                                    setIsUserRegistered(bool value);
+        void                                    setIsUserSet( bool value );
 
         void                                    handleCommand(std::string buffer);
 
