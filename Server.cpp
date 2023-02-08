@@ -10,6 +10,7 @@ Server::Server( void ) : _port(0),
                         _version("2.0"),
                         _serverName("JLA.irc.com"),
                         _password(""),
+                        _creationDate("Wed Feb 8 15:53:25 2023"),
                         _nbUsers(0),
                         _maxUsers(10)
 {
@@ -22,7 +23,7 @@ Server::Server( void ) : _port(0),
     }
     
     _commandMap["NICK"] = &setNick;
-    // _commandMap["USER"] = &setUser;
+    _commandMap["USER"] = &setUser;
     // _commandMap['JOIN'] = &joinChannel;
     // _commandMap['PASS'] = &checkPass;
     // _commandMap['PRIVMSG'] = &sendPrivMsg;
@@ -44,6 +45,8 @@ int                         Server::getMaxUsers() const { return (_maxUsers); }
 std::string                 Server::getServerName() const { return (_serverName); }
 
 std::string                 Server::getPassword() const { return (_password); }
+
+std::string                 Server::getCreationDate( void ) const { return (_creationDate); }
 
 std::vector<std::string>    Server::getNickList() const { return (_nickList); }
 
