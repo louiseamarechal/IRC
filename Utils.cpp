@@ -35,3 +35,24 @@ std::string removeConsecutiveWhitespace( std::string buffer ) {
 
     return result;
 }
+
+std::vector<std::string> splitString( std::string params ) {
+
+    std::vector<std::string>        splittedParams;
+    char                            whitespace = 32;
+    std::string::iterator           it = params.begin();
+    std::string                     result;
+
+    for (it; it != params.end(); ++it)
+    {
+        result += *it; // copie each charactere to result
+        if (*it == whitespace || (it + 1) == params.end())
+        {
+                if (*it == whitespace)
+                    result.pop_back(); // remove whitespace at the end of result
+                splittedParams.push_back(result); // add result to the vector
+                result.clear(); // empty string result
+        };
+    }
+    return (splittedParams);
+}
