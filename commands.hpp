@@ -22,5 +22,6 @@ void                    joinchannel(std::string join);
 void                    checkPass(std::string password);
 void                    sendprivmsg(std::string message);
 bool                    isNickformatok(std::string nick);
+void                    motd(std::string params, User &user);
 
 #endif
