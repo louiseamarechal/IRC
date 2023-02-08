@@ -1,6 +1,6 @@
-#include "Server.hpp"
-#include "User.hpp"
-#include "Utils.hpp"
+#include "server/Server.hpp"
+#include "user/User.hpp"
+#include "utils.hpp"
 #include <cstdlib>
 
 int main( int argc, char **argv ) 

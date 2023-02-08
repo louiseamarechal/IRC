@@ -1,5 +1,5 @@
-#include "User.hpp"
-#include "Server.hpp"
+#include "user/User.hpp"
+#include "server/Server.hpp"
 #include <string.h>
 
 /*************************************************************************************/

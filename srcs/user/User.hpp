@@ -16,7 +16,7 @@
 #include <fcntl.h>
 #include <vector>
 #include <map>
-#include "Server.hpp"
+#include "server/Server.hpp"
 #include "commands.hpp"
 
 class Server;

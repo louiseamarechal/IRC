@@ -1,4 +1,4 @@
-#include "Reply.hpp"
+#include "reply.hpp"
 
 std::string     sendMessage(int code, User &user, Server &server) {
     return (formatMessage(code, user, server, "", "", "", ""));

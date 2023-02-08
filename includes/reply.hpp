@@ -1,8 +1,8 @@
 # ifndef REPLY_HPP
 # define REPLY_HPP
 
-#include "User.hpp"
-#include "Server.hpp"
+#include "user/User.hpp"
+#include "server/Server.hpp"
 #include <sstream>
 #include <ostream>
 

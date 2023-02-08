@@ -6,12 +6,14 @@
 #include <stdio.h>
 #include <map>
 #include <vector>
-#include "Server.hpp"
-#include "User.hpp"
 #include <sys/socket.h>
 #include <sys/types.h>
-#include "Reply.hpp"
-#include "Utils.hpp"
+#include <algorithm>
+#include <cstddef>
+#include "user/User.hpp"
+#include "server/Server.hpp"
+#include "reply.hpp"
+#include "utils.hpp"
 
 
 class User;
