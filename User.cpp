@@ -120,9 +120,12 @@ void User::handleCommand(std::string buffer)
     size_t              endlinepos;
 
     std::cout << "Handle Command -- Buffer = " << buffer << std::endl;
+   
 
-    while(pos != buffer.size())
-    {
+    while(buffer.size() != 0)
+    { 
+        std::cout << "Buffer size = " << buffer.size() << std::endl;
+    std::cout << "pos  = " << pos << std::endl;
         pos = buffer.find(whitespace);// retourne premier espace trouve
         endlinepos = buffer.find("\n");// retourne premier \n trouve
         s1 = buffer.substr(0, pos); // copie la commande
