@@ -6,7 +6,7 @@
 /*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 16:10:56 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/02/08 12:56:04 by lmarecha         ###   ########.fr       */
+/*   Updated: 2023/02/08 16:47:06 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,49 +69,55 @@ bool    isNickformatok(std::string nick)
     return (false);
 }   
 
-//rajouter les RPL si ca se passe bien aussi !
-
-// USER <username> <mode> <unused> <realname>
 void    setUser(std::string params, User &user)
 {
     // std::string                 mode; // le mettre sistematiquement a 0 ?
     // std::string                 unused; // sert a rien
     std::string                 realname;
-    std::string                 formattedParams = removeConsecutiveWhitespace(params);
-    std::vector<std::string>    splittedParams = splitString(formattedParams);
+    std::string                 formattedParams;
+    std::vector<std::string>    splittedParams;
+    std::string                 errorMessage;
 
-    if (user.getIsUserSet() == true)
+    if (user.getIsUserRegistered() == true)
     {
-        // envoyer RPL 462 (ALREADY REGISTERED)
+        errorMessage = sendMessage(462, user, *(user.getServer()));
+        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
         return;
     }
     
+    formattedParams = removeConsecutiveWhitespace(params);
+    splittedParams = splitString(formattedParams);
+     
     if (splittedParams.size() < 4)
     {
-        std::cout << "Not enought params -> send RPL 461" << std::endl;
-        // envoyer RPL 461 (NEEDMOREPARAMS);
+        errorMessage = sendMessage1(461, user, *(user.getServer()), "USER");
+        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
         return;
     }
-    else if (splittedParams[3][0] != ':')
+    
+    if (splittedParams[3][0] != ':')
         return;
-    else if (splittedParams.size() == 4)
+        
+    if (splittedParams.size() == 4)
         user.setUserFullName(splittedParams[3]);
     else if (splittedParams.size() > 4 )
     {
         realname.clear();
-        for (int i = 3; i < splittedParams.size(); i++)
+        for (unsigned long int i = 3; i < splittedParams.size(); i++)
         {
             realname.append(splittedParams[i]);
             realname += " ";
         }
-        realname.pop_back();
+        realname.erase(realname.size() - 1);
         user.setUserFullName(realname);
     }
        
     user.setUserLoggin(splittedParams[0]);
+    user.setIsUserSet(true);
+    
+    if (user.getIsUserRegistered() == true)
+        sendWelcomeMessages(user, *(user.getServer()));
     
     // mode = splittedParams[1];
     // unused = splittedParams[2];
-    
-    
 }
