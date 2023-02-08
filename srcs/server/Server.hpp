@@ -16,7 +16,7 @@
 #include <fcntl.h>
 #include <map>
 #include <vector>
-#include "User.hpp"
+#include "user/User.hpp"
 #include "commands.hpp"
 
 class User;
