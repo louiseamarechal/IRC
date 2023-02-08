@@ -6,7 +6,7 @@
 /*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/26 16:10:56 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/02/07 17:02:37 by lmarecha         ###   ########.fr       */
+/*   Updated: 2023/02/08 12:56:04 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,17 +72,46 @@ bool    isNickformatok(std::string nick)
 //rajouter les RPL si ca se passe bien aussi !
 
 // USER <username> <mode> <unused> <realname>
-// void    setUser(std::string params, User &user)
-// {
-//     int             position;
-//     char            whitespace = 32;
-//     std::string     username;
-//     std::string     mode;
-//     std::string     unused;
-//     std::string     realname; //ici il faudra voir en cas de conflit lequel on priorise...
+void    setUser(std::string params, User &user)
+{
+    // std::string                 mode; // le mettre sistematiquement a 0 ?
+    // std::string                 unused; // sert a rien
+    std::string                 realname;
+    std::string                 formattedParams = removeConsecutiveWhitespace(params);
+    std::vector<std::string>    splittedParams = splitString(formattedParams);
 
-//     position = params.find(whitespace);
-//     username = params.substr(0, position);
-//     for ( std::string::iterator it = params.begin(); *it == whitespace; it++)
-//         position++;
-// }
+    if (user.getIsUserSet() == true)
+    {
+        // envoyer RPL 462 (ALREADY REGISTERED)
+        return;
+    }
+    
+    if (splittedParams.size() < 4)
+    {
+        std::cout << "Not enought params -> send RPL 461" << std::endl;
+        // envoyer RPL 461 (NEEDMOREPARAMS);
+        return;
+    }
+    else if (splittedParams[3][0] != ':')
+        return;
+    else if (splittedParams.size() == 4)
+        user.setUserFullName(splittedParams[3]);
+    else if (splittedParams.size() > 4 )
+    {
+        realname.clear();
+        for (int i = 3; i < splittedParams.size(); i++)
+        {
+            realname.append(splittedParams[i]);
+            realname += " ";
+        }
+        realname.pop_back();
+        user.setUserFullName(realname);
+    }
+       
+    user.setUserLoggin(splittedParams[0]);
+    
+    // mode = splittedParams[1];
+    // unused = splittedParams[2];
+    
+    
+}
