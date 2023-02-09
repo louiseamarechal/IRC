@@ -18,6 +18,7 @@
 #include <vector>
 #include "user/User.hpp"
 #include "commands.hpp"
+#include "channel/Channel.hpp"
 
 class User;
 
@@ -60,7 +61,7 @@ class Server
         std::map< int, User* >      _userMap;
         int                         _nbUsers;
         int                         _maxUsers;
-        // std::vector< Channel >  _Channels;
+        std::vector< Channel >      _channels;
 
         //Commands
         std::map<std::string, void (*)(std::string params, User &user)> _commandMap;
