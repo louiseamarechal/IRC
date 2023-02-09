@@ -6,7 +6,7 @@
 /*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/01 15:48:44 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/02/01 15:48:48 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/02/08 16:54:43 by jbouyer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ class Server
         sockaddr_in                 bindSocket( int serverSocket );
         void                        removeUser( int i );
         void                        addUser( int fd);
+        void                        acceptconnexion(int serverFd);
 
     private :
              

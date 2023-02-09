@@ -1,6 +1,8 @@
 #include "Server.hpp"
 #include "User.hpp"
 #include "Utils.hpp"
+#include <sys/epoll.h> // for epoll_create1(), epoll_ctl(), struct epoll_event
+
 
 /*************************************************************************************/
 /*                              CONSTRUCTORS                                         */
@@ -146,19 +148,53 @@ sockaddr_in Server::bindSocket( int serverSocket )
     return ( serverAddress );
 } 
 
-int    Server::runServer( void ) 
+static int		epoll_init()
+{
+	// Create epoll instance
+	int epoll_fd = epoll_create1(0);
+	if (epoll_fd < 0)
+	{
+		std::cerr << "epoll_create1 failed\n";
+		throw std::exception();
+	}
+
+	return epoll_fd;
+}
+
+void    Server::acceptconnexion(int serverFd)
 {
     sockaddr_in clientAddress;
-    int         clientSocket;
-    int         pollCount;
-    char        buffer[1024];
-    int         nBytes;
-    int         serverSocket = createSocket();
-    sockaddr_in serverAddress = bindSocket( serverSocket );
-    
+    int   clientFd;
+    socklen_t clientAddressSize = sizeof(clientAddress);
+    clientFd = accept(serverFd, (sockaddr*)&clientAddress, &clientAddressSize);
+    // std::cout<<"NOUVELE CONNEXION"<<std::endl;
+    if (clientFd < 0)
+        sendError("Failed to accept incoming connection");
+    else
+    {
+        std::cout<< "Accepted connection: fd #" << clientFd <<std::endl;
+        addUser(clientFd);
+    }
+}
+int    Server::runServer( void ) 
+{
+    // char        buffer[1024];
+    // int         nBytes;
+    int         serverFd = createSocket();
+    sockaddr_in serverAddress = bindSocket( serverFd );
+    int epoll_fd = epoll_init();
+    struct epoll_event event;
+    event.events = EPOLLIN | EPOLLET;
+
+    if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, serverFd, &event))
+    {
+        std::cout<<"Failed to create epoll file descriptor";
+        close(epoll_fd);
+        throw std::exception();
+    }
     
     // Listen for incoming connections
-    int listenResult = listen(serverSocket, serverAddress.sin_port);
+    int listenResult = listen(serverFd, serverAddress.sin_port);
     if (listenResult < 0) {
         sendError("Failed to listen for incoming connections");
         return 1;
@@ -166,55 +202,84 @@ int    Server::runServer( void )
     else
         std::cout << "Listening for incoming connections ..." << std::endl;
 
-    // Accept and handle connections
-    while ( true ) 
+    for (int i = 0;; i++)
     {
-        socklen_t clientAddressSize = sizeof(clientAddress);
-        clientSocket = accept(serverSocket, (sockaddr*)&clientAddress, &clientAddressSize);
-        
-        if (clientSocket < 0)
-            sendError("Failed to accept incoming connection");
-        else
+        memset(&event, 0, sizeof(struct epoll_event));
+        int event_count = epoll_wait(epoll_fd, &event, 1, -1);
+        std::cout << "new event in epoll" << std::endl;
+        for (int i = 0; i < event_count; i++)
         {
-            std::cout<< "Accepted connection: fd #" << clientSocket <<std::endl;
-            _fds[_nbUsers].fd = clientSocket;
-            _fds[_nbUsers].events = POLLIN;
-            addUser(clientSocket);
-        }
-        while ( _nbUsers > 0 )
-        {
-            pollCount = poll(_fds, _nbUsers, 700);
-            if ( pollCount <= 0 ) 
-            {
-                if ( pollCount < 0 )
-                    sendError("Poll error !");
-                // else if ( pollCount == 0 )
-                //     sendError("Times up");
-            } 
-            else
-                std::cout << "Poll is a success !" << std::endl;
-            for ( int i = 0; i <= _nbUsers; i++ ) 
-            {
-                if ( _fds[i].revents & POLLIN ) 
-                { // on a des donnees a lire
-                    nBytes = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
-                    if (nBytes <= 0)
-                    {
-                        removeUser(clientSocket);
-                        continue;
-                    }
-                    if (nBytes > 0)
-                    {
-                        buffer[nBytes] = '\0';
-                        std::cout << "Buffer Server = " << buffer << std::endl;
-                        // std::cout << "i = " << i << std::endl;
-                        _userMap[clientSocket]->handleCommand(buffer);
-                        // memset(buffer, 0, sizeof(buffer));
-                    }
-                }
+            if (event.data.fd == serverFd)
+			{
+    std::cout<<"NOUVELE CONNEXION"<<std::endl;
+				// acceptconnexion(serverFd); //check ca
+			}
+            // else
+            // {
+            //     nBytes = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
+            //     if (nBytes <= 0)
+            //     {
+            //         removeUser(event.data.fd);
+            //         continue;
+            //     }
+            //     if (nBytes > 0)
+            //     {
+            //         buffer[nBytes] = '\0';
+            //         std::cout << "Buffer Server = " << buffer << std::endl;
+            //         _userMap[event.data.fd]->handleCommand(buffer);
+            //     }
             }
         }
     }
+    // Accept and handle connections
+    // while ( true ) 
+    // {
+    //     socklen_t clientAddressSize = sizeof(clientAddress);
+    //     clientSocket = accept(serverFd, (sockaddr*)&clientAddress, &clientAddressSize);
+        
+    //     if (clientSocket < 0)
+    //         sendError("Failed to accept incoming connection");
+    //     else
+    //     {
+    //         std::cout<< "Accepted connection: fd #" << clientSocket <<std::endl;
+    //         _fds[_nbUsers].fd = clientSocket;
+    //         _fds[_nbUsers].events = POLLIN;
+    //         addUser(clientSocket);
+    //     }
+    //     while ( _nbUsers > 0 )
+    //     {
+    //         pollCount = poll(_fds, _nbUsers, 700);
+    //         if ( pollCount <= 0 ) 
+    //         {
+    //             if ( pollCount < 0 )
+    //                 sendError("Poll error !");
+    //             // else if ( pollCount == 0 )
+    //             //     sendError("Times up");
+    //         } 
+    //         else
+    //             std::cout << "Poll is a success !" << std::endl;
+    //         for ( int i = 0; i <= _nbUsers; i++ ) 
+    //         {
+    //             if ( _fds[i].revents & POLLIN ) 
+    //             { // on a des donnees a lire
+    //                 nBytes = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
+    //                 if (nBytes <= 0)
+    //                 {
+    //                     removeUser(clientSocket);
+    //                     continue;
+    //                 }
+    //                 if (nBytes > 0)
+    //                 {
+    //                     buffer[nBytes] = '\0';
+    //                     std::cout << "Buffer Server = " << buffer << std::endl;
+    //                     // std::cout << "i = " << i << std::endl;
+    //                     _userMap[clientSocket]->handleCommand(buffer);
+    //                     // memset(buffer, 0, sizeof(buffer));
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
     return (0);
 }
 
