@@ -1,24 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   commands.cpp                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/26 16:10:56 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/02/07 15:35:18 by jbouyer          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "commands.hpp"
-#include "Server.hpp"
-#include<vector>
-#include "Reply.hpp"
-#include <algorithm>
-#include <iostream>       
-#include <string>         
-#include <cstddef>
-
 
 // penser a verifier si ca existe deja ou pas comme surnom c'est mieux ...
 void    setNick(std::string nick, User &user)
@@ -68,11 +48,3 @@ bool    isNickformatok(std::string nick)
         return(true);
     return (false);
 }   
-
-//rajouter les RPL si ca se passe bien aussi !
-
-// void    SetUser(std::string buffer, User &user)
-// {
-//     std::string     fullName;
-//     std::string     UserNick; //ici il faudra voir en cas de conflit lequel on priorise...
-// }

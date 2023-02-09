@@ -1,25 +1,37 @@
-#include "Reply.hpp"
+#include "reply.hpp"
 
-std::string    sendMessage(int code, User &user, Server &server) {
+std::string     sendMessage(int code, User &user, Server &server) {
     return (formatMessage(code, user, server, "", "", "", ""));
 }
 
-std::string    sendMessage1(int code, User &user, Server &server, std::string str1) {
+std::string     sendMessage1(int code, User &user, Server &server, std::string str1) {
     return (formatMessage(code, user, server, str1, "", "", ""));
 }
 
-std::string    sendMessage2(int code, User &user, Server &server, std::string str1, std::string str2) {
+std::string     sendMessage2(int code, User &user, Server &server, std::string str1, std::string str2) {
     return (formatMessage(code, user, server, str1, str2, "", ""));
 }
 
-std::string    sendMessage3(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3) {
+std::string     sendMessage3(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3) {
     return (formatMessage(code, user, server, str1, str2, str3, ""));
 }
 
-std::string    sendMessage4(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4) {
+std::string     sendMessage4(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4) {
     return (formatMessage(code, user, server, str1, str2, str3, str4));
 }
 
+void            sendWelcomeMessages(User& user, Server &server) {
+    
+    std::string RPL1 = sendMessage1(001, user, server, user.getUserNick());
+    std::string RPL2 = sendMessage2(002, user, server, server.getServerName(), server.getVersion());
+    std::string RPL3 = sendMessage1(003, user, server, server.getCreationDate());
+    std::string RPL4 = sendMessage4(004, user, server, server.getServerName(), server.getVersion(), "userModesTBC", "channelModesTBC");
+
+    send(user.getUserFd(), RPL1.c_str(), RPL1.size(), 0);
+    send(user.getUserFd(), RPL2.c_str(), RPL2.size(), 0);
+    send(user.getUserFd(), RPL3.c_str(), RPL3.size(), 0);
+    send(user.getUserFd(), RPL4.c_str(), RPL4.size(), 0);
+}
 
 std::string    formatMessage(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4 ) {
 

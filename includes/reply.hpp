@@ -1,8 +1,8 @@
 # ifndef REPLY_HPP
 # define REPLY_HPP
 
-#include "User.hpp"
-#include "Server.hpp"
+#include "user/User.hpp"
+#include "server/Server.hpp"
 #include <sstream>
 #include <ostream>
 
@@ -111,12 +111,13 @@
 class Server;
 class User;
 
-std::string    formatMessage(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4 );
+std::string     formatMessage(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4 );
 
-std::string sendMessage(int code, User &user, Server &server);
-std::string sendMessage1(int code, User &user, Server &server, std::string str1);
-std::string sendMessage2(int code, User &user, Server &server, std::string str1, std::string str2);
-std::string sendMessage3(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3);
-std::string sendMessage4(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4);
+std::string     sendMessage(int code, User &user, Server &server);
+std::string     sendMessage1(int code, User &user, Server &server, std::string str1);
+std::string     sendMessage2(int code, User &user, Server &server, std::string str1, std::string str2);
+std::string     sendMessage3(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3);
+std::string     sendMessage4(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4);
 
+void            sendWelcomeMessages(User& user, Server &server);
 #endif

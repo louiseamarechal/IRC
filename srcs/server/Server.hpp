@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Server.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/01 15:48:44 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/02/08 16:54:43 by jbouyer          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 # ifndef SERVER_HPP
 # define SERVER_HPP
 
@@ -28,7 +16,7 @@
 #include <fcntl.h>
 #include <map>
 #include <vector>
-#include "User.hpp"
+#include "user/User.hpp"
 #include "commands.hpp"
 
 class User;
@@ -46,6 +34,7 @@ class Server
         std::string                 getVersion( void ) const;
         std::string                 getServerName( void ) const;
         std::string                 getPassword( void ) const;
+        std::string                 getCreationDate( void ) const;
         std::vector<std::string>    getNickList(void)   const;
         std::map<std::string, void (*)(std::string params, User &user)>    getCommandMap(void)   const;
 
@@ -66,6 +55,7 @@ class Server
         std::string                 _version;
         std::string                 _serverName; //JLA
         std::string                 _password;
+        std::string                 _creationDate;
         struct pollfd               _fds[200];
 
         std::map< int, User* >      _userMap;

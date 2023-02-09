@@ -1,0 +1,27 @@
+Reply :
+ - checker si il y a des RPL pour les commandes non set up
+ - ajouter server.getCreationDate()
+ - ajouter manuellement userModes, channelModes pour RPL004
+
+Commandes utilisees pour les RPL et ERR :
+
+    - NICK
+    - MOTD
+    - OPER
+    - PASS
+    - PING
+    - PONG
+    - QUIT
+    - USER
+    - WHO
+    - WHOIS
+    - WHOWAS
+
+    CHANNEL CMDS :
+    - JOIN
+    - LIST
+    - NAMES
+    - NOTICE
+    - PART
+    - PRIVMSG
+    - TOPIC

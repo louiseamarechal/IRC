@@ -1,41 +1,72 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/01/27 14:24:03 by jbouyer           #+#    #+#              #
-#    Updated: 2023/01/31 12:29:43 by lmarecha         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+#------------------------------------#
+#             COMPILATION            #
+#------------------------------------#
 
-NAME = ircserv
+NAME	=	ircserv
 
-FLAGS = -Wall -Wextra -Werror -std=c++98 -g
-SRC =	commands.cpp \
-		Server.cpp \
-		User.cpp \
-		Utils.cpp \
-		Reply.cpp \
-		main.cpp
+FLAGS	=	-Wall -Wextra -Werror -std=c++98 -g
 
-HEADER = commands.hpp Server.hpp User.hpp Utils.hpp Reply.hpp
-OBJ	=	${SRC:.cpp=.o}
+
+#------------------------------------#
+#                SOURCES             #
+#------------------------------------#
+
+SRCDIR		=	srcs/
+
+SRCFILE		=	main.cpp \
+				utils.cpp \
+				reply.cpp \
+				commands/NICK.cpp \
+				commands/USER.cpp
+		
+CLASSFILE	=	server/Server.cpp \
+				user/User.cpp
+
+SRC			=	$(addprefix $(SRCDIR), $(SRCFILE)) $(addprefix $(SRCDIR), $(CLASSFILE))
+
+
+#------------------------------------#
+#              INCLUDES              #
+#------------------------------------#
+
+INCLDIR			=	includes/
+
+INCLSRCFILES 	=	commands.hpp \
+					reply.hpp \
+					utils.hpp 
+
+INCLCLASSFILES	=	server/Server.hpp \
+					user/User.hpp
+
+INCLUDES		=	$(addprefix $(INCLDIR), $(INCLSRCFILES)) $(addprefix $(SRCDIR), $(INCLCLASSFILES))
+
+
+#------------------------------------#
+#               OBJECTS              #
+#------------------------------------#
+
+OBJDIR	=	objs/
+OBJ		=	$(subst $(SRCDIR),$(OBJDIR),$(SRC:.cpp=.o))
+
+
+#------------------------------------#
+#               RULES                #
+#------------------------------------#
 
 all: $(NAME)
 
 $(NAME):$(OBJ)
 		c++ -o $(NAME) $(OBJ) $(FLAGS)
 
-%.o : %.cpp $(HEADER)
-		c++ $(FLAGS) -c $< -o $@
+$(OBJDIR)%.o: $(SRCDIR)%.cpp $(INCLUDES) 
+		@mkdir -p `dirname $@`
+		c++ $(FLAGS) -c $< -o $@ -I $(INCLDIR) -I $(SRCDIR)
 
 clean :
-		rm -rf $(OBJ)
+		rm -rf $(OBJDIR)
 
 fclean :
-		rm -rf $(NAME) $(OBJ)
+		rm -rf $(NAME) $(OBJDIR)
 
 re : fclean
 	make all

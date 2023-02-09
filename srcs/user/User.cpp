@@ -1,5 +1,5 @@
-#include "User.hpp"
-#include "Server.hpp"
+#include "user/User.hpp"
+#include "server/Server.hpp"
 #include <string.h>
 
 /*************************************************************************************/
@@ -48,7 +48,7 @@ std::string User::getUserLoggin( void ) const { return ( _userLoggin ); }
 
 std::string User::getUserFullName( void ) const { return( _userFullName ); }
 
-bool        User::getIsUserRegistered() const {return (_isUserRegistered);}
+bool        User::getIsUserRegistered() const { return (_isUserRegistered); }
 
 bool        User::getIsNickSet() const{return(_isNickSet);}
 
@@ -68,7 +68,21 @@ void    User::setUserFullName( std::string fullName ) { _userFullName = fullName
 
 void    User::setIsUserRegistered(bool value) {_isUserRegistered = value;}
 
-void    User::setIsNickSet(bool value) {_isNickSet = value;}
+void    User::setIsNickSet(bool value) {
+    
+    _isNickSet = value;
+
+    if (_isNickSet == true && _isUserSet == true)
+        setIsUserRegistered(true);
+}
+
+void    User::setIsUserSet( bool value ) { 
+    
+    _isUserSet = value;
+    
+    if (_isNickSet == true && _isUserSet == true)
+        setIsUserRegistered(true);    
+}
 
 /*************************************************************************************/
 /*                              FUNCTIONS                                            */

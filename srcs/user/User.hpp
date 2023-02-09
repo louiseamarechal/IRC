@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   User.hpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/01 15:48:57 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/02/01 17:05:51 by jbouyer          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 # ifndef USER_HPP
 # define USER_HPP
 
@@ -28,7 +16,7 @@
 #include <fcntl.h>
 #include <vector>
 #include <map>
-#include "Server.hpp"
+#include "server/Server.hpp"
 #include "commands.hpp"
 
 class Server;
@@ -55,6 +43,7 @@ class User
         void                                    setUserFullName( std::string fullName );
         void                                    setIsNickSet(bool value);
         void                                    setIsUserRegistered(bool value);
+        void                                    setIsUserSet( bool value );
 
         void                                    handleCommand(std::string buffer);
 
