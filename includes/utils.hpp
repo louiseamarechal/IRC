@@ -1,7 +1,7 @@
 # ifndef UTILS_HPP
 # define UTILS_HPP
 
-#include "Server.hpp"
+#include "server/Server.hpp"
 #include <iostream>
 #include <sys/socket.h>
 #include <netinet/in.h>
