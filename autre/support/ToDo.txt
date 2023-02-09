@@ -6,13 +6,15 @@ Reply :
 Commandes utilisees pour les RPL et ERR :
 
     - NICK - ajouter RPL + verifier que ok si nick deja pris + checker RPL sur IRSSI quand Server sera ok
-    - MOTD
+    - MOTD - ok -> regler params vide sur Handle command + irssi
     - OPER
-    - PASS
-    - PING
     - PONG
+    - PING
     - QUIT
     - USER - ok -> verifier les histoires de MODES (do we use it) + checker RPL sur IRSSI quand Server sera ok
+
+    On les fait ?
+    - PASS
     - WHO
     - WHOIS
     - WHOWAS
