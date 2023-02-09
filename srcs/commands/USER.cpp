@@ -47,7 +47,10 @@ void    setUser(std::string params, User &user)
     user.setIsUserSet(true);
     
     if (user.getIsUserRegistered() == true)
+    {
         sendWelcomeMessages(user, *(user.getServer()));
+        motd("", user);
+    }
     
     // mode = splittedParams[1];
     // unused = splittedParams[2];

@@ -10,6 +10,7 @@
 #include <sys/types.h>
 #include <algorithm>
 #include <cstddef>
+#include <fstream>
 #include "user/User.hpp"
 #include "server/Server.hpp"
 #include "reply.hpp"
