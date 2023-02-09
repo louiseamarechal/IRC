@@ -10,6 +10,7 @@
 #include <sys/types.h>
 #include <algorithm>
 #include <cstddef>
+#include <fstream>
 #include "user/User.hpp"
 #include "server/Server.hpp"
 #include "reply.hpp"
@@ -24,5 +25,6 @@ void                    joinchannel(std::string join);
 void                    checkPass(std::string password);
 void                    sendprivmsg(std::string message);
 bool                    isNickformatok(std::string nick);
+void                    motd(std::string params, User &user);
 
 #endif

@@ -12,7 +12,7 @@ Commandes utilisees pour les RPL et ERR :
     - PING
     - QUIT
     - USER - ok -> verifier les histoires de MODES (do we use it) + checker RPL sur IRSSI quand Server sera ok
-    
+
     On les fait ?
     - PASS
     - WHO
