@@ -61,7 +61,7 @@ class Server
         std::map< int, User* >      _userMap;
         int                         _nbUsers;
         int                         _maxUsers;
-        std::vector< Channel >      _channels;
+        // std::vector< Channel >      _channels;
 
         //Commands
         std::map<std::string, void (*)(std::string params, User &user)> _commandMap;
