@@ -47,7 +47,7 @@ class Server
         sockaddr_in                 bindSocket( int serverSocket );
         void                        removeUser( int i );
         void                        addUser( int fd);
-        void                        acceptconnexion(int serverFd);
+        int                         acceptconnexion(int server_fd);
 
     private :
              
