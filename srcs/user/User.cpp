@@ -118,6 +118,7 @@ void User::handleCommand(std::string buffer)
     std::string         tmp;
     size_t              pos = 0;
     size_t              endlinepos;
+    std::string         command;
 
     std::cout << "Handle Command -- Buffer = " << buffer << std::endl;
    
@@ -129,7 +130,7 @@ void User::handleCommand(std::string buffer)
         pos = buffer.find(whitespace);// retourne premier espace trouve
         endlinepos = buffer.find("\n");// retourne premier \n trouve
         s1 = buffer.substr(0, pos); // copie la commande
-        
+       
         if (pos == std::string::npos)
         {
             s1.clear();
@@ -148,9 +149,11 @@ void User::handleCommand(std::string buffer)
             }
             pos = s2.size();
         }
-        std::cout << "Handle Command -- Command = " << s1 << std::endl;
+        command = toUpper(s1);
+        std::cout << "Handle Command -- s1 = " << s1 << std::endl;
+        std::cout << "Handle Command -- Command = " << command << std::endl;
         std::cout << "Handle Command -- Params = " << s2 <<std::endl;
-        if (getServer()->getCommandMap().count(s1) > 0)
-            getServer()->getCommandMap()[s1](s2, *this);
+        if (getServer()->getCommandMap().count(command) > 0)
+            getServer()->getCommandMap()[command](s2, *this);
     }
 }
