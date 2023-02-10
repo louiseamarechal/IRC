@@ -26,6 +26,7 @@ Server::Server( void ) : _port(0),
     
     _commandMap["NICK"] = &setNick;
     _commandMap["USER"] = &setUser;
+    _commandMap["USERHOST"] = &setUser;
     _commandMap["MOTD"] = &motd;
     // _commandMap['JOIN'] = &joinChannel;
     // _commandMap['PASS'] = &checkPass;
@@ -232,6 +233,7 @@ int    Server::runServer( void )
                 client_fd = acceptconnexion(server_fd);
                 add_fd_to_poll(epoll_fd, client_fd); //on ajoute le fd du nouvequ client a la liste de poll;
             }
+            std::memset(buffer, 0, sizeof(buffer));
 			nBytes = recv(events[i].data.fd, buffer, sizeof(buffer), 0);
             std::cout << "nBytes  = " << nBytes << std::endl;
             if (nBytes <= 0)
@@ -244,7 +246,6 @@ int    Server::runServer( void )
                 buffer[nBytes] = '\0';
                 std::cout << "Buffer Server = " << buffer << std::endl;
                 _userMap[events[i].data.fd]->handleCommand(buffer);
-                // memset(buffer, 0, sizeof(buffer));
             }
 		}
 	}
