@@ -27,3 +27,21 @@ Commandes utilisees pour les RPL et ERR :
     - PART
     - PRIVMSG
     - TOPIC
+
+
+Jacinthe :
+    - gerer les doublons dans NICK
+    - interdire NICK sans params
+
+LouiseA :
+    - gerer le pb avec recv (cf Alex)
+
+TBC :
+    - creer Classe channel
+    - faire les commandes restantes
+    - revoir User -> est-ce qu'on fait une structure pour les donnees ?
+
+LUNDI APREM - REUNION AU SOMMET 14h -- TBC
+    TOPIC : CHANNEL
+
+
