@@ -118,28 +118,42 @@ void User::handleCommand(std::string buffer)
     std::string         tmp;
     size_t              pos = 0;
     size_t              endlinepos;
+    std::string         command;
 
     std::cout << "Handle Command -- Buffer = " << buffer << std::endl;
    
-
-    while(buffer.size() != 0)
-    { 
-        std::cout << "Buffer size = " << buffer.size() << std::endl;
+    std::cout << "Buffer size = " << buffer.size() << std::endl;
     std::cout << "pos  = " << pos << std::endl;
+
+    while (buffer.size() != 0)
+    {
         pos = buffer.find(whitespace);// retourne premier espace trouve
         endlinepos = buffer.find("\n");// retourne premier \n trouve
         s1 = buffer.substr(0, pos); // copie la commande
-        pos++;
-        s2 = buffer.substr(pos, endlinepos - pos - 1);
-        if (endlinepos != buffer.size())
-        {  
-            tmp = buffer.substr(endlinepos + 1, buffer.size());
-            buffer = tmp;
+       
+        if (pos == std::string::npos)
+        {
+            s1.clear();
+            s1 = buffer.substr(0, buffer.size() - 2); // remove \r\n
+            s2 = "";
+            buffer.clear(); // on a que une commande et pas de params donc on met fin a la boucle
         }
-        pos = s2.size();
-        std::cout << "Handle Command -- Command = " << s1 << std::endl;
+        else
+        {
+            pos++;
+            s2 = buffer.substr(pos, endlinepos - pos - 1);
+            if (endlinepos != buffer.size())
+            {  
+                tmp = buffer.substr(endlinepos + 1, buffer.size());
+                buffer = tmp;
+            }
+            pos = s2.size();
+        }
+        command = toUpper(s1);
+        std::cout << "Handle Command -- s1 = " << s1 << std::endl;
+        std::cout << "Handle Command -- Command = " << command << std::endl;
         std::cout << "Handle Command -- Params = " << s2 <<std::endl;
-        if (getServer()->getCommandMap().count(s1) > 0)
-            getServer()->getCommandMap()[s1](s2, *this);
+        if (getServer()->getCommandMap().count(command) > 0)
+            getServer()->getCommandMap()[command](s2, *this);
     }
 }

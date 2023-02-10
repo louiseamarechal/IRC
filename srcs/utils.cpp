@@ -62,3 +62,19 @@ std::vector<std::string> splitString( std::string params ) {
     }
     return (splittedParams);
 }
+
+std::string toUpper( std::string str ) {
+
+    std::string::iterator   it;
+    std::string             upperCaseStr;
+
+    if ( str.empty() )
+        return (str);
+    
+    for (it = str.begin(); it != str.end(); it++)
+        upperCaseStr += toupper(*it);
+    
+    std::cout << "Upper case version = " << upperCaseStr << std::endl;
+
+    return (upperCaseStr);
+}

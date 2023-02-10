@@ -41,9 +41,9 @@
 /* 366 */ # define RPL_ENDOFNAMES(channel) (channel + " :End of NAMES list \r\n") // (NAMES)
 /* 369 */ # define RPL_ENDOFWHOWAS(nick) (nick + " :End of WHOWAS") // (WHOWAS)
 
-/* 372 */ # define RPL_ENDOFMOTD(text) (":- " + text + "\r\n") // (MOTD)
+/* 372 */ # define RPL_MOTD(text) (":- " + text + "\r\n") // (MOTD)
 /* 375 */ # define RPL_MOTDSTART(server) (":- " + server + " Message of the day - \r\n") // (MOTD)
-/* 376 */ # define RPL_MOTD() (":End of MOTD command") // (MOTD)
+/* 376 */ # define RPL_ENDOFMOTD() (":End of MOTD command") // (MOTD)
 
 /* 381 */ # define RPL_YOUREOPER() (":You are now an IRC operator \r\n") // (OPER)
 /* 392 */ # define RPL_USERSSTART() (":UserID Terminal Host \r\n") // (USERS)
@@ -118,6 +118,7 @@ std::string     sendMessage1(int code, User &user, Server &server, std::string s
 std::string     sendMessage2(int code, User &user, Server &server, std::string str1, std::string str2);
 std::string     sendMessage3(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3);
 std::string     sendMessage4(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4);
-
+std::string     addPrefixToMotd(std::string text, std::string prefix);
 void            sendWelcomeMessages(User& user, Server &server);
+
 #endif

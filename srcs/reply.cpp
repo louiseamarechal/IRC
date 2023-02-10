@@ -1,5 +1,22 @@
 #include "reply.hpp"
 
+std::string     addPrefixToMotd(std::string text, std::string prefix) {
+    
+    std::string             newText;
+    std::string::iterator   it;
+
+    prefix += ":- ";
+
+    for (it = text.begin(); it != text.end(); it++)
+    {
+        newText += *it;
+        if (*it == '\n')
+            newText += prefix;
+    }
+
+    return (newText);
+}
+
 std::string     sendMessage(int code, User &user, Server &server) {
     return (formatMessage(code, user, server, "", "", "", ""));
 }
@@ -109,13 +126,16 @@ std::string    formatMessage(int code, User &user, Server &server, std::string s
             return (prefix + RPL_ENDOFWHOWAS(str1));
             // return (prefix + RPL_ENDOFWHOWAS(nick));
         case 372:
-            return (prefix + RPL_ENDOFMOTD(str1));
+        {
+            std::string texte = addPrefixToMotd(str1, prefix);
+            return (prefix + RPL_MOTD(texte));
+        }
             // return (prefix + RPL_ENDOFMOTD(text));
         case 375:
             return (prefix + RPL_MOTDSTART(str1));
             // return (prefix + RPL_MOTDSTART(server));
         case 376:
-            return (prefix + RPL_MOTD());
+            return (prefix + RPL_ENDOFMOTD());
         case 381:
             return (prefix + RPL_YOUREOPER());
         case 392:
