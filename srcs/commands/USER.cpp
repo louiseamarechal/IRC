@@ -18,11 +18,8 @@ void    setUser(std::string params, User &user)
     
     formattedParams = removeConsecutiveWhitespace(params);
     splittedParams = splitString(formattedParams);
-     
-    if (splittedParams.size() > 4 )
-        return ;
-        
-    if (splittedParams.size() < 4 || splittedParams[3].size() < 2)
+
+    if (splittedParams.size() < 4 || (splittedParams[3].size() < 2 && splittedParams.size() == 4))
     {
         errorMessage = sendMessage1(461, user, *(user.getServer()), "USER");
         send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
