@@ -41,6 +41,8 @@ class Server
         void                        setPort( int port);
         void                        setPassword( std::string password );
         void                        setNbUsers( void );
+        void                        setNickList(std::string nick);
+        void                        removeNickList(std::string oldNick);
         
         int                         runServer( void );
         int                         createSocket( void );
