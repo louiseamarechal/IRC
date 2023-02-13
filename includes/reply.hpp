@@ -76,7 +76,7 @@
 /* 424 */ # define ERR_FILEERROR(file_operation, file) (":File error doing " + file_operation + " on " + file + "\r\n") // (USERS)
 
 /* 431 */ # define ERR_NONICKNAMEGIVEN() (":No nickname given \r\n") // (NICK, WHOIS, WHOWAS)
-/* 432 */ # define ERR_ERRONEUSNICKNAME(nick) (nick + " :Erroneous nickname \r\n") // (NICK)
+/* 432 */ # define ERR_ERRONEUSNICKNAME(nick) (nick + " :Erroneous nickname\r\n") // (NICK)
 /* 433 */ # define ERR_NICKNAMEINUSE(nick) (nick + " :Nickname is already in use \r\n") // (NICK)
 
 /* 436 */ //# define ERR_NICKCOLLISION do we use ? // (NICK)
