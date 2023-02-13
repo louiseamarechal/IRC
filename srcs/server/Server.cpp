@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include <algorithm>
 #include "user/User.hpp"
 #include "../includes/utils.hpp"
 #include <sys/epoll.h> // for epoll_create1(), epoll_ctl(), struct epoll_event
@@ -63,6 +64,22 @@ std::map<std::string, void (*)(std::string params, User &user)>    Server::getCo
 void    Server::setPort( int port ) { _port = port; }
 
 void    Server::setPassword( std::string password ) { _password = password; }
+
+void    Server::setNickList(std::string nick)
+{
+    _nickList.push_back(nick);
+}
+
+void   Server::removeNickList(std::string oldNick)
+{
+    std::vector<std::string>::iterator it = std::find(_nickList.begin(), _nickList.end(), oldNick);
+    if ( it != _nickList.end())
+         _nickList.erase(it);
+    else 
+    {
+        std::cout<<" remove old nickname failed" << std::endl;
+    }
+}
 
 /*************************************************************************************/
 /*                              FUNCTIONS                                            */
