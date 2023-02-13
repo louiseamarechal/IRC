@@ -200,10 +200,12 @@ static int   init_epoll()
 
 int    Server::runServer( void ) 
 {
-    char        buffer[1024];
-    int         nBytes;
-    int         event_count;
-    int         client_fd;
+    char                        buffer[1024];
+    int                         nBytes;
+    int                         event_count;
+    int                         client_fd;
+    std::string                 data;
+    std::vector<std::string>    splittedBuffer;
 
     int         server_fd = createSocket();
     sockaddr_in serverAddress = bindSocket( server_fd ); //on init le server.
@@ -235,6 +237,7 @@ int    Server::runServer( void )
             }
             std::memset(buffer, 0, sizeof(buffer));
 			nBytes = recv(events[i].data.fd, buffer, sizeof(buffer), 0);
+            std::cout << "Buffer Server = " << buffer << std::endl;
             std::cout << "nBytes  = " << nBytes << std::endl;
             if (nBytes <= 0)
             {
@@ -243,9 +246,19 @@ int    Server::runServer( void )
             }
             if (nBytes > 0)
             {
-                buffer[nBytes] = '\0';
-                std::cout << "Buffer Server = " << buffer << std::endl;
-                _userMap[events[i].data.fd]->handleCommand(buffer);
+                // buffer[nBytes] = '\0';
+                data.append(buffer, nBytes); // j'append les buffer a data (poentiellement des reliquas non recus au tour d'avant)
+                if (data.find("\r\n") == std::string::npos) // si je trouve pas de \r\n dans le buffer, je quitte la condition pour pouvoir l'append au tour d'apres
+                    break;
+                std::cout << "Data Server (after append()) = " << data << std::endl;
+                splittedBuffer = splitStringSep(data, "\r\n");
+                data.clear();
+                for (size_t j = 0; j < splittedBuffer.size(); j++)
+                {
+                    std::cout << "Command send to Handle Commande -- Server : " << splittedBuffer[j] << std::endl;
+                    _userMap[events[i].data.fd]->handleCommand(splittedBuffer[j]);
+                }
+                splittedBuffer.clear();
             }
 		}
 	}

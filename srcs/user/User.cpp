@@ -177,36 +177,62 @@ void    User::setIsUserSet( bool value ) {
 //     buffer.clear();
 // }
 
+// void User::handleCommand(std::string buffer)
+// {
+//     std::vector<std::string>    splittedBuffer;
+//     std::string                 whitespace = " ";
+//     std::string                 command;
+//     std::string                 params;
+//     size_t                      position;
+
+//     splittedBuffer = splitStringSep(buffer, "\r\n");
+//     if (buffer.find("\r\n") == std::string::npos)
+//         std::cout << "NO LINE RETURN ETC..." << std::endl;
+//     for (size_t i = 0; i < splittedBuffer.size(); i++)
+//     {
+//         position = splittedBuffer[i].find(whitespace);
+
+//         if (position == std::string::npos)
+//         {
+//             command = toUpper(splittedBuffer[i].substr(0, splittedBuffer[i].size()));
+//             params = "";
+//         }
+//         else
+//         {
+//             command = toUpper(splittedBuffer[i].substr(0, position));
+//             position++;
+//             params = splittedBuffer[i].substr(position, splittedBuffer[i].size() - position);
+//         }
+        
+//         std::cout << "Handle Command -- Command = " << command << std::endl;
+//         std::cout << "Handle Command -- Params = " << params <<std::endl;
+//         if (getServer()->getCommandMap().count(command) > 0)
+//             getServer()->getCommandMap()[command](params, *this);
+//     }
+// }
 void User::handleCommand(std::string buffer)
 {
-    std::vector<std::string>    splittedBuffer;
     std::string                 whitespace = " ";
     std::string                 command;
     std::string                 params;
     size_t                      position;
 
-    splittedBuffer = splitStringSep(buffer, "\r\n");
-    if (buffer.find("\r\n") == std::string::npos)
-        std::cout << "NO LINE RETURN ETC..." << std::endl;
-    for (size_t i = 0; i < splittedBuffer.size(); i++)
-    {
-        position = splittedBuffer[i].find(whitespace);
+    position = buffer.find(whitespace);
 
-        if (position == std::string::npos)
-        {
-            command = toUpper(splittedBuffer[i].substr(0, splittedBuffer[i].size()));
-            params = "";
-        }
-        else
-        {
-            command = toUpper(splittedBuffer[i].substr(0, position));
-            position++;
-            params = splittedBuffer[i].substr(position, splittedBuffer[i].size() - position);
-        }
-        
-        std::cout << "Handle Command -- Command = " << command << std::endl;
-        std::cout << "Handle Command -- Params = " << params <<std::endl;
-        if (getServer()->getCommandMap().count(command) > 0)
-            getServer()->getCommandMap()[command](params, *this);
+    if (position == std::string::npos)
+    {
+        command = toUpper(buffer.substr(0, buffer.size()));
+        params = "";
     }
+    else
+    {
+        command = toUpper(buffer.substr(0, position));
+        position++;
+        params = buffer.substr(position, buffer.size() - position);
+    }
+    
+    std::cout << "Handle Command -- Command = " << command << std::endl;
+    std::cout << "Handle Command -- Params = " << params <<std::endl;
+    if (getServer()->getCommandMap().count(command) > 0)
+        getServer()->getCommandMap()[command](params, *this);
 }
