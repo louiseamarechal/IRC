@@ -21,6 +21,7 @@
 #include "channel/Channel.hpp"
 
 class User;
+class Channel;
 
 class Server 
 {
@@ -51,6 +52,8 @@ class Server
         void                        removeUser( int i );
         void                        addUser( int fd);
         int                         acceptconnexion(int server_fd);
+        void                        setChannels( Channel &channel );
+        bool                        channelNameAlreadyUsed( std::string channelName );
 
     private :
              
@@ -64,7 +67,8 @@ class Server
         std::map< int, User* >      _userMap;
         int                         _nbUsers;
         int                         _maxUsers;
-        // std::vector< Channel >      _channels;
+        std::vector< Channel& >      _channels;
+        std::vector< std::string >  _channelNames;
 
         //Commands
         std::map<std::string, void (*)(std::string params, User &user)> _commandMap;

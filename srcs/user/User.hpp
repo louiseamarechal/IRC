@@ -17,11 +17,12 @@
 #include <vector>
 #include <map>
 #include "server/Server.hpp"
+#include "channel/Channel.hpp"
 #include "commands.hpp"
 
 class Server;
+class Channel;
 
-class Command;
 class User 
 {
     public :
@@ -56,6 +57,7 @@ class User
         bool                                    _isUserSet;
         bool                                    _isUserRegistered;
         Server*                                 _server;
+        Channel*                                _channelName;
 };
 
 #endif

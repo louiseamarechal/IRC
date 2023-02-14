@@ -29,7 +29,7 @@ Server::Server( void ) : _port(0),
     _commandMap["USER"] = &setUser;
     _commandMap["USERHOST"] = &setUser;
     _commandMap["MOTD"] = &motd;
-    // _commandMap['JOIN'] = &joinChannel;
+    _commandMap["JOIN"] = &joinChannel;
     // _commandMap['PASS'] = &checkPass;
     // _commandMap['PRIVMSG'] = &sendPrivMsg;
     return ;
@@ -81,10 +81,32 @@ void   Server::removeNickList(std::string oldNick)
     }
 }
 
+void    Server::setChannels( Channel &channel )
+{
+    if (!channelNameAlreadyUsed(channel.getChannelName()))
+    {
+        _channelNames.push_back(channel.getChannelName());
+        _channels.push_back(channel);
+    }
+}
+
 /*************************************************************************************/
 /*                              FUNCTIONS                                            */
 /*************************************************************************************/
- 
+
+bool    Server::channelNameAlreadyUsed( std::string channelName )
+{
+    std::vector<std::string>::iterator   it;
+
+    for (it = _channelNames.begin(); it != _channelNames.end(); it++)
+    {
+        if (*it == channelName)
+            return (true);
+    }
+
+    return (false);
+}
+
 void    Server::removeUser( int i ) { 
     //ICI FAIRE BLOC TRY AND CATCH pourjeter une exception si on trouve pas le fd dans la mapde user utiliser Map.at() pour etre sure qu ca existe et que ca cree pas un truc random u'on supprime apres.
         delete _userMap[_fds[i].fd];
@@ -281,4 +303,7 @@ int    Server::runServer( void )
 	}
     return (0);
 }
+
+
+
 	
