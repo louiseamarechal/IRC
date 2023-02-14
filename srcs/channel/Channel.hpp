@@ -3,6 +3,7 @@
 
 #include "user/User.hpp"
 #include "server/Server.hpp"
+#include <vector>
 
 class Server;
 class User;
@@ -10,17 +11,21 @@ class User;
 class Channel {
 
     public :
-        Channel( std::string name, Server* server, User* channelCreator );
+        Channel( std::string name, Server& server, User& channelCreator );
         ~Channel( void );
+
+        std::string    getChannelName( void ) const;
 
     private :
         // std::string                     _channelShortName;
         std::string                     _channelName;
-        std::map<std::string, User *>   _channelMembers; // est ce que Map est le plus approprie ? -> acceder a un User via son nickname
-        Server*                         _channelServer;
-        User*                           _channelOperator;
-        User*                           _channelCreator;
+        std::vector<User&>              _channelMembers; // est ce que Map est le plus approprie ? -> acceder a un User via son nickname
+        Server&                         _server;
+        User&                           _channelOperator;
+        User&                           _channelCreator;
 
 };
+
+bool    channelNameIsOk( std::string name );
 
 #endif
