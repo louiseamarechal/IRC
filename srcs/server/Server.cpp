@@ -1,4 +1,5 @@
 #include "Server.hpp"
+#include <algorithm>
 #include "user/User.hpp"
 #include "../includes/utils.hpp"
 #include <sys/epoll.h> // for epoll_create1(), epoll_ctl(), struct epoll_event
@@ -26,6 +27,7 @@ Server::Server( void ) : _port(0),
     
     _commandMap["NICK"] = &setNick;
     _commandMap["USER"] = &setUser;
+    _commandMap["USERHOST"] = &setUser;
     _commandMap["MOTD"] = &motd;
     // _commandMap['JOIN'] = &joinChannel;
     // _commandMap['PASS'] = &checkPass;
@@ -62,6 +64,22 @@ std::map<std::string, void (*)(std::string params, User &user)>    Server::getCo
 void    Server::setPort( int port ) { _port = port; }
 
 void    Server::setPassword( std::string password ) { _password = password; }
+
+void    Server::setNickList(std::string nick)
+{
+    _nickList.push_back(nick);
+}
+
+void   Server::removeNickList(std::string oldNick)
+{
+    std::vector<std::string>::iterator it = std::find(_nickList.begin(), _nickList.end(), oldNick);
+    if ( it != _nickList.end())
+         _nickList.erase(it);
+    else 
+    {
+        std::cout<<" remove old nickname failed" << std::endl;
+    }
+}
 
 /*************************************************************************************/
 /*                              FUNCTIONS                                            */
@@ -199,10 +217,12 @@ static int   init_epoll()
 
 int    Server::runServer( void ) 
 {
-    char        buffer[1024];
-    int         nBytes;
-    int         event_count;
-    int         client_fd;
+    char                        buffer[1024];
+    int                         nBytes;
+    int                         event_count;
+    int                         client_fd;
+    std::string                 data;
+    std::vector<std::string>    splittedBuffer;
 
     int         server_fd = createSocket();
     sockaddr_in serverAddress = bindSocket( server_fd ); //on init le server.
@@ -232,7 +252,9 @@ int    Server::runServer( void )
                 client_fd = acceptconnexion(server_fd);
                 add_fd_to_poll(epoll_fd, client_fd); //on ajoute le fd du nouvequ client a la liste de poll;
             }
+            std::memset(buffer, 0, sizeof(buffer));
 			nBytes = recv(events[i].data.fd, buffer, sizeof(buffer), 0);
+            std::cout << "Buffer Server = " << buffer << std::endl;
             std::cout << "nBytes  = " << nBytes << std::endl;
             if (nBytes <= 0)
             {
@@ -241,10 +263,19 @@ int    Server::runServer( void )
             }
             if (nBytes > 0)
             {
-                buffer[nBytes] = '\0';
-                std::cout << "Buffer Server = " << buffer << std::endl;
-                _userMap[events[i].data.fd]->handleCommand(buffer);
-                // memset(buffer, 0, sizeof(buffer));
+                // buffer[nBytes] = '\0';
+                data.append(buffer, nBytes); // j'append les buffer a data (poentiellement des reliquas non recus au tour d'avant)
+                if (data.find("\r\n") == std::string::npos) // si je trouve pas de \r\n dans le buffer, je quitte la condition pour pouvoir l'append au tour d'apres
+                    break;
+                std::cout << "Data Server (after append()) = " << data << std::endl;
+                splittedBuffer = splitStringSep(data, "\r\n");
+                data.clear();
+                for (size_t j = 0; j < splittedBuffer.size(); j++)
+                {
+                    std::cout << "Command send to Handle Commande -- Server : " << splittedBuffer[j] << std::endl;
+                    _userMap[events[i].data.fd]->handleCommand(splittedBuffer[j]);
+                }
+                splittedBuffer.clear();
             }
 		}
 	}

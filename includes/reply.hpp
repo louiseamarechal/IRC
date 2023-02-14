@@ -43,7 +43,7 @@
 
 /* 372 */ # define RPL_MOTD(text) (":- " + text + "\r\n") // (MOTD)
 /* 375 */ # define RPL_MOTDSTART(server) (":- " + server + " Message of the day - \r\n") // (MOTD)
-/* 376 */ # define RPL_ENDOFMOTD() (":End of MOTD command") // (MOTD)
+/* 376 */ # define RPL_ENDOFMOTD() (":End of MOTD command\r\n") // (MOTD)
 
 /* 381 */ # define RPL_YOUREOPER() (":You are now an IRC operator \r\n") // (OPER)
 /* 392 */ # define RPL_USERSSTART() (":UserID Terminal Host \r\n") // (USERS)
@@ -76,7 +76,7 @@
 /* 424 */ # define ERR_FILEERROR(file_operation, file) (":File error doing " + file_operation + " on " + file + "\r\n") // (USERS)
 
 /* 431 */ # define ERR_NONICKNAMEGIVEN() (":No nickname given \r\n") // (NICK, WHOIS, WHOWAS)
-/* 432 */ # define ERR_ERRONEUSNICKNAME(nick) (nick + " :Erroneous nickname \r\n") // (NICK)
+/* 432 */ # define ERR_ERRONEUSNICKNAME(nick) (nick + " :Erroneous nickname\r\n") // (NICK)
 /* 433 */ # define ERR_NICKNAMEINUSE(nick) (nick + " :Nickname is already in use \r\n") // (NICK)
 
 /* 436 */ //# define ERR_NICKCOLLISION do we use ? // (NICK)
@@ -90,7 +90,7 @@
 /* 451 */ # define ERR_NOTREGISTERED() (":You have not registered \r\n") // (OTHER)
 
 /* 461 */ # define ERR_NEEDMOREPARAMS(command) (command + " :Not enough parameters \r\n") // (USER, JOIN, PART, TOPIC, INVITE, OPER, PASS)
-/* 462 */ # define ERR_ALREADYREGISTRED() (":Unauthorized command (already registered \r\n") // (USER, PASS)
+/* 462 */ # define ERR_ALREADYREGISTRED() (":Unauthorized command (already registered) \r\n") // (USER, PASS)
 
 /* 464 */ # define ERR_PASSWDMISMATCH() (":Password incorrect \r\n") // (OPER)
 

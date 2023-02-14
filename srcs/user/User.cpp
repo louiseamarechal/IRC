@@ -72,16 +72,28 @@ void    User::setIsNickSet(bool value) {
     
     _isNickSet = value;
 
+    if (value == true)
+        std::cout << "NICK is now set" << std::endl;
+
     if (_isNickSet == true && _isUserSet == true)
+    {
         setIsUserRegistered(true);
+        std::cout << "User has been set to status : REGISTERED " << std::endl;
+    }
 }
 
 void    User::setIsUserSet( bool value ) { 
     
     _isUserSet = value;
     
+    if (value == true)
+        std::cout << "USER is now set" << std::endl;
+
     if (_isNickSet == true && _isUserSet == true)
+    {
         setIsUserRegistered(true);    
+        std::cout << "User status has been set to : REGISTERED " << std::endl;
+    }
 }
 
 /*************************************************************************************/
@@ -110,50 +122,117 @@ void    User::setIsUserSet( bool value ) {
 //         getServer()->getCommandMap()[s1](s2, *this);
 // }
 
+// void User::handleCommand(std::string buffer)
+// {
+//     std::string         whitespace = " ";
+//     std::string         s1;
+//     std::string         s2;
+//     std::string         tmp;
+//     size_t              pos = 0;
+//     size_t              endlinepos;
+//     std::string         command;
+
+//     std::cout << "Handle Command -- Buffer = " << buffer << std::endl;
+   
+//     std::cout << "Buffer size = " << buffer.size() << std::endl;
+//     std::cout << "pos  = " << pos << std::endl;
+
+//     while (buffer.size() != 0)
+//     {
+//         std::cout << "JE COMMENCE LA BOUCLE" << std::endl;
+//         pos = buffer.find(whitespace);// retourne premier espace trouve
+//         endlinepos = buffer.find("\n");// retourne premier \n trouve
+//         s1 = buffer.substr(0, pos); // copie la commande
+
+//         if (pos == std::string::npos)
+//         {
+//             s1.clear();
+//             if (buffer.find("\r") != std::string::npos) // si il y a un \r -> received from irssi
+//                 s1 = buffer.substr(0, buffer.size() - 2); // remove \r\n
+//             else // received from nc
+//                 s1 = buffer.substr(0, buffer.size() - 1); // pas de \r a remove, seulement un \n
+//             s2 = "";
+//             buffer.clear(); // on a que une commande et pas de params donc on met fin a la boucle
+//         }
+//         else
+//         {
+//             pos++;
+//             s2 = buffer.substr(pos, endlinepos - pos - 1);
+//             if (endlinepos != buffer.size())
+//             {  
+//                 tmp = buffer.substr(endlinepos + 1, buffer.size());
+//                 buffer = tmp;
+//             }
+//             pos = s2.size();
+//         }
+//         command = toUpper(s1);
+//         std::cout << "Handle Command -- s1 = " << s1 << std::endl;
+//         std::cout << "Handle Command -- Command = " << command << std::endl;
+//         std::cout << "Handle Command -- Params = " << s2 <<std::endl;
+//         if (getServer()->getCommandMap().count(command) > 0)
+//             getServer()->getCommandMap()[command](s2, *this);
+//         buffer.clear();
+//         sleep(1);
+//     }
+//     buffer.clear();
+// }
+
+// void User::handleCommand(std::string buffer)
+// {
+//     std::vector<std::string>    splittedBuffer;
+//     std::string                 whitespace = " ";
+//     std::string                 command;
+//     std::string                 params;
+//     size_t                      position;
+
+//     splittedBuffer = splitStringSep(buffer, "\r\n");
+//     if (buffer.find("\r\n") == std::string::npos)
+//         std::cout << "NO LINE RETURN ETC..." << std::endl;
+//     for (size_t i = 0; i < splittedBuffer.size(); i++)
+//     {
+//         position = splittedBuffer[i].find(whitespace);
+
+//         if (position == std::string::npos)
+//         {
+//             command = toUpper(splittedBuffer[i].substr(0, splittedBuffer[i].size()));
+//             params = "";
+//         }
+//         else
+//         {
+//             command = toUpper(splittedBuffer[i].substr(0, position));
+//             position++;
+//             params = splittedBuffer[i].substr(position, splittedBuffer[i].size() - position);
+//         }
+        
+//         std::cout << "Handle Command -- Command = " << command << std::endl;
+//         std::cout << "Handle Command -- Params = " << params <<std::endl;
+//         if (getServer()->getCommandMap().count(command) > 0)
+//             getServer()->getCommandMap()[command](params, *this);
+//     }
+// }
 void User::handleCommand(std::string buffer)
 {
-    std::string         whitespace = " ";
-    std::string         s1;
-    std::string         s2;
-    std::string         tmp;
-    size_t              pos = 0;
-    size_t              endlinepos;
-    std::string         command;
+    std::string                 whitespace = " ";
+    std::string                 command;
+    std::string                 params;
+    size_t                      position;
 
-    std::cout << "Handle Command -- Buffer = " << buffer << std::endl;
-   
-    std::cout << "Buffer size = " << buffer.size() << std::endl;
-    std::cout << "pos  = " << pos << std::endl;
+    position = buffer.find(whitespace);
 
-    while (buffer.size() != 0)
+    if (position == std::string::npos)
     {
-        pos = buffer.find(whitespace);// retourne premier espace trouve
-        endlinepos = buffer.find("\n");// retourne premier \n trouve
-        s1 = buffer.substr(0, pos); // copie la commande
-       
-        if (pos == std::string::npos)
-        {
-            s1.clear();
-            s1 = buffer.substr(0, buffer.size() - 2); // remove \r\n
-            s2 = "";
-            buffer.clear(); // on a que une commande et pas de params donc on met fin a la boucle
-        }
-        else
-        {
-            pos++;
-            s2 = buffer.substr(pos, endlinepos - pos - 1);
-            if (endlinepos != buffer.size())
-            {  
-                tmp = buffer.substr(endlinepos + 1, buffer.size());
-                buffer = tmp;
-            }
-            pos = s2.size();
-        }
-        command = toUpper(s1);
-        std::cout << "Handle Command -- s1 = " << s1 << std::endl;
-        std::cout << "Handle Command -- Command = " << command << std::endl;
-        std::cout << "Handle Command -- Params = " << s2 <<std::endl;
-        if (getServer()->getCommandMap().count(command) > 0)
-            getServer()->getCommandMap()[command](s2, *this);
+        command = toUpper(buffer.substr(0, buffer.size()));
+        params = "";
     }
+    else
+    {
+        command = toUpper(buffer.substr(0, position));
+        position++;
+        params = buffer.substr(position, buffer.size() - position);
+    }
+    
+    std::cout << "Handle Command -- Command = " << command << std::endl;
+    std::cout << "Handle Command -- Params = " << params <<std::endl;
+    if (getServer()->getCommandMap().count(command) > 0)
+        getServer()->getCommandMap()[command](params, *this);
 }

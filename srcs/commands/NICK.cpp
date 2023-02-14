@@ -1,47 +1,59 @@
 #include "commands.hpp"
+#include "reply.hpp"
 
-// penser a verifier si ca existe deja ou pas comme surnom c'est mieux ...
 void    setNick(std::string nick, User &user)
 {
     std::cout << "Set Nick -- nick = " << nick << std::endl;
 
    std::vector<std::string> nicklist = user.getServer()->getNickList();
    if (isNickformatok(nick) == false)
-        {send(user.getUserFd(), sendMessage1(432, user, *(user.getServer()), nick).c_str(), 60, 0);
-        std::cout<<"NICKNAME == FALSE"<<std::endl;}
+    {
+        send(user.getUserFd(), sendMessage1(432, user, *(user.getServer()), nick).c_str(), sendMessage1(432, user, *(user.getServer()), nick).size(), 0);
+        std::cout<<"NICKNAME == FALSE"<<std::endl;
+        return;
+    }
     if (user.getIsUserRegistered() == true)
     {
         if(std::find(nicklist.begin(), nicklist.end(), nick) != nicklist.end())
-            send(user.getUserFd(), sendMessage1(433, user, *(user.getServer()), nick).c_str(), 60, 0); //plus tard formater le message
+            send(user.getUserFd(), sendMessage1(433, user, *(user.getServer()), nick).c_str(), sendMessage1(433, user, *(user.getServer()), nick).size(), 0);
         else
         {
-            std::vector<std::string>::iterator it = find(nicklist.begin(), nicklist.end(), user.getUserNick());
-            nicklist.erase(it);
-            nicklist.push_back(nick);
+            std::string tmp  = ":" + user.getUserNick() + " NICK :" + nick + "\r\n";
+            std::cout << "nickname will be changed" << std::endl;
+            user.getServer()->removeNickList(user.getUserNick());
+            std::cout<<"old nick removed"<<std::endl;
+            user.getServer()->setNickList(nick);
             user.setUserNick(nick);
+            std::cout<<"new nick set == "<<user.getUserNick()<< std::endl;
+            send(user.getUserFd(), tmp.c_str(), tmp.size(),0);
+            return;
         }
     }
     else
     {
         if(user.getIsNickSet() == false)
         {
+            if(std::find(nicklist.begin(), nicklist.end(), nick) != nicklist.end())
+            {
+                send(user.getUserFd(), sendMessage1(433, user, *(user.getServer()), nick).c_str(), sendMessage1(433, user, *(user.getServer()), nick).size(), 0);
+                return;
+            }
             user.setIsNickSet(true);
             user.setUserNick(nick);
-            nicklist.push_back(nick);
+            user.getServer()->setNickList(nick);
             if (user.getIsUserSet() == true)
             { 
                 user.setIsUserRegistered(true);
-                // RPLWELCOME + 4 messages distincts.
+                sendWelcomeMessages(user, *user.getServer());
             }
         }
-        // else
-        //     return (451  define ERR_NOTREGISTERED)
+        else
+            sendMessage(451, user, *user.getServer());
     }
 }
 
 bool    isNickformatok(std::string nick)
 {
-    std::cout<<"nick = "<< nick;
     if (nick.size() > 9)
         return (false);
     if (nick.find_first_not_of("-_qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM") == std::string::npos)
