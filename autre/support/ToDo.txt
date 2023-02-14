@@ -5,7 +5,7 @@ Reply :
 
 Commandes utilisees pour les RPL et ERR :
 
-    - NICK - ajouter RPL + verifier que ok si nick deja pris + checker RPL sur IRSSI quand Server sera ok
+    - NICK - ajouter RPL + verifier que ok si nick deja pris + checker RPL sur IRSSI quand Server sera ok  
     - MOTD - ok -> regler params vide sur Handle command + irssi
     - OPER
     - PONG
@@ -41,7 +41,7 @@ TBC :
     - faire les commandes restantes
     - revoir User -> est-ce qu'on fait une structure pour les donnees ?
 
-LUNDI APREM - REUNION AU SOMMET 14h -- TBC
+MARDI APREM - REUNION AU SOMMET 14h -- TBC
     TOPIC : CHANNEL
 
 
