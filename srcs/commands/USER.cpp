@@ -49,7 +49,7 @@ void    setUser(std::string params, User &user)
     if (user.getIsUserRegistered() == true)
     {
         sendWelcomeMessages(user, *(user.getServer()));
-        motd("", user);
+        // motd("", user);
     }
     
     // mode = splittedParams[1];

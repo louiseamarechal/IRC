@@ -54,6 +54,8 @@ void    setNick(std::string nick, User &user)
 
 bool    isNickformatok(std::string nick)
 {
+    if (nick.size() == 0)
+        return(false);
     if (nick.size() > 9)
         return (false);
     if (nick.find_first_not_of("-_qwertyuiopasdfghjklzxcvbnm1234567890QWERTYUIOPASDFGHJKLZXCVBNM") == std::string::npos)

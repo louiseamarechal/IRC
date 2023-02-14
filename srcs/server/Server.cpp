@@ -29,6 +29,8 @@ Server::Server( void ) : _port(0),
     _commandMap["USER"] = &setUser;
     _commandMap["USERHOST"] = &setUser;
     _commandMap["MOTD"] = &motd;
+    _commandMap["PING"] = &ping;
+    _commandMap["OPER"] = &OPER;
     // _commandMap['JOIN'] = &joinChannel;
     // _commandMap['PASS'] = &checkPass;
     // _commandMap['PRIVMSG'] = &sendPrivMsg;
