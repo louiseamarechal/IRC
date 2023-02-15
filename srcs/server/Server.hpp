@@ -19,7 +19,9 @@
 #include "user/User.hpp"
 #include "commands.hpp"
 
+
 class User;
+
 
 class Server 
 {
@@ -50,6 +52,8 @@ class Server
         void                        removeUser( int i );
         void                        addUser( int fd);
         int                         acceptconnexion(int server_fd);
+        static void                  sigintHandler(int sig);
+        // void                         disconnect_all(void);
 
     private :
              
@@ -59,9 +63,9 @@ class Server
         std::string                 _password;
         std::string                 _creationDate;
         struct pollfd               _fds[200];
-
-        std::map< int, User* >      _userMap;
         int                         _nbUsers;
+        std::map< int, User* >      _userMap;
+        
         int                         _maxUsers;
         // std::vector< Channel >  _Channels;
 
@@ -71,6 +75,10 @@ class Server
         //checknick
         std::vector<std::string>         _nickList;
 
+
 };
+
+extern Server*                  global_serv;
+extern std::vector<int>         g_fdList;
 
 #endif

@@ -20,7 +20,8 @@ SRCFILE		=	main.cpp \
 				commands/USER.cpp \
 				commands/MOTD.cpp \
 				commands/PING.cpp \
-				commands/OPER.cpp 
+				commands/OPER.cpp \
+				commands/QUIT.cpp 
 		
 CLASSFILE	=	server/Server.cpp \
 				user/User.cpp

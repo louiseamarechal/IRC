@@ -4,7 +4,7 @@
 #include "utils.hpp"
 #include <cstring>
 
-void OPER(std::string params, User &user)
+void oper(std::string params, User &user)
 {
     std::vector<std::string> tmp;
     std::string operuser = "lol";
@@ -25,6 +25,7 @@ void OPER(std::string params, User &user)
         else
         {
             std::cout<< "oper successsssss " <<std::endl;
+            user.setOper(true);
             send(user.getUserFd(), sendMessage(381, user, *user.getServer()).c_str(), sendMessage(381, user, *user.getServer()).size(), 0);
         }
     }

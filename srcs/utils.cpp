@@ -6,12 +6,15 @@ void   sendError( std::string message ) {
     std::cerr << message << std::endl;
 }
 
-void sigintHandler(int sig) {
-        (void)sig;
-        // Affiche un message et termine proprement le processus
-        std::cout << "SIGINT reçu, arrêt du programme" << std::endl;
-        exit(0);
-}
+// void sigintHandler(int sig) {
+//         (void)sig;
+//         // Affiche un message et termine proprement le processus
+//         std::cout << "SIGINT reçu, arrêt du programme" << std::endl;
+//         // //ok gros tej les trucs pour eviter que ca leak;
+//         // tej tous les users;
+//         // tej le server;
+//         exit(0);
+// }
 
 std::string removeConsecutiveWhitespace( std::string buffer ) {
 

@@ -37,6 +37,7 @@ class User
         bool                                    getIsNickSet() const;
         bool                                    getIsUserSet() const;
         Server*                                 getServer() const;
+        bool                                    getIsOper() const;
 
         void                                    setUserNick( std::string nick );
         void                                    setUserLoggin( std::string loggin );
@@ -44,7 +45,7 @@ class User
         void                                    setIsNickSet(bool value);
         void                                    setIsUserRegistered(bool value);
         void                                    setIsUserSet( bool value );
-
+        void                                    setOper(bool value);
         void                                    handleCommand(std::string buffer);
 
     private :
@@ -55,6 +56,7 @@ class User
         bool                                    _isNickSet;
         bool                                    _isUserSet;
         bool                                    _isUserRegistered;
+        bool                                    _isOper;
         Server*                                 _server;
 };
 

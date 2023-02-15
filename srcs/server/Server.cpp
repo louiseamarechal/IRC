@@ -1,9 +1,12 @@
 #include "Server.hpp"
 #include <algorithm>
+#include <unistd.h>
 #include "user/User.hpp"
 #include "../includes/utils.hpp"
 #include <sys/epoll.h> // for epoll_create1(), epoll_ctl(), struct epoll_event
 
+Server*                 global_serv;
+std::vector<int>         g_fdList;
 
 /*************************************************************************************/
 /*                              CONSTRUCTORS                                         */
@@ -14,13 +17,13 @@ Server::Server( void ) : _port(0),
                         _serverName("JLA.irc.com"),
                         _password(""),
                         _creationDate("Wed Feb 8 15:53:25 2023"),
-                        _nbUsers(0),
+                        // _nbUsers(0),
                         _maxUsers(10)
 {
     _userMap = std::map<int, User*>();
     _commandMap = std::map<std::string, void (*)(std::string, User &)>();
     _nickList = std::vector<std::string>();
-
+    _nbUsers = 0;
     for (int i = 0; i < 200; i++) {
         _fds[i].fd = -1;
     }
@@ -30,14 +33,18 @@ Server::Server( void ) : _port(0),
     _commandMap["USERHOST"] = &setUser;
     _commandMap["MOTD"] = &motd;
     _commandMap["PING"] = &ping;
-    _commandMap["OPER"] = &OPER;
+    _commandMap["OPER"] = &oper;
+    _commandMap["QUIT"] = &quit;
     // _commandMap['JOIN'] = &joinChannel;
     // _commandMap['PASS'] = &checkPass;
     // _commandMap['PRIVMSG'] = &sendPrivMsg;
     return ;
 }
 
-Server::~Server( void ) { return ; }
+Server::~Server( void ) 
+{ 
+    return ;
+}
 
 /*************************************************************************************/
 /*                              GETTERS                                              */
@@ -87,7 +94,8 @@ void   Server::removeNickList(std::string oldNick)
 /*                              FUNCTIONS                                            */
 /*************************************************************************************/
  
-void    Server::removeUser( int i ) { 
+void    Server::removeUser( int i ) 
+{ 
     //ICI FAIRE BLOC TRY AND CATCH pourjeter une exception si on trouve pas le fd dans la mapde user utiliser Map.at() pour etre sure qu ca existe et que ca cree pas un truc random u'on supprime apres.
         delete _userMap[_fds[i].fd];
     _fds[i] = _fds[_nbUsers -  1];
@@ -123,6 +131,7 @@ void    Server::removeUser( int i ) {
 
 void    Server::addUser( int fd) 
 {  
+    g_fdList.push_back(fd);
     if ( _nbUsers < _maxUsers && _userMap[fd] == NULL)
     {
         User  *newUser = new User(fd, this);
@@ -131,6 +140,29 @@ void    Server::addUser( int fd)
     }
     else
         std::cout << "Too many users ! " << std::endl;
+}
+
+// void    Server::disconnect_all(void)
+// {
+//     delete this;
+//     return;
+// }
+void Server::sigintHandler(int sig)
+{
+        (void)sig;
+        // Affiche un message et termine proprement le processus
+        // disconnect_all();
+        // for (int i = _fdList.size(); i >= 0; i--)
+        //     close(_fdList[i]);
+        // if (global_serv->getNbUsers() > 0)
+        // {
+        //     for (size_t i = 0; i < g_fdList.size(); i++)
+        //     close (g_fdList[i]); //get user map de 0 et on chope le fd et on le kill;
+        // }
+        delete global_serv;
+        std::cout << "SIGINT reçu, arrêt du programme" << std::endl;
+        exit(0);
+       
 }
 
 int     Server::createSocket( void )
@@ -146,9 +178,8 @@ int     Server::createSocket( void )
     setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &enable, sizeof(enable));
     
     fcntl(serverSocket, F_GETFL, O_NONBLOCK);
-    signal(SIGINT, sigintHandler);
-
-    return ( serverSocket );
+    signal(SIGINT, &Server::sigintHandler);
+   return ( serverSocket );
 }
 
 sockaddr_in Server::bindSocket( int serverSocket ) 
