@@ -18,6 +18,8 @@ Server::Server( void ) : _port(0),
                         _maxUsers(10)
 {
     _userMap = std::map<int, User*>();
+    channels = std::map<std::string, Channel*>();
+    _channelNames = std::vector<std::string>();
     _commandMap = std::map<std::string, void (*)(std::string, User &)>();
     _nickList = std::vector<std::string>();
 
@@ -55,7 +57,11 @@ std::string                 Server::getCreationDate( void ) const { return (_cre
 
 std::vector<std::string>    Server::getNickList() const { return (_nickList); }
 
-std::map<std::string, void (*)(std::string params, User &user)>    Server::getCommandMap(void)   const { return (_commandMap);}
+// Channel*                    Server::getChannel( std::string channelName ) const { return (_channels[channelName]); }
+
+// std::map<std::string, Channel*> Server::getChannels( void ) const { return (_channels); };
+
+std::map<std::string, void (*)(std::string params, User &user)>    Server::getCommandMap(void) const { return (_commandMap);}
 
 /*************************************************************************************/
 /*                              SETTERS                                              */
@@ -83,39 +89,38 @@ void   Server::removeNickList(std::string oldNick)
 
 void    Server::setChannels( Channel* channel )
 {
-    if (!channelNameAlreadyUsed(channel->getChannelName()))
-    {
-        _channelNames.push_back(channel->getChannelName());
-        _channels.push_back(channel);
-    }
+    std::string channelName = channel->getChannelName();
+
+    _channelNames.push_back(channelName);
+    if (channels[channelName] == NULL)
+        channels[channelName] = channel;
 }
 
 /*************************************************************************************/
 /*                              FUNCTIONS                                            */
 /*************************************************************************************/
 
-bool    Server::channelNameAlreadyUsed( std::string channelName )
-{
-    std::vector<std::string>::iterator   it;
+// bool    Server::channelNameAlreadyUsed( std::string channelName )
+// {
+//     std::vector<std::string>::iterator   it;
 
-    for (it = _channelNames.begin(); it != _channelNames.end(); it++)
-    {
-        if (*it == channelName)
-            return (true);
-    }
+//     for (it = _channelNames.begin(); it != _channelNames.end(); it++)
+//     {
+//         if (*it == channelName)
+//             return (true);
+//     }
 
-    return (false);
-}
+//     return (false);
+// }
+
+// void    Server::addMemberToChannel(User& user, std::string channelName) { _channels[channelName]->addChannelMembers(user); }
 
 bool    Server::channelIsOkToJoin( Channel& channel )
 {
-    std::vector<Channel*>::iterator it;
+    std::string channelName = channel.getChannelName();
 
-    for (it = _channels.begin(); it != _channels.end(); it++)
-    {
-        if ((*it)->getChannelName() == channel.getChannelName() && !(channel.getChannelMembers().empty()))
+    if (channels[channelName] != NULL && !(channel.getChannelMembers().empty()))
             return (true);
-    }
 
     return (false);
 }

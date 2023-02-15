@@ -4,7 +4,10 @@
 /*                              CONSTRUCTORS                                         */
 /*************************************************************************************/
 
-Channel::Channel( std::string name, Server& server, User& channelCreator ) : _server(server), _channelOperator(channelCreator), _channelCreator(channelCreator)
+Channel::Channel( std::string name, Server& server, User& user ) : _channelMembers(std::vector<User*>()),
+                                                                _server(server),
+                                                                _channelOperator(user.getUserNick()), 
+                                                                _channelCreator(user.getUserNick())
 {
     // on set les attributs
         // si format de name ok seuelement on set le name
@@ -12,17 +15,34 @@ Channel::Channel( std::string name, Server& server, User& channelCreator ) : _se
     
     // on ajoute le channel operator a la liste des membres
     // on set up le channel dans server (on l'ajoute a la liste des channels + on ajoute le nom a la channelName liste)
-
-    if ( channelNameFormatIsOk(name) && !(server.channelNameAlreadyUsed(name)))
+    if ( channelNameFormatIsOk(name))
         _channelName = name;
-    
-    _channelMembers.push_back(_channelOperator);
+    else
+    {
+        std::string errorMessage = sendMessage1(476, user, server, name);
+        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+        return;
+    }
+
+    addChannelMembers(user);
     server.setChannels(this);
 
     return ;
 }
 
+Channel&    Channel::operator=( Channel const & rhs )
+{
+    if (this != &rhs)
+    {
+        _channelName = rhs.getChannelName();
+        _channelMembers = rhs.getChannelMembers();
+        _server = getChannelServer();
+        _channelOperator = getChannelOperator();
+        _channelCreator = getChannelCreator();
+    }
 
+    return (*this);
+}
 
 Channel::~Channel( void ) { return; }
 
@@ -31,11 +51,31 @@ Channel::~Channel( void ) { return; }
 /*************************************************************************************/
 
 std::string         Channel::getChannelName( void ) const { return (_channelName); }
-std::vector<User&>  Channel::getChannelMembers( void ) const { return (_channelMembers); }
+std::vector<User*>  Channel::getChannelMembers( void ) const { return (_channelMembers); }
+std::string         Channel::getChannelCreator( void ) const { return (_channelCreator); }
+std::string         Channel::getChannelOperator( void ) const { return (_channelOperator); }
+Server&             Channel::getChannelServer( void ) const { return (_server); }
 
 /*************************************************************************************/
 /*                              FUNCTIONS                                            */
 /*************************************************************************************/
+
+void    Channel::addChannelMembers( User& user )
+{
+    std::vector<User*>::iterator    it;
+    std::string                     userNick = user.getUserNick();
+
+    for (it = _channelMembers.begin(); it != _channelMembers.end(); it++)
+    {
+        if ((*it)->getUserNick() == userNick)
+        {
+            std::cout << "User is already in the _channelMembers vector" << std::endl;
+            return;
+        }
+        else
+            _channelMembers.push_back(&user);
+    }
+}
 
 bool    channelNameFormatIsOk( std::string name )
 {
@@ -56,6 +96,6 @@ bool    channelNameFormatIsOk( std::string name )
             // si c'est le dernier dans _channelMembers on delete le channel de server._channels
 
 // Quand on remove un Channel on doit :
-    // le laisser dans _channelNames -> une fois qu'un nom de channel a existe il a plus de droit d'etre repris
-    // supprimer le channel du vector dans server._channels
-    // supprimer l'objet channel cree dans joinChannel
+    // le remove de _channelNames
+    // supprimer le channel de map dans server._channels
+    // supprimer l'objet channel cree dans joinChannel (dans map server)

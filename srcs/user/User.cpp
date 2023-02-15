@@ -6,7 +6,15 @@
 /*                              CONSTRUCTORS                                         */
 /*************************************************************************************/
 
-User::User(int fd, Server *server) : _userLoggin(""), _userFullName(""), _userNick(""), _userFd(fd), _isNickSet(false), _isUserSet(false),  _isUserRegistered(false), _server(server)
+User::User(int fd, Server *server) : _userLoggin(""),
+                                    _userFullName(""),
+                                    _userNick(""),
+                                    _userFd(fd),
+                                    _isNickSet(false),
+                                    _isUserSet(false),
+                                    _isUserRegistered(false),
+                                    _server(server),
+                                    _userChannel()
 { 
     
     std::cout << "New User created : fd = " << _userFd << std::endl;
@@ -50,7 +58,7 @@ bool        User::getIsUserSet() const{return(_isUserSet);}
 
 Server*     User::getServer() const{return(_server);}
 
-Channel&    User::getChannel( void ) const { return (_channel); }
+Channel&    User::getUserChannel( void ) const { return (*_userChannel); }
 
 std::string User::getUserNick( void ) const { return (_userNick); }
 
@@ -99,6 +107,10 @@ void    User::setIsUserSet( bool value ) {
         std::cout << "User status has been set to : REGISTERED " << std::endl;
     }
 }
+
+void    User::setUserChannel( Channel* channel ) { _userChannel = channel; }
+
+// void    User::addUserToChannel( std::string channelName) { _server->addMemberToChannel(*this, channelName); }
 
 /*************************************************************************************/
 /*                              FUNCTIONS                                            */

@@ -39,7 +39,8 @@ class User
         std::string                             getUserLoggin() const;
         std::string                             getUserFullName() const;
         // std::string                             getChannelName() const;
-        Channel&                                getChannel() const;
+        Channel&                                getUserChannel() const;
+        // void                                    addUserToChannel( std::string channelName );
 
         void                                    setUserNick( std::string nick );
         void                                    setUserLoggin( std::string loggin );
@@ -47,6 +48,7 @@ class User
         void                                    setIsNickSet(bool value);
         void                                    setIsUserRegistered(bool value);
         void                                    setIsUserSet( bool value );
+        void                                    setUserChannel( Channel* channel );
 
         void                                    handleCommand(std::string buffer);
 
@@ -59,7 +61,7 @@ class User
         bool                                    _isUserSet;
         bool                                    _isUserRegistered;
         Server*                                 _server;
-        Channel&                                _channel;
+        Channel*                                _userChannel;
         // std::string                             _channelNaeme;
 };
 
