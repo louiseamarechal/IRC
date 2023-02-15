@@ -42,12 +42,6 @@ User::~User( void ) { return ; } // supprimer les users ?
 
 int         User::getUserFd( void ) const { return (_userFd); }
 
-std::string User::getUserNick( void ) const { return (_userNick); }
-
-std::string User::getUserLoggin( void ) const { return ( _userLoggin ); }
-
-std::string User::getUserFullName( void ) const { return( _userFullName ); }
-
 bool        User::getIsUserRegistered() const { return (_isUserRegistered); }
 
 bool        User::getIsNickSet() const{return(_isNickSet);}
@@ -55,6 +49,16 @@ bool        User::getIsNickSet() const{return(_isNickSet);}
 bool        User::getIsUserSet() const{return(_isUserSet);}
 
 Server*     User::getServer() const{return(_server);}
+
+Channel&    User::getChannel( void ) const { return (_channel); }
+
+std::string User::getUserNick( void ) const { return (_userNick); }
+
+std::string User::getUserLoggin( void ) const { return ( _userLoggin ); }
+
+std::string User::getUserFullName( void ) const { return( _userFullName ); }
+
+// std::string User::getChannelName( void ) const { return( _channelName ); }
 
 /*************************************************************************************/
 /*                              SETTERS                                              */

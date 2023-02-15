@@ -44,31 +44,35 @@ class Server
         void                        setPassword( std::string password );
         void                        setNbUsers( void );
         void                        setNickList(std::string nick);
-        void                        removeNickList(std::string oldNick);
+        void                        setChannels( Channel* channel );
         
+        void                        removeNickList(std::string oldNick);
         int                         runServer( void );
         int                         createSocket( void );
         sockaddr_in                 bindSocket( int serverSocket );
         void                        removeUser( int i );
         void                        addUser( int fd);
         int                         acceptconnexion(int server_fd);
-        void                        setChannels( Channel &channel );
         bool                        channelNameAlreadyUsed( std::string channelName );
+        bool                        channelIsOkToJoin( Channel& channel );
 
     private :
              
-        int                         _port;
-        std::string                 _version;
-        std::string                 _serverName; //JLA
-        std::string                 _password;
-        std::string                 _creationDate;
-        struct pollfd               _fds[200];
+        int             _port;
+        std::string     _version;
+        std::string     _serverName; //JLA
+        std::string     _password;
+        std::string     _creationDate;
+        struct pollfd   _fds[200];
 
-        std::map< int, User* >      _userMap;
-        int                         _nbUsers;
-        int                         _maxUsers;
-        std::vector< Channel& >      _channels;
-        std::vector< std::string >  _channelNames;
+        // USER
+        std::map< int, User* >              _userMap;
+        int                                 _nbUsers;
+        int                                 _maxUsers;
+
+        //CHANNEL
+        std::map< std::string, Channel* >   _channels; // should be a map
+        std::vector< std::string >          _channelNames;
 
         //Commands
         std::map<std::string, void (*)(std::string params, User &user)> _commandMap;

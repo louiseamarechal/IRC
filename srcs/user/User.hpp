@@ -31,13 +31,15 @@ class User
         ~User( void );
 
         int                                     getUserFd() const;
-        std::string                             getUserNick() const;
-        std::string                             getUserLoggin() const;
-        std::string                             getUserFullName() const;
         bool                                    getIsUserRegistered() const;
         bool                                    getIsNickSet() const;
         bool                                    getIsUserSet() const;
         Server*                                 getServer() const;
+        std::string                             getUserNick() const;
+        std::string                             getUserLoggin() const;
+        std::string                             getUserFullName() const;
+        // std::string                             getChannelName() const;
+        Channel&                                getChannel() const;
 
         void                                    setUserNick( std::string nick );
         void                                    setUserLoggin( std::string loggin );
@@ -57,7 +59,8 @@ class User
         bool                                    _isUserSet;
         bool                                    _isUserRegistered;
         Server*                                 _server;
-        Channel*                                _channelName;
+        Channel&                                _channel;
+        // std::string                             _channelNaeme;
 };
 
 #endif

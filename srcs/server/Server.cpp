@@ -81,11 +81,11 @@ void   Server::removeNickList(std::string oldNick)
     }
 }
 
-void    Server::setChannels( Channel &channel )
+void    Server::setChannels( Channel* channel )
 {
-    if (!channelNameAlreadyUsed(channel.getChannelName()))
+    if (!channelNameAlreadyUsed(channel->getChannelName()))
     {
-        _channelNames.push_back(channel.getChannelName());
+        _channelNames.push_back(channel->getChannelName());
         _channels.push_back(channel);
     }
 }
@@ -101,6 +101,19 @@ bool    Server::channelNameAlreadyUsed( std::string channelName )
     for (it = _channelNames.begin(); it != _channelNames.end(); it++)
     {
         if (*it == channelName)
+            return (true);
+    }
+
+    return (false);
+}
+
+bool    Server::channelIsOkToJoin( Channel& channel )
+{
+    std::vector<Channel*>::iterator it;
+
+    for (it = _channels.begin(); it != _channels.end(); it++)
+    {
+        if ((*it)->getChannelName() == channel.getChannelName() && !(channel.getChannelMembers().empty()))
             return (true);
     }
 

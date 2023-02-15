@@ -14,7 +14,8 @@ class Channel {
         Channel( std::string name, Server& server, User& channelCreator );
         ~Channel( void );
 
-        std::string    getChannelName( void ) const;
+        std::string                     getChannelName( void ) const;
+        std::vector<User&>              getChannelMembers( void ) const;
 
     private :
         // std::string                     _channelShortName;
@@ -26,6 +27,6 @@ class Channel {
 
 };
 
-bool    channelNameIsOk( std::string name );
+bool    channelNameFormatIsOk( std::string name );
 
 #endif
