@@ -115,14 +115,3 @@ bool    channelNameFormatIsOk( std::string name )
     
     return (true);
 }
-
-// On remove un Channel si :
-    // le dernier user a quitte le Channel.
-        // quand un user quitte le Channel (PART) on clear user._channelName()
-        // on le remove de _channelMembers
-            // si c'est le dernier dans _channelMembers on delete le channel de server._channels
-
-// Quand on remove un Channel on doit :
-    // le remove de _channelNames
-    // supprimer le channel de map dans server._channels
-    // supprimer l'objet channel cree dans joinChannel (dans map server)
