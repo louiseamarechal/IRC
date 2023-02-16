@@ -37,9 +37,9 @@
 /* 341 */ # define RPL_INVITING(channel, nick) (channel + " " + nick + "\r\n") // (INVITE)
 
 /* 352 */ // (a retravailler) # define RPL_WHOREPLY(channel, user, host, server, nick, hopcount, real_name) ("<channel> <user> <host> <server> <nick> ( "H" / "G" > ["*"] [ ( "@" / "+" ) ]:<hopcount> <real_name> \r\n") // (WHO)
-/* 353 */ # define RPL_NAMREPLY(channel, symbol, nick) (channel + " :" + symbol + nick) // (NAMES & JOIN) :master.ircgod.com 353 louise = #channel1 :@louise
+/* 353 */ # define RPL_NAMREPLY(channel, symbol, nick) (channel + " :" + symbol + nick + "\r\n") // (NAMES & JOIN) :master.ircgod.com 353 louise = #channel1 :@louise
 /* 366 */ # define RPL_ENDOFNAMES(channel) (channel + " :End of NAMES list \r\n") // (NAMES)
-/* 369 */ # define RPL_ENDOFWHOWAS(nick) (nick + " :End of WHOWAS") // (WHOWAS)
+/* 369 */ # define RPL_ENDOFWHOWAS(nick) (nick + " :End of WHOWAS"+ "\r\n") // (WHOWAS)
 
 /* 372 */ # define RPL_MOTD(text) (":- " + text + "\r\n") // (MOTD)
 /* 375 */ # define RPL_MOTDSTART(server) (":- " + server + " Message of the day - \r\n") // (MOTD)

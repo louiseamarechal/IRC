@@ -24,6 +24,8 @@ Channel::Channel( std::string name, Server& server, User& user ) : _channelMembe
         return;
     }
 
+    std::cout << "Channel created ! " << _channelName << std::endl;
+
     addChannelMembers(user);
     server.setChannels(this);
 
@@ -56,6 +58,18 @@ std::string         Channel::getChannelCreator( void ) const { return (_channelC
 std::string         Channel::getChannelOperator( void ) const { return (_channelOperator); }
 Server&             Channel::getChannelServer( void ) const { return (_server); }
 
+std::string         Channel::getAllMembersName( void ) const
+{
+    std::vector<User*>::const_iterator    it;
+    std::string                     membersNames;
+
+    for (it = _channelMembers.begin(); it != _channelMembers.end(); it++)
+        membersNames += (*it)->getUserNick() + " ";
+    
+    return (membersNames);
+}
+
+
 /*************************************************************************************/
 /*                              FUNCTIONS                                            */
 /*************************************************************************************/
@@ -72,19 +86,32 @@ void    Channel::addChannelMembers( User& user )
             std::cout << "User is already in the _channelMembers vector" << std::endl;
             return;
         }
-        else
-            _channelMembers.push_back(&user);
     }
+
+    _channelMembers.push_back(&user);
+    std::cout << user.getUserNick() << " is now part of the _channelMembers List" << std::endl;
+    
+    return;
 }
 
 bool    channelNameFormatIsOk( std::string name )
 {
+    std::cout << "name[0]" << name[0] << std::endl;
     if ( name.length() > 200 || name.length() < 1 )
+    {
+        std::cout << "It's a length issue ! Whuuut " << std::endl;
         return (false);
+    }
     if ( (name.find(',') != std::string::npos) || (name.find(7) != std::string::npos) )
+    {
+        std::cout << "I found a , or a 7char ! Whuuut " << std::endl;
         return (false);
-    if (name[0] != '#' || name[0] != '&') // '#' = channel available across IRC network -> '&' available on local server only
+    }
+    if (name[0] != '#' && name[0] != '&') // '#' = channel available across IRC network -> '&' available on local server only
+    {
+        std::cout << "First char is not ok ! Whut whut ! Show me what u got : " << name[0] << std::endl;
         return (false);
+    }
     
     return (true);
 }

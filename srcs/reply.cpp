@@ -117,8 +117,8 @@ std::string    formatMessage(int code, User &user, Server &server, std::string s
             // return (prefix + RPL_INVITING(channel, nick));
         // case 352:
         //     return (prefix + RPL_WHOREPLY())
-        // case 353:
-        //     return (prefix + RPL_NAMREPLY())
+        case 353:
+            return (prefix + RPL_NAMREPLY(str1, str2, str3));
         case 366:
             return (prefix + RPL_ENDOFNAMES(str1));
             // return (prefix + RPL_ENDOFNAMES(channel));

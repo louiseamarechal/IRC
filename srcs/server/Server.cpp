@@ -93,7 +93,10 @@ void    Server::setChannels( Channel* channel )
 
     _channelNames.push_back(channelName);
     if (channels[channelName] == NULL)
+    {
         channels[channelName] = channel;
+        std::cout << channels[channelName]->getChannelName() << " is now in the server public channels map ! His channelOperator is : " <<  channels[channelName]->getChannelOperator() << std::endl;
+    }
 }
 
 /*************************************************************************************/
@@ -119,8 +122,13 @@ bool    Server::channelIsOkToJoin( Channel& channel )
 {
     std::string channelName = channel.getChannelName();
 
-    if (channels[channelName] != NULL && !(channel.getChannelMembers().empty()))
-            return (true);
+    if (!(channel.getChannelMembers().empty()))
+    {
+        std::cout << "Channels already has members" << std::endl;
+        
+    }
+    if (channels[channelName] != NULL)
+        return (true);
 
     return (false);
 }

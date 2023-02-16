@@ -66,7 +66,7 @@ std::string User::getUserLoggin( void ) const { return ( _userLoggin ); }
 
 std::string User::getUserFullName( void ) const { return( _userFullName ); }
 
-// std::string User::getChannelName( void ) const { return( _channelName ); }
+std::string User::getChannelName( void ) const { return( _channelName ); }
 
 /*************************************************************************************/
 /*                              SETTERS                                              */
@@ -108,7 +108,11 @@ void    User::setIsUserSet( bool value ) {
     }
 }
 
-void    User::setUserChannel( Channel* channel ) { _userChannel = channel; }
+void    User::setUserChannel( Channel* channel )
+{
+    _userChannel = channel; 
+    _channelName = channel->getChannelName();
+}
 
 // void    User::addUserToChannel( std::string channelName) { _server->addMemberToChannel(*this, channelName); }
 

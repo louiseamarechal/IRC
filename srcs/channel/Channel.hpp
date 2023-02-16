@@ -3,6 +3,7 @@
 
 #include "user/User.hpp"
 #include "server/Server.hpp"
+#include "reply.hpp"
 #include <vector>
 
 class Server;
@@ -21,6 +22,7 @@ class Channel {
         Server&                         getChannelServer( void ) const;
         std::string                     getChannelOperator( void ) const;
         std::string                     getChannelCreator( void ) const;
+        std::string                     getAllMembersName( void ) const;
 
         void                            addChannelMembers( User& user );
 

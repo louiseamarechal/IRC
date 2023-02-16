@@ -38,7 +38,7 @@ class User
         std::string                             getUserNick() const;
         std::string                             getUserLoggin() const;
         std::string                             getUserFullName() const;
-        // std::string                             getChannelName() const;
+        std::string                             getChannelName() const;
         Channel&                                getUserChannel() const;
         // void                                    addUserToChannel( std::string channelName );
 
@@ -62,7 +62,7 @@ class User
         bool                                    _isUserRegistered;
         Server*                                 _server;
         Channel*                                _userChannel;
-        // std::string                             _channelNaeme;
+        std::string                             _channelName;
 };
 
 #endif

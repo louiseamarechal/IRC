@@ -4,38 +4,47 @@
 void    sendJoinRpl( User &user, std::string channelName )
 {
     std::string symbol;
-    std::string rpl = ":" + user.getUserNick() + " JOIN " + channelName + "\r\n";;
-    std::string rpl353 = sendMessage3(353, user, *user.getServer(), channelName, symbol, user.getUserNick());;
-    std::string rpl366 = sendMessage1(366, user, *user.getServer(), channelName);;
+    std::string rpl = ":" + user.getUserNick() + " JOIN " + channelName + "\r\n";
+    std::string rplThree;
+    std::string rplOne;
+    std::string nickNames;
+
+    if (user.getUserChannel().getChannelMembers().size() > 1)
+        nickNames = user.getUserChannel().getAllMembersName();
+    else
+        nickNames = user.getUserNick();
 
     if (user.getUserChannel().getChannelOperator() == user.getUserNick())
         symbol = "@";
     else
         symbol = "";
 
+    rplThree = sendMessage3(353, user, *user.getServer(), channelName, symbol, nickNames);
+    rplOne = sendMessage1(366, user, *user.getServer(), channelName);
+
     send(user.getUserFd(), rpl.c_str(), rpl.size(), 0);
-    send(user.getUserFd(), rpl353.c_str(), rpl353.size(), 0);
-    send(user.getUserFd(), rpl366.c_str(), rpl366.size(), 0);
+    send(user.getUserFd(), rplThree.c_str(), rplThree.size(), 0);
+    send(user.getUserFd(), rplOne.c_str(), rplOne.size(), 0);
 }
 
 void    joinChannel( std::string channelName, User &user )
 {
-    // Server* server = user.getServer(); // Récupération de la référence de Server à partir de User
-    // Channel& channel = server->getChannel(channelName); // Récupération de la référence de Channel correspondant au nom channelName
-    // channel.addChannelMembers(user); // Ajout de la référence de User à la variable _channelMembers de Channel
+    // si le user fait deja parti d'un channel
+    if (!(user.getChannelName().empty()))
+        return;
 
-
-    // si le channel est ouvert et que le user ne fait pas parti d'un autre channel
     if ( user.getServer()->channels.empty() )// si le channel n'existe pas encore
     {
-        // creer le nouveau channel
+        if (!channelNameFormatIsOk(channelName))
+        {
+            std::string errorMessage = sendMessage1(476, user, *user.getServer(), channelName);
+            send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+            return;
+        }
+
         Channel  *newChannel = new Channel(channelName, *user.getServer(), user);
 
-        // if (newChannel == NULL)
-        //     return;
-        
-        // ajouter le channel a userChannel
-            // user ajoute a _channelMembers dans le constructeur + designe as channelOperator & channelCreator
+        // ajouter le channel a userChannel (il est ajoute a _channelMembers dans le constructeur + designe as channelOperator & channelCreator)
         user.setUserChannel(newChannel);
 
         //ajouter le Channel a la map du server _channels
@@ -44,19 +53,21 @@ void    joinChannel( std::string channelName, User &user )
         return;
     }
     
-    std::string userChannelName = user.getUserChannel().getChannelName();
-    std::cout << "Channel name = " << userChannelName << std::endl;
+    std::string serverChannelName = user.getServer()->channels[channelName]->getChannelName();
+    std::cout << "Channel name = " << serverChannelName << std::endl;
+    std::cout << "Can I join the channel ? " << user.getServer()->channelIsOkToJoin(*user.getServer()->channels[channelName]) << std::endl;
+    std::cout << "I am not appart of a channel ! " << user.getChannelName().empty() << std::endl;
 
-    if ((user.getServer()->channelIsOkToJoin(*user.getServer()->channels[channelName]) && userChannelName.empty()))
+    if ((user.getServer()->channelIsOkToJoin(*user.getServer()->channels[channelName]) && user.getChannelName().empty()))
     {
     // add channel to user
-    user.setUserChannel(user.getServer()->channels[channelName]);
+        user.setUserChannel(user.getServer()->channels[channelName]);
     
     // si user not already in _channelMembers list
         // user ajoutee a channel._channelMembers dans setUserChannel;
-    user.getServer()->channels[channelName]->addChannelMembers(user);
+        user.getServer()->channels[channelName]->addChannelMembers(user);
     // user.addUserToChannel( channelName );
-    sendJoinRpl(user, channelName);
+        sendJoinRpl(user, channelName);
     }
 
     // let the user receive all channel messages + receive PRIVMSG from other channelMembers
