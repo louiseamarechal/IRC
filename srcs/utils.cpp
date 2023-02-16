@@ -59,12 +59,14 @@ std::vector<std::string> splitStringSep( std::string params , std::string sep )
         std::cout << "Splitted String Sep result = " << result << std::endl;
         startPos = endPos + sepLength; // on avance startPos apres \r\n
         splittedParams.push_back(result); // on ajoute notre str au vector
+        result.clear();
     }
-
+    result.clear();
     return (splittedParams);
 }
 
-std::vector<std::string> splitString( std::string params ) {
+std::vector<std::string> splitString( std::string params )
+ {
 
     std::vector<std::string>        splittedParams;
     char                            whitespace = 32;

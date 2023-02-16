@@ -54,7 +54,6 @@ class Server
         int                         acceptconnexion(int server_fd);
         static void                  sigintHandler(int sig);
         // void                         disconnect_all(void);
-
     private :
              
         int                         _port;

@@ -4,6 +4,8 @@
 #include "user/User.hpp"
 #include "../includes/utils.hpp"
 #include <sys/epoll.h> // for epoll_create1(), epoll_ctl(), struct epoll_event
+#include <iostream>       // std::cout
+#include <string> 
 
 Server*                 global_serv;
 std::vector<int>         g_fdList;
@@ -21,7 +23,7 @@ Server::Server( void ) : _port(0),
                         _maxUsers(10)
 {
     _userMap = std::map<int, User*>();
-    _commandMap = std::map<std::string, void (*)(std::string, User &)>();
+    _commandMap = std::map<std::string, void (*)(std::string, User&)>();
     _nickList = std::vector<std::string>();
     _nbUsers = 0;
     for (int i = 0; i < 200; i++) {
@@ -38,11 +40,19 @@ Server::Server( void ) : _port(0),
     // _commandMap['JOIN'] = &joinChannel;
     // _commandMap['PASS'] = &checkPass;
     // _commandMap['PRIVMSG'] = &sendPrivMsg;
-    return ;
+    // return ;
 }
 
 Server::~Server( void ) 
 { 
+    std::cout<<"destructor server called"<<std::endl;
+    // for (size_t i = 0; i < g_fdList.size(); i++)
+    // {
+    //     delete _userMap[g_fdList[i]];
+    //     close(g_fdList[i]);
+    // }   
+    // for (int i = 0; i < _nbUsers; i++)
+    //     delete _userMap[i];
     return ;
 }
 
@@ -150,15 +160,18 @@ void    Server::addUser( int fd)
 void Server::sigintHandler(int sig)
 {
         (void)sig;
-        // Affiche un message et termine proprement le processus
-        // disconnect_all();
-        // for (int i = _fdList.size(); i >= 0; i--)
-        //     close(_fdList[i]);
-        // if (global_serv->getNbUsers() > 0)
-        // {
-        //     for (size_t i = 0; i < g_fdList.size(); i++)
-        //     close (g_fdList[i]); //get user map de 0 et on chope le fd et on le kill;
-        // }
+         for (size_t i = 0; i < g_fdList.size(); i++)
+        {
+            std::map< int, User* > :: iterator it = global_serv->_userMap.find(g_fdList[i]);
+            if (it != global_serv->_userMap.end())
+            {   
+                delete it->second;
+                global_serv->_userMap.erase(it);
+                close(g_fdList[i]);
+            }
+        }
+        close (3);
+        g_fdList.clear();
         delete global_serv;
         std::cout << "SIGINT reçu, arrêt du programme" << std::endl;
         exit(0);
@@ -300,12 +313,17 @@ int    Server::runServer( void )
                 data.append(buffer, nBytes); // j'append les buffer a data (poentiellement des reliquas non recus au tour d'avant)
                 if (data.find("\r\n") == std::string::npos) // si je trouve pas de \r\n dans le buffer, je quitte la condition pour pouvoir l'append au tour d'apres
                     break;
+                if (data == "\r\n")
+                {
+                    data.clear();
+                    break;
+                }
                 std::cout << "Data Server (after append()) = " << data << std::endl;
                 splittedBuffer = splitStringSep(data, "\r\n");
                 data.clear();
                 for (size_t j = 0; j < splittedBuffer.size(); j++)
                 {
-                    std::cout << "Command send to Handle Commande -- Server : " << splittedBuffer[j] << std::endl;
+                      std::cout << "Command send to Handle Commande -- Server : " << splittedBuffer[j] << std::endl;
                     _userMap[events[i].data.fd]->handleCommand(splittedBuffer[j]);
                 }
                 splittedBuffer.clear();
