@@ -51,6 +51,7 @@ class User
         void                                    setUserChannel( Channel* channel );
 
         void                                    handleCommand(std::string buffer);
+        void                                    clearChannel( void );
 
     private :
         std::string                             _userLoggin; // jbouyer

@@ -100,3 +100,13 @@ std::string toUpper( std::string str ) {
 
     return (upperCaseStr);
 }
+
+bool    isACommand(std::string buffer)
+{
+    std::string bigBuf = toUpper(buffer);
+
+    if (bigBuf == "NICK" || bigBuf == "USER" || bigBuf == "USERHOST" || bigBuf == "MOTD" || bigBuf == "JOIN" || bigBuf == "PART")
+        return (true);
+
+    return (false);
+}

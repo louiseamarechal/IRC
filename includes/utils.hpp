@@ -26,5 +26,6 @@ std::string                 removeConsecutiveWhitespace( std::string buffer ); /
 std::vector<std::string>    splitString( std::string params ); // split la string a chaque wihtespace
 std::string                 toUpper( std::string str );
 std::vector<std::string>    splitStringSep( std::string params , std::string sep );
+bool                        isACommand(std::string buffer);
 
 #endif

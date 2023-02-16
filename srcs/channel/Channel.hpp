@@ -25,6 +25,8 @@ class Channel {
         std::string                     getAllMembersName( void ) const;
 
         void                            addChannelMembers( User& user );
+        void                            removeChannelMembers( User& user );
+        void                            sendMessageToEveryone( std::string buffer, int fd );
 
     private :
         // std::string                     _channelShortName;

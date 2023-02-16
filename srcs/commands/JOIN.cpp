@@ -8,15 +8,18 @@ void    sendJoinRpl( User &user, std::string channelName )
     std::string rplOne;
     std::string nickNames;
 
-    if (user.getUserChannel().getChannelMembers().size() > 1)
-        nickNames = user.getUserChannel().getAllMembersName();
-    else
-        nickNames = user.getUserNick();
-
     if (user.getUserChannel().getChannelOperator() == user.getUserNick())
         symbol = "@";
     else
         symbol = "";
+
+    if (user.getUserChannel().getChannelMembers().size() > 1)
+    {
+        nickNames = user.getUserChannel().getAllMembersName();
+        symbol = "@";
+    }
+    else
+        nickNames = user.getUserNick();
 
     rplThree = sendMessage3(353, user, *user.getServer(), channelName, symbol, nickNames);
     rplOne = sendMessage1(366, user, *user.getServer(), channelName);
@@ -78,7 +81,6 @@ void    joinChannel( std::string channelName, User &user )
         user.getServer()->channels[channelName]->addChannelMembers(user);
         sendJoinRpl(user, channelName);
     }
-
 }
 
 // 461 ERR_NEEDMOREPARAMS ---- done

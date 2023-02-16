@@ -38,6 +38,7 @@ class Server
         std::string                                                     getPassword( void ) const;
         std::string                                                     getCreationDate( void ) const;
         std::vector<std::string>                                        getNickList(void)   const;
+        std::vector<std::string>                                        getChannelNames(void)   const;
         // std::map< std::string, Channel* >                               getChannels( void ) const;
         // Channel*                                                        getChannel( std::string channelName ) const;
         std::map<std::string, void (*)(std::string params, User &user)> getCommandMap(void)   const;
@@ -57,6 +58,8 @@ class Server
         void                                                            addUser( int fd);
         int                                                             acceptconnexion(int server_fd);
         bool                                                            channelIsOkToJoin( Channel& channel );
+        void                                                            sendMessageToAllChannelMembers( std::string buffer, int fd );
+        void                                                            deleteChannel( Channel* channel );
         
         std::map< std::string, Channel* >                               channels;
 
@@ -73,6 +76,7 @@ class Server
         std::map< int, User* >              _userMap;
         int                                 _nbUsers;
         int                                 _maxUsers;
+        int                                 _serverFd;
 
         //CHANNEL
         std::vector< std::string >           _channelNames;

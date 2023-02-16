@@ -46,7 +46,11 @@ Channel&    Channel::operator=( Channel const & rhs )
     return (*this);
 }
 
-Channel::~Channel( void ) { return; }
+Channel::~Channel( void ) 
+{ 
+    std::cout << "Destroying Channel : " << _channelName << std::endl;
+    return;
+}
 
 /*************************************************************************************/
 /*                              GETTERS                                              */
@@ -92,6 +96,52 @@ void    Channel::addChannelMembers( User& user )
     std::cout << user.getUserNick() << " is now part of the _channelMembers List" << std::endl;
     
     return;
+}
+
+void    Channel::sendMessageToEveryone( std::string buffer, int fd )
+{
+    std::vector<User*>::iterator    it = _channelMembers.begin();
+
+    while (it != _channelMembers.end())
+    {
+        if ((*it)->getUserFd() != fd)
+            send((*it)->getUserFd(), buffer.c_str(), buffer.size(), 0);
+        it++;
+    }
+}
+
+void    Channel::removeChannelMembers( User& user )
+{
+    if (_channelMembers.size() == 1) // last member of the channel
+    {
+        _channelMembers.clear();
+        std::cout << "Last member left the Channel ! _channelMembers.size() is now : " << _channelMembers.size() << std::endl;
+        _server.deleteChannel(this);
+        return ;
+    }
+    
+    std::vector<User*>::iterator    it = _channelMembers.begin();
+    std::string                     userNick = user.getUserNick();
+
+    if (_channelOperator == userNick)
+        _channelOperator.clear();
+
+    if (_channelCreator == userNick)
+        _channelCreator.clear();
+
+    while (it != _channelMembers.end())
+    {
+        if ((*it)->getUserNick() == userNick)
+        {
+            std::cout << "I'm about to remove this user from _channelMembers : " << (*it)->getUserNick() << std::endl;
+            it = _channelMembers.erase(it); // récupère l'itérateur de l'élément suivant
+            std::cout << "User has been removed from the _channslMembers vector." << std::endl;
+        }
+        else
+        {
+            ++it;
+        }
+    }
 }
 
 bool    channelNameFormatIsOk( std::string name )
