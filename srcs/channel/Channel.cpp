@@ -102,7 +102,7 @@ bool    channelNameFormatIsOk( std::string name )
         std::cout << "It's a length issue ! Whuuut " << std::endl;
         return (false);
     }
-    if ( (name.find(',') != std::string::npos) || (name.find(7) != std::string::npos) )
+    if ( (name.find(',') != std::string::npos) || (name.find(7) != std::string::npos) || (name.find(' ') != std::string::npos))
     {
         std::cout << "I found a , or a 7char ! Whuuut " << std::endl;
         return (false);
