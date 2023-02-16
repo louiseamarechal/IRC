@@ -42,7 +42,7 @@ void            sendWelcomeMessages(User& user, Server &server) {
     std::string RPL1 = sendMessage1(001, user, server, user.getUserNick());
     std::string RPL2 = sendMessage2(002, user, server, server.getServerName(), server.getVersion());
     std::string RPL3 = sendMessage1(003, user, server, server.getCreationDate());
-    std::string RPL4 = sendMessage4(004, user, server, server.getServerName(), server.getVersion(), "userModesTBC", "channelModesTBC");
+    std::string RPL4 = sendMessage4(004, user, server, server.getServerName(), server.getVersion(), "userModesTBC", "channelModes nmvt");
 
     send(user.getUserFd(), RPL1.c_str(), RPL1.size(), 0);
     send(user.getUserFd(), RPL2.c_str(), RPL2.size(), 0);
