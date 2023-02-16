@@ -1,5 +1,4 @@
 #include "commands.hpp"
-#include "channel/Channel.hpp"
 
 void    sendJoinRpl( User &user, std::string channelName )
 {
@@ -29,15 +28,31 @@ void    sendJoinRpl( User &user, std::string channelName )
 
 void    joinChannel( std::string channelName, User &user )
 {
+    std::string errorMessage;
     // si le user fait deja parti d'un channel
-    if (!(user.getChannelName().empty()))
+
+    if (!user.getIsUserRegistered())
         return;
+
+    if (!(user.getChannelName().empty()))
+    {
+        errorMessage = sendMessage1(405, user, *user.getServer(), channelName);
+        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+        return;
+    }
+
+    if (channelName.empty())
+    {
+        errorMessage = sendMessage1(461, user, *user.getServer(), "JOIN");
+        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+        return;
+    }
 
     if ( user.getServer()->channels.empty() )// si le channel n'existe pas encore
     {
         if (!channelNameFormatIsOk(channelName))
         {
-            std::string errorMessage = sendMessage1(476, user, *user.getServer(), channelName);
+            errorMessage = sendMessage1(476, user, *user.getServer(), channelName);
             send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
             return;
         }
@@ -47,44 +62,31 @@ void    joinChannel( std::string channelName, User &user )
         // ajouter le channel a userChannel (il est ajoute a _channelMembers dans le constructeur + designe as channelOperator & channelCreator)
         user.setUserChannel(newChannel);
 
-        //ajouter le Channel a la map du server _channels
+        //ajouter le Channel a la plublic map du server channels
         user.getServer()->setChannels(newChannel);
         sendJoinRpl(user, channelName);
         return;
     }
     
-    std::string serverChannelName = user.getServer()->channels[channelName]->getChannelName();
-    std::cout << "Channel name = " << serverChannelName << std::endl;
-    std::cout << "Can I join the channel ? " << user.getServer()->channelIsOkToJoin(*user.getServer()->channels[channelName]) << std::endl;
-    std::cout << "I am not appart of a channel ! " << user.getChannelName().empty() << std::endl;
-
+    // si le Channel existe et que User n'est pas deja dans un autre channel
     if ((user.getServer()->channelIsOkToJoin(*user.getServer()->channels[channelName]) && user.getChannelName().empty()))
     {
-    // add channel to user
+    // add channel object to user
         user.setUserChannel(user.getServer()->channels[channelName]);
     
-    // si user not already in _channelMembers list
-        // user ajoutee a channel._channelMembers dans setUserChannel;
+    // si user not already in _channelMembers list on l'y ajoute
         user.getServer()->channels[channelName]->addChannelMembers(user);
-    // user.addUserToChannel( channelName );
         sendJoinRpl(user, channelName);
     }
 
-    // let the user receive all channel messages + receive PRIVMSG from other channelMembers
-    // envoyer les RPL
-
-
-
-// HOW IT SHOOULD BEHAVE
-    // nick louise
-    // user lola caro marie :louise a
-    // JOIN #channel1
-
-    //RPL :
-    // :louise!lola@127.0.0.1 JOIN #channel1
-    // :master.ircgod.com 353 louise = #channel1 :@louise (NAMES cmd)
-    // :master.ircgod.com 366 louise #channel1 :End of NAMES list (NAMES cmd)
-    // :master.ircgod.com 329 louise #channel1 1676390651 (RPL CREATION_TIME) -> wtf
-
-
 }
+
+// 461 ERR_NEEDMOREPARAMS ---- done
+// 476 ERR_BADCHANMASK ------- done
+// 405 ERR_TOOMANYCHANNELS --- done
+// 471 ERR_CHANNELISFULL ----- we don't limit the access
+// 403 ERR_NOSUCHCHANNEL ----- if a channel doesn't exists we create it
+// 407 ERR_TOOMANYTARGETS ---- we don't do safe channels
+// 332 RPL_TOPIC ------------- we don't do TOPIC
+// 474 ERR_BANNEDFROMCHAN ---- we don't allow operators to ban people
+// 437 ERR_UNAVAILRESOURCE --- we don't do it
