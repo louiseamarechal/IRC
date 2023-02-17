@@ -319,12 +319,13 @@ int    Server::runServer( void )
                     break;
                 }
                 std::cout << "Data Server (after append()) = " << data << std::endl;
-                splittedBuffer = splitStringSep(data, "\r\n");
+                splittedBuffer.push_back(data);
                 data.clear();
+                splitStringSep(splittedBuffer, "\r\n");
                 for (size_t j = 0; j < splittedBuffer.size(); j++)
                 {
-                      std::cout << "Command send to Handle Commande -- Server : " << splittedBuffer[j] << std::endl;
-                    _userMap[events[i].data.fd]->handleCommand(splittedBuffer[j]);
+                      std::cout << "Command send to Handle Commande -- Server : " << splittedBuffer.at(j) << std::endl;
+                    _userMap[events[i].data.fd]->handleCommand(splittedBuffer.at(j));
                 }
                 splittedBuffer.clear();
             }

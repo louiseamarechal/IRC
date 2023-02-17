@@ -25,6 +25,6 @@ void                        sendError( std::string message );
 std::string                 removeConsecutiveWhitespace( std::string buffer ); // supprime les whitespaces qui se suivent + tous ceux au debut du mot et touc ceux a la fin a la fin : "     Hello  World !  " -> "Hello World !"
 std::vector<std::string>    splitString( std::string params ); // split la string a chaque wihtespace
 std::string                 toUpper( std::string str );
-std::vector<std::string>    splitStringSep( std::string params , std::string sep );
+void    splitStringSep( std::vector<std::string>    &params, std::string sep );
 
 #endif
