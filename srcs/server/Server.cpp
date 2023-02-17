@@ -105,12 +105,14 @@ void    Server::setNickList(std::string nick)
 void   Server::removeNickList(std::string oldNick)
 {
     std::vector<std::string>::iterator it = std::find(_nickList.begin(), _nickList.end(), oldNick);
+    std::cout<< "nicklist size = " << _nickList.size()<<std::endl;
     if ( it != _nickList.end())
-         _nickList.erase(it);
-    else 
-    {
-        std::cout<<" remove old nickname failed" << std::endl;
+    {    
+        _nickList.erase(it);
+        std::cout<<"nickname removed : " << oldNick << std::endl;
     }
+    else 
+        std::cout<<" remove old nickname failed" << std::endl;
 }
 
 /*************************************************************************************/
@@ -214,6 +216,13 @@ void    Server::deleteChannel( Channel* channel )
 void    Server::removeUser( int i ) 
 { 
     //ICI FAIRE BLOC TRY AND CATCH pourjeter une exception si on trouve pas le fd dans la mapde user utiliser Map.at() pour etre sure qu ca existe et que ca cree pas un truc random u'on supprime apres.
+    // std::map<std::string, User*>::iterator it = _userMap.find(fd);
+
+    // if (it != _userMap.end())
+    // {
+    //     delete it->second; // Libère la mémoire allouée pour l'objet Channel
+    //     _userMap.erase(it);
+    // }
         delete _userMap[_fds[i].fd];
     _fds[i] = _fds[_nbUsers -  1];
 
