@@ -19,12 +19,15 @@ SRCFILE		=	main.cpp \
 				commands/NICK.cpp \
 				commands/USER.cpp \
 				commands/MOTD.cpp \
+				commands/JOIN.cpp \
+				commands/PART.cpp \
 				commands/PING.cpp \
 				commands/OPER.cpp \
 				commands/QUIT.cpp 
 		
 CLASSFILE	=	server/Server.cpp \
-				user/User.cpp
+				user/User.cpp \
+				channel/Channel.cpp
 
 SRC			=	$(addprefix $(SRCDIR), $(SRCFILE)) $(addprefix $(SRCDIR), $(CLASSFILE))
 
@@ -40,7 +43,8 @@ INCLSRCFILES 	=	commands.hpp \
 					utils.hpp 
 
 INCLCLASSFILES	=	server/Server.hpp \
-					user/User.hpp
+					user/User.hpp \
+					channel/Channel.hpp
 
 INCLUDES		=	$(addprefix $(INCLDIR), $(INCLSRCFILES)) $(addprefix $(SRCDIR), $(INCLCLASSFILES))
 

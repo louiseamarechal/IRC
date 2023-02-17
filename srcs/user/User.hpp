@@ -17,11 +17,12 @@
 #include <vector>
 #include <map>
 #include "server/Server.hpp"
+#include "channel/Channel.hpp"
 #include "commands.hpp"
 
 class Server;
+class Channel;
 
-class Command;
 class User 
 {
     public :
@@ -30,13 +31,16 @@ class User
         ~User( void );
 
         int                                     getUserFd() const;
-        std::string                             getUserNick() const;
-        std::string                             getUserLoggin() const;
-        std::string                             getUserFullName() const;
         bool                                    getIsUserRegistered() const;
         bool                                    getIsNickSet() const;
         bool                                    getIsUserSet() const;
         Server*                                 getServer() const;
+        std::string                             getUserNick() const;
+        std::string                             getUserLoggin() const;
+        std::string                             getUserFullName() const;
+        std::string                             getChannelName() const;
+        Channel&                                getUserChannel() const;
+        // void                                    addUserToChannel( std::string channelName );
         bool                                    getIsOper() const;
 
         void                                    setUserNick( std::string nick );
@@ -45,8 +49,10 @@ class User
         void                                    setIsNickSet(bool value);
         void                                    setIsUserRegistered(bool value);
         void                                    setIsUserSet( bool value );
+        void                                    setUserChannel( Channel* channel );
         void                                    setOper(bool value);
         void                                    handleCommand(std::string buffer);
+        void                                    clearChannel( void );
 
     private :
         std::string                             _userLoggin; // jbouyer
@@ -58,6 +64,8 @@ class User
         bool                                    _isUserRegistered;
         bool                                    _isOper;
         Server*                                 _server;
+        Channel*                                _userChannel;
+        std::string                             _channelName;
 };
 
 #endif

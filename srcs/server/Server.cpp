@@ -19,11 +19,16 @@ Server::Server( void ) : _port(0),
                         _serverName("JLA.irc.com"),
                         _password(""),
                         _creationDate("Wed Feb 8 15:53:25 2023"),
+                        _maxUsers(10),
+                        _serverFd(0)
                         // _nbUsers(0),
-                        _maxUsers(10)
+
 {
     _userMap = std::map<int, User*>();
-    _commandMap = std::map<std::string, void (*)(std::string, User&)>();
+    channels = std::map<std::string, Channel*>();
+    _channelNames = std::vector<std::string>();
+    _commandMap = std::map<std::string, void (*)(std::string, User &)>();
+
     _nickList = std::vector<std::string>();
     _nbUsers = 0;
     for (int i = 0; i < 200; i++) {
@@ -34,10 +39,12 @@ Server::Server( void ) : _port(0),
     _commandMap["USER"] = &setUser;
     _commandMap["USERHOST"] = &setUser;
     _commandMap["MOTD"] = &motd;
+    _commandMap["JOIN"] = &joinChannel;
+    _commandMap["PART"] = &partChannel;
     _commandMap["PING"] = &ping;
     _commandMap["OPER"] = &oper;
     _commandMap["QUIT"] = &quit;
-    // _commandMap['JOIN'] = &joinChannel;
+    
     // _commandMap['PASS'] = &checkPass;
     // _commandMap['PRIVMSG'] = &sendPrivMsg;
     // return ;
@@ -74,7 +81,13 @@ std::string                 Server::getCreationDate( void ) const { return (_cre
 
 std::vector<std::string>    Server::getNickList() const { return (_nickList); }
 
-std::map<std::string, void (*)(std::string params, User &user)>    Server::getCommandMap(void)   const { return (_commandMap);}
+std::vector<std::string>    Server::getChannelNames() const { return (_channelNames); }
+
+// Channel*                    Server::getChannel( std::string channelName ) const { return (_channels[channelName]); }
+
+// std::map<std::string, Channel*> Server::getChannels( void ) const { return (_channels); };
+
+std::map<std::string, void (*)(std::string params, User &user)>    Server::getCommandMap(void) const { return (_commandMap);}
 
 /*************************************************************************************/
 /*                              SETTERS                                              */
@@ -101,9 +114,97 @@ void   Server::removeNickList(std::string oldNick)
 }
 
 /*************************************************************************************/
+/*                             CHANNEL FUNCTIONS                                     */
+/*************************************************************************************/
+
+void    Server::setChannels( Channel* channel )
+{
+    std::string channelName = channel->getChannelName();
+
+    _channelNames.push_back(channelName);
+    if (channels[channelName] == NULL)
+    {
+        channels[channelName] = channel;
+        std::cout << channels[channelName]->getChannelName() << " is now in the server public channels map ! His channelOperator is : " <<  channels[channelName]->getChannelOperator() << std::endl;
+    }
+}
+
+bool    Server::channelIsOkToJoin( Channel& channel )
+{
+    std::string channelName = channel.getChannelName();
+
+    if (!(channel.getChannelMembers().empty()))
+    {
+        std::cout << "Channels already has members" << std::endl;
+        
+    }
+    if (channels[channelName] != NULL)
+        return (true);
+
+    return (false);
+}
+
+void    Server::sendMessageToAllChannelMembers( std::string buffer, int fd )
+{
+    if (fd == _serverFd)
+        return;
+
+    std::vector<std::string> splittedBuffer = splitString(splitStringSep(buffer, "\r\n")[0]);
+
+    if (isACommand(splittedBuffer[0]))
+        return;
+
+    std::map< int, User* >::iterator    it = _userMap.find(fd);
+    std::string                         channelName;
+
+    if (it == _userMap.end())
+        return;
+
+    channelName = it->second->getChannelName();
+
+    if (channels[channelName] == NULL)
+        return ;
+
+    channels[channelName]->sendMessageToEveryone(buffer, fd);
+}
+
+void    Server::deleteChannel( Channel* channel )
+{
+    std::vector<std::string>::iterator  it = _channelNames.begin();
+    std::string                         channelName = channel->getChannelName();
+
+    // je supprime le nom de channel de mon vector _channelNames
+    while (it != _channelNames.end())
+    {
+        if (*it == channelName)
+        {
+            std::cout << "I'm about to remove this channel name from _channelNames : " << *it << std::endl;
+            it = _channelNames.erase(it); // récupère l'itérateur de l'élément suivant
+            std::cout << "Name has been removed from the _channelNames vector." << std::endl;
+        }
+        else
+        {
+            ++it;
+        }
+    }
+
+    // je cherche le bon channel et je le supprime
+    std::map<std::string, Channel*>::iterator itMap = channels.find(channelName);
+
+    if (itMap != channels.end())
+    {
+        std::cout << "Removing channel " << channelName << " from the server public channels map !" << std::endl;
+        delete itMap->second; // Libère la mémoire allouée pour l'objet Channel
+        channels.erase(itMap);
+    }
+    // itMap est un itérateur qui pointe versla clé channelName dans la map. 
+    // itMap->second, permet d'acceder à la valeur associée à la clé -> un pointeur vers l'objet Channel.
+}
+
+/*************************************************************************************/
 /*                              FUNCTIONS                                            */
 /*************************************************************************************/
- 
+
 void    Server::removeUser( int i ) 
 { 
     //ICI FAIRE BLOC TRY AND CATCH pourjeter une exception si on trouve pas le fd dans la mapde user utiliser Map.at() pour etre sure qu ca existe et que ca cree pas un truc random u'on supprime apres.
@@ -270,10 +371,10 @@ int    Server::runServer( void )
     std::string                 data;
     std::vector<std::string>    splittedBuffer;
 
-    int         server_fd = createSocket();
-    sockaddr_in serverAddress = bindSocket( server_fd ); //on init le server.
+    _serverFd = createSocket();
+    sockaddr_in serverAddress = bindSocket( _serverFd ); //on init le server.
     // Listen for incoming connections
-    int listenResult = listen(server_fd, serverAddress.sin_port);
+    int listenResult = listen(_serverFd, serverAddress.sin_port);
     if (listenResult < 0) {
         sendError("Failed to listen for incoming connections");
         return 1;
@@ -282,7 +383,7 @@ int    Server::runServer( void )
         std::cout << "Listening for incoming connections ..." << std::endl;
     // on init le epoll_fd. 
     int epoll_fd = init_epoll(); 
-    add_fd_to_poll(epoll_fd, server_fd); //on ajoute le fd du server a la liste de poll;
+    add_fd_to_poll(epoll_fd, _serverFd); //on ajoute le fd du server a la liste de poll;
     struct epoll_event events[100];   
 	while (1) 
     {
@@ -292,10 +393,10 @@ int    Server::runServer( void )
 		for (int i = 0; i < event_count; i++)
          {
 			std::cout<< "Reading file descriptor " << events[i].data.fd << std::endl;
-			std::cout<< "server fd = " << server_fd << std::endl;
-            if (events[i].data.fd == server_fd)
+			std::cout<< "server fd = " << _serverFd << std::endl;
+            if (events[i].data.fd == _serverFd)
             {
-                client_fd = acceptconnexion(server_fd);
+                client_fd = acceptconnexion(_serverFd);
                 add_fd_to_poll(epoll_fd, client_fd); //on ajoute le fd du nouvequ client a la liste de poll;
             }
             std::memset(buffer, 0, sizeof(buffer));
@@ -319,6 +420,8 @@ int    Server::runServer( void )
                     break;
                 }
                 std::cout << "Data Server (after append()) = " << data << std::endl;
+                
+                sendMessageToAllChannelMembers(data, events[i].data.fd);
                 splittedBuffer.push_back(data);
                 data.clear();
                 splitStringSep(splittedBuffer, "\r\n");
@@ -333,4 +436,7 @@ int    Server::runServer( void )
 	}
     return (0);
 }
+
+
+
 	

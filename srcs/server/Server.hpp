@@ -18,9 +18,11 @@
 #include <vector>
 #include "user/User.hpp"
 #include "commands.hpp"
+#include "channel/Channel.hpp"
 
 
 class User;
+class Channel;
 
 
 class Server 
@@ -30,30 +32,41 @@ class Server
         ~Server( void );
 
 
-        int                         getPort( void ) const;
-        int                         getNbUsers( void ) const;
-        int                         getMaxUsers( void ) const;
-        std::string                 getVersion( void ) const;
-        std::string                 getServerName( void ) const;
-        std::string                 getPassword( void ) const;
-        std::string                 getCreationDate( void ) const;
-        std::vector<std::string>    getNickList(void)   const;
-        std::map<std::string, void (*)(std::string params, User &user)>    getCommandMap(void)   const;
+        int                                                             getPort( void ) const;
+        int                                                             getNbUsers( void ) const;
+        int                                                             getMaxUsers( void ) const;
+        std::string                                                     getVersion( void ) const;
+        std::string                                                     getServerName( void ) const;
+        std::string                                                     getPassword( void ) const;
+        std::string                                                     getCreationDate( void ) const;
+        std::vector<std::string>                                        getNickList(void)   const;
+        std::vector<std::string>                                        getChannelNames(void)   const;
+        // std::map< std::string, Channel* >                               getChannels( void ) const;
+        // Channel*                                                        getChannel( std::string channelName ) const;
+        std::map<std::string, void (*)(std::string params, User &user)> getCommandMap(void)   const;
 
-        void                        setPort( int port);
-        void                        setPassword( std::string password );
-        void                        setNbUsers( void );
-        void                        setNickList(std::string nick);
-        void                        removeNickList(std::string oldNick);
+        void                                                            setPort( int port);
+        void                                                            setPassword( std::string password );
+        void                                                            setNbUsers( void );
+        void                                                            setNickList(std::string nick);
+        void                                                            setChannels( Channel* channel );
         
-        int                         runServer( void );
-        int                         createSocket( void );
-        sockaddr_in                 bindSocket( int serverSocket );
+        int                                                             runServer( void );
+        int                                                             createSocket( void );
+        sockaddr_in                                             bindSocket( int serverSocket );
         void                        removeUser( int i );
         void                        addUser( int fd);
         int                         acceptconnexion(int server_fd);
         static void                  sigintHandler(int sig);
         // void                         disconnect_all(void);
+        
+        void                                                            removeNickList(std::string oldNick);
+        bool                                                            channelIsOkToJoin( Channel& channel );
+        void                                                            sendMessageToAllChannelMembers( std::string buffer, int fd );
+        void                                                            deleteChannel( Channel* channel );
+        
+        std::map< std::string, Channel* >                               channels;
+        
     private :
              
         int                         _port;
@@ -66,7 +79,10 @@ class Server
         std::map< int, User* >      _userMap;
         
         int                         _maxUsers;
-        // std::vector< Channel >  _Channels;
+        int                          _serverFd;
+
+        
+        std::vector< std::string >           _channelNames;
 
         //Commands
         std::map<std::string, void (*)(std::string params, User &user)> _commandMap;
