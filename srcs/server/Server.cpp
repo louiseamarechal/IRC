@@ -157,7 +157,7 @@ void    Server::sendMessageToAllChannelMembers( std::string buffer, int fd )
 
     splittedBufferWhiteSpace = splitString(splittedBuffer[0]);
 
-    if (isACommand(splittedBuffer[0]))
+    if (isACommand(splittedBufferWhiteSpace[0]))
         return;
 
     std::map< int, User* >::iterator    it = _userMap.find(fd);

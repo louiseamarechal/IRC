@@ -4,7 +4,6 @@ void    sendJoinRpl( User &user, std::string channelName )
 {
     std::string symbol;
     std::string rpl = ":" + user.getUserNick() + " JOIN " + channelName + "\r\n";
-    // std::string rpl = ":" + channelName.substr(1, channelName.size()) + "!" + user.getUserLoggin() + "@" + "127.0.0.1" + " JOIN " + channelName + "\r\n";
     std::string rplThree;
     std::string rplOne;
     std::string nickNames;
@@ -27,6 +26,7 @@ void    sendJoinRpl( User &user, std::string channelName )
 
     if (user.getUserChannel().getChannelMembers().size() > 1)
         user.getUserChannel().sendMessageToEveryone(rpl, user.getUserFd());
+
     send(user.getUserFd(), rpl.c_str(), rpl.size(), 0);
     send(user.getUserFd(), rplThree.c_str(), rplThree.size(), 0);
     send(user.getUserFd(), rplOne.c_str(), rplOne.size(), 0);
