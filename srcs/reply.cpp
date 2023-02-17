@@ -48,6 +48,7 @@ void            sendWelcomeMessages(User& user, Server &server) {
     send(user.getUserFd(), RPL2.c_str(), RPL2.size(), 0);
     send(user.getUserFd(), RPL3.c_str(), RPL3.size(), 0);
     send(user.getUserFd(), RPL4.c_str(), RPL4.size(), 0);
+    motd("", user);
 }
 
 std::string    formatMessage(int code, User &user, Server &server, std::string str1, std::string str2, std::string str3, std::string str4 ) {

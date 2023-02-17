@@ -1,9 +1,14 @@
 #include "Server.hpp"
 #include <algorithm>
+#include <unistd.h>
 #include "user/User.hpp"
 #include "../includes/utils.hpp"
 #include <sys/epoll.h> // for epoll_create1(), epoll_ctl(), struct epoll_event
+#include <iostream>       // std::cout
+#include <string> 
 
+Server*                 global_serv;
+std::vector<int>         g_fdList;
 
 /*************************************************************************************/
 /*                              CONSTRUCTORS                                         */
@@ -14,13 +19,13 @@ Server::Server( void ) : _port(0),
                         _serverName("JLA.irc.com"),
                         _password(""),
                         _creationDate("Wed Feb 8 15:53:25 2023"),
-                        _nbUsers(0),
+                        // _nbUsers(0),
                         _maxUsers(10)
 {
     _userMap = std::map<int, User*>();
-    _commandMap = std::map<std::string, void (*)(std::string, User &)>();
+    _commandMap = std::map<std::string, void (*)(std::string, User&)>();
     _nickList = std::vector<std::string>();
-
+    _nbUsers = 0;
     for (int i = 0; i < 200; i++) {
         _fds[i].fd = -1;
     }
@@ -29,13 +34,27 @@ Server::Server( void ) : _port(0),
     _commandMap["USER"] = &setUser;
     _commandMap["USERHOST"] = &setUser;
     _commandMap["MOTD"] = &motd;
+    _commandMap["PING"] = &ping;
+    _commandMap["OPER"] = &oper;
+    _commandMap["QUIT"] = &quit;
     // _commandMap['JOIN'] = &joinChannel;
     // _commandMap['PASS'] = &checkPass;
     // _commandMap['PRIVMSG'] = &sendPrivMsg;
-    return ;
+    // return ;
 }
 
-Server::~Server( void ) { return ; }
+Server::~Server( void ) 
+{ 
+    std::cout<<"destructor server called"<<std::endl;
+    // for (size_t i = 0; i < g_fdList.size(); i++)
+    // {
+    //     delete _userMap[g_fdList[i]];
+    //     close(g_fdList[i]);
+    // }   
+    // for (int i = 0; i < _nbUsers; i++)
+    //     delete _userMap[i];
+    return ;
+}
 
 /*************************************************************************************/
 /*                              GETTERS                                              */
@@ -85,7 +104,8 @@ void   Server::removeNickList(std::string oldNick)
 /*                              FUNCTIONS                                            */
 /*************************************************************************************/
  
-void    Server::removeUser( int i ) { 
+void    Server::removeUser( int i ) 
+{ 
     //ICI FAIRE BLOC TRY AND CATCH pourjeter une exception si on trouve pas le fd dans la mapde user utiliser Map.at() pour etre sure qu ca existe et que ca cree pas un truc random u'on supprime apres.
         delete _userMap[_fds[i].fd];
     _fds[i] = _fds[_nbUsers -  1];
@@ -121,6 +141,7 @@ void    Server::removeUser( int i ) {
 
 void    Server::addUser( int fd) 
 {  
+    g_fdList.push_back(fd);
     if ( _nbUsers < _maxUsers && _userMap[fd] == NULL)
     {
         User  *newUser = new User(fd, this);
@@ -129,6 +150,32 @@ void    Server::addUser( int fd)
     }
     else
         std::cout << "Too many users ! " << std::endl;
+}
+
+// void    Server::disconnect_all(void)
+// {
+//     delete this;
+//     return;
+// }
+void Server::sigintHandler(int sig)
+{
+        (void)sig;
+         for (size_t i = 0; i < g_fdList.size(); i++)
+        {
+            std::map< int, User* > :: iterator it = global_serv->_userMap.find(g_fdList[i]);
+            if (it != global_serv->_userMap.end())
+            {   
+                delete it->second;
+                global_serv->_userMap.erase(it);
+                close(g_fdList[i]);
+            }
+        }
+        close (3);
+        g_fdList.clear();
+        delete global_serv;
+        std::cout << "SIGINT reçu, arrêt du programme" << std::endl;
+        exit(0);
+       
 }
 
 int     Server::createSocket( void )
@@ -144,9 +191,8 @@ int     Server::createSocket( void )
     setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &enable, sizeof(enable));
     
     fcntl(serverSocket, F_GETFL, O_NONBLOCK);
-    signal(SIGINT, sigintHandler);
-
-    return ( serverSocket );
+    signal(SIGINT, &Server::sigintHandler);
+   return ( serverSocket );
 }
 
 sockaddr_in Server::bindSocket( int serverSocket ) 
@@ -267,13 +313,19 @@ int    Server::runServer( void )
                 data.append(buffer, nBytes); // j'append les buffer a data (poentiellement des reliquas non recus au tour d'avant)
                 if (data.find("\r\n") == std::string::npos) // si je trouve pas de \r\n dans le buffer, je quitte la condition pour pouvoir l'append au tour d'apres
                     break;
+                if (data == "\r\n")
+                {
+                    data.clear();
+                    break;
+                }
                 std::cout << "Data Server (after append()) = " << data << std::endl;
-                splittedBuffer = splitStringSep(data, "\r\n");
+                splittedBuffer.push_back(data);
                 data.clear();
+                splitStringSep(splittedBuffer, "\r\n");
                 for (size_t j = 0; j < splittedBuffer.size(); j++)
                 {
-                    std::cout << "Command send to Handle Commande -- Server : " << splittedBuffer[j] << std::endl;
-                    _userMap[events[i].data.fd]->handleCommand(splittedBuffer[j]);
+                      std::cout << "Command send to Handle Commande -- Server : " << splittedBuffer.at(j) << std::endl;
+                    _userMap[events[i].data.fd]->handleCommand(splittedBuffer.at(j));
                 }
                 splittedBuffer.clear();
             }

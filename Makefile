@@ -18,7 +18,10 @@ SRCFILE		=	main.cpp \
 				reply.cpp \
 				commands/NICK.cpp \
 				commands/USER.cpp \
-				commands/MOTD.cpp
+				commands/MOTD.cpp \
+				commands/PING.cpp \
+				commands/OPER.cpp \
+				commands/QUIT.cpp 
 		
 CLASSFILE	=	server/Server.cpp \
 				user/User.cpp
