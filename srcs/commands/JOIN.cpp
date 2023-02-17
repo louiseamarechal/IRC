@@ -3,11 +3,11 @@
 void    sendJoinRpl( User &user, std::string channelName )
 {
     std::string symbol;
-    std::string rpl = ":" + user.getUserNick() + " JOIN " + channelName + "\r\n";
+    std::string rpl = ":" + channelName.substr(1, channelName.size()) + "!" + user.getUserNick() + "@" + "127.0.0.1" + " JOIN " + channelName + "\r\n";
     std::string rplThree;
     std::string rplOne;
     std::string nickNames;
-
+// :hey!gsd@127.0.0.1 JOIN #hey
     if (user.getUserChannel().getChannelOperator() == user.getUserNick())
         symbol = "@";
     else
@@ -34,6 +34,8 @@ void    joinChannel( std::string channelName, User &user )
     std::string errorMessage;
     // si le user fait deja parti d'un channel
 
+    std::cout << "CHANNEL NAME received in JOIN.cpp" << channelName << std::endl;
+
     if (!user.getIsUserRegistered())
         return;
 
@@ -50,8 +52,10 @@ void    joinChannel( std::string channelName, User &user )
         send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
         return;
     }
+    std::cout << "JUST BEFORE CHANNEL CREATION, DID I MAKE IT HERE ?" << std::endl;
+    // std::cout << user.getServer()->channels.empty
 
-    if ( user.getServer()->channels.empty() )// si le channel n'existe pas encore
+    if ( user.getServer()->channels[channelName] == NULL )// si le channel n'existe pas encore
     {
         if (!channelNameFormatIsOk(channelName))
         {
@@ -59,8 +63,9 @@ void    joinChannel( std::string channelName, User &user )
             send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
             return;
         }
-
         Channel  *newChannel = new Channel(channelName, *user.getServer(), user);
+
+        std::cout << "CHANNEL NAME IN JOIN: " << newChannel->getChannelName() << std::endl;
 
         // ajouter le channel a userChannel (il est ajoute a _channelMembers dans le constructeur + designe as channelOperator & channelCreator)
         user.setUserChannel(newChannel);
@@ -72,7 +77,7 @@ void    joinChannel( std::string channelName, User &user )
     }
     
     // si le Channel existe et que User n'est pas deja dans un autre channel
-    if ((user.getServer()->channelIsOkToJoin(*user.getServer()->channels[channelName]) && user.getChannelName().empty()))
+    else if ((user.getServer()->channelIsOkToJoin(*user.getServer()->channels[channelName]) && user.getChannelName().empty()))
     {
     // add channel object to user
         user.setUserChannel(user.getServer()->channels[channelName]);

@@ -46,12 +46,13 @@ void    partChannel(std::string params, User &user)
         return;
     }
 
-    if (user.getChannelName() != channelName)
+    if (user.getChannelName() != channelName) // user not in this channel
     {
         errorMessage = sendMessage1(442, user, *user.getServer(), channelName);
         send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
         return;
     }
+
 
     user.clearChannel(); // clear channelName + _userChannel pointe sur NULL
     user.getServer()->channels[channelName]->removeChannelMembers(user); // remove User de _channelMembers + delete le channel dans server
@@ -60,3 +61,18 @@ void    partChannel(std::string params, User &user)
 // 461 ERR_NEEDMOREPARAMS --- done
 // 442 ERR_NOTONCHANNEL ----- done
 // 403 ERR_NOSUCHCHANNEL ---- done
+
+// sendMessageToEveryone
+
+// :louise!gdfs@127.0.0.1 JOIN #hey
+// :louise!gdfs@127.0.0.1 PART #hey :
+
+// join #hey
+// :hey!gsd@127.0.0.1 JOIN #hey
+// :master.ircgod.com 353 hey = #hey :@louisea  hey 
+// :master.ircgod.com 366 hey #hey :End of NAMES list
+// :master.ircgod.com 329 hey #hey 1676632377
+// hello (from irssi)
+// :master.ircgod.com 421 hey HELLO :Unknown command
+// :louisea!lmarecha@127.0.0.1 PRIVMSG #hey :hello
+// PING :master.ircgod.com

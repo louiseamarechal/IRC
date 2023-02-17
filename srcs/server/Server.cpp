@@ -127,7 +127,7 @@ void    Server::sendMessageToAllChannelMembers( std::string buffer, int fd )
     if (fd == _serverFd)
         return;
 
-    std::vector<std::string> splittedBuffer = splitString(buffer);
+    std::vector<std::string> splittedBuffer = splitString(splitStringSep(buffer, "\r\n")[0]);
 
     if (isACommand(splittedBuffer[0]))
         return;
@@ -139,7 +139,6 @@ void    Server::sendMessageToAllChannelMembers( std::string buffer, int fd )
         return;
 
     channelName = it->second->getChannelName();
-    std::cout << "channel Name = " << channelName << std::endl;
 
     if (channels[channelName] == NULL)
         return ;
