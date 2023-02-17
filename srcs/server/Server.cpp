@@ -267,17 +267,20 @@ void    Server::addUser( int fd)
 void Server::sigintHandler(int sig)
 {
         (void)sig;
-         for (size_t i = 0; i < g_fdList.size(); i++)
+        if (g_fdList.size() != 0)
         {
-            std::map< int, User* > :: iterator it = global_serv->_userMap.find(g_fdList[i]);
-            if (it != global_serv->_userMap.end())
-            {   
-                delete it->second;
-                global_serv->_userMap.erase(it);
-                close(g_fdList[i]);
+            for (size_t i = 0; i < g_fdList.size(); i++)
+            {
+                std::map< int, User* > :: iterator it = global_serv->_userMap.find(g_fdList[i]);
+                if (it != global_serv->_userMap.end())
+                {   
+                    delete it->second;
+                    global_serv->_userMap.erase(it);
+                    close(g_fdList[i]);
+                }
             }
         }
-        close (3);
+        close (global_serv->_serverFd);
         g_fdList.clear();
         delete global_serv;
         std::cout << "SIGINT reçu, arrêt du programme" << std::endl;
