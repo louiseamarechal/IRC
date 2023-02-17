@@ -152,7 +152,7 @@ void    Server::sendMessageToAllChannelMembers( std::string buffer, int fd )
     std::vector<std::string> splittedBuffer;
     std::vector<std::string> splittedBufferWhiteSpace;
 
-    splittedBuffer.at(0) = buffer;
+    splittedBuffer.push_back(buffer);
     splitStringSep(splittedBuffer, "\r\n");
 
     splittedBufferWhiteSpace = splitString(splittedBuffer[0]);
