@@ -20,8 +20,10 @@
 #include "commands.hpp"
 #include "channel/Channel.hpp"
 
+
 class User;
 class Channel;
+
 
 class Server 
 {
@@ -49,36 +51,37 @@ class Server
         void                                                            setNickList(std::string nick);
         void                                                            setChannels( Channel* channel );
         
-        // void                                                            addMemberToChannel( User& user, std::string channelName );
-        void                                                            removeNickList(std::string oldNick);
         int                                                             runServer( void );
         int                                                             createSocket( void );
-        sockaddr_in                                                     bindSocket( int serverSocket );
-        void                                                            removeUser( int i );
-        void                                                            addUser( int fd);
-        int                                                             acceptconnexion(int server_fd);
+        sockaddr_in                                             bindSocket( int serverSocket );
+        void                        removeUser( int i );
+        void                        addUser( int fd);
+        int                         acceptconnexion(int server_fd);
+        static void                  sigintHandler(int sig);
+        // void                         disconnect_all(void);
+        
+        void                                                            removeNickList(std::string oldNick);
         bool                                                            channelIsOkToJoin( Channel& channel );
         void                                                            sendMessageToAllChannelMembers( std::string buffer, int fd );
         void                                                            deleteChannel( Channel* channel );
         
         std::map< std::string, Channel* >                               channels;
-
+        
     private :
              
-        int                                 _port;
-        std::string                         _version;
-        std::string                         _serverName; //JLA
-        std::string                         _password;
-        std::string                         _creationDate;
-        struct pollfd                       _fds[200];
+        int                         _port;
+        std::string                 _version;
+        std::string                 _serverName; //JLA
+        std::string                 _password;
+        std::string                 _creationDate;
+        struct pollfd               _fds[200];
+        int                         _nbUsers;
+        std::map< int, User* >      _userMap;
+        
+        int                         _maxUsers;
+        int                          _serverFd;
 
-        // USER
-        std::map< int, User* >              _userMap;
-        int                                 _nbUsers;
-        int                                 _maxUsers;
-        int                                 _serverFd;
-
-        //CHANNEL
+        
         std::vector< std::string >           _channelNames;
 
         //Commands
@@ -87,6 +90,10 @@ class Server
         //checknick
         std::vector<std::string>         _nickList;
 
+
 };
+
+extern Server*                  global_serv;
+extern std::vector<int>         g_fdList;
 
 #endif

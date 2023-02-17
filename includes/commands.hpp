@@ -25,6 +25,9 @@ void                    setUser(std::string params, User &user);
 void                    checkPass(std::string password);
 bool                    isNickformatok(std::string nick);
 void                    motd(std::string params, User &user);
+void                    ping(std::string params, User &user);
+void                    oper(std::string params, User &user);
+void                    quit(std::string params, User &user);
 
 void                    joinChannel(std::string channelName, User &user);
 void                    partChannel(std::string str, User &user);

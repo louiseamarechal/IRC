@@ -13,6 +13,7 @@ User::User(int fd, Server *server) : _userLoggin(""),
                                     _isNickSet(false),
                                     _isUserSet(false),
                                     _isUserRegistered(false),
+                                    _isOper(false),
                                     _server(server),
                                     _userChannel()
 { 
@@ -35,6 +36,7 @@ User&   User::operator=( User const & rhs )
         _isNickSet = rhs.getIsNickSet();
         _isUserSet = rhs.getIsUserSet();
         _isUserRegistered = rhs.getIsUserRegistered();
+        _isOper = rhs.getIsOper();
         _server = rhs.getServer();
     }
 
@@ -42,7 +44,12 @@ User&   User::operator=( User const & rhs )
 }
 
 
-User::~User( void ) { return ; } // supprimer les users ?
+User::~User( void )
+{ 
+    std::cout<<"destructor user called for ==" << getUserFd() <<std::endl;
+    // delete this;
+    return ; 
+} // supprimer les users ?
 
 /*************************************************************************************/
 /*                              GETTERS                                              */
@@ -55,6 +62,8 @@ bool        User::getIsUserRegistered() const { return (_isUserRegistered); }
 bool        User::getIsNickSet() const{return(_isNickSet);}
 
 bool        User::getIsUserSet() const{return(_isUserSet);}
+
+bool        User::getIsOper() const {return(_isOper);}
 
 Server*     User::getServer() const{return(_server);}
 
@@ -79,6 +88,8 @@ void    User::setUserLoggin( std::string loggin ) { _userLoggin = loggin; }
 void    User::setUserFullName( std::string fullName ) { _userFullName = fullName; }
 
 void    User::setIsUserRegistered(bool value) {_isUserRegistered = value;}
+
+void    User::setOper(bool value) {_isOper = value;}
 
 void    User::setIsNickSet(bool value) {
     
@@ -143,6 +154,7 @@ void User::handleCommand(std::string buffer)
     
     std::cout << "Handle Command -- Command = " << command << std::endl;
     std::cout << "Handle Command -- Params = " << params <<std::endl;
+    std::cout << "savoir si la commande correspond  a un vrai truc == " << getServer()->getCommandMap().count(command) << std::endl;
     if (getServer()->getCommandMap().count(command) > 0)
         getServer()->getCommandMap()[command](params, *this);
 }

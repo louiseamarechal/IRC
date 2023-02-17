@@ -6,12 +6,15 @@ void   sendError( std::string message ) {
     std::cerr << message << std::endl;
 }
 
-void sigintHandler(int sig) {
-        (void)sig;
-        // Affiche un message et termine proprement le processus
-        std::cout << "SIGINT reçu, arrêt du programme" << std::endl;
-        exit(0);
-}
+// void sigintHandler(int sig) {
+//         (void)sig;
+//         // Affiche un message et termine proprement le processus
+//         std::cout << "SIGINT reçu, arrêt du programme" << std::endl;
+//         // //ok gros tej les trucs pour eviter que ca leak;
+//         // tej tous les users;
+//         // tej le server;
+//         exit(0);
+// }
 
 std::string removeConsecutiveWhitespace( std::string buffer ) {
 
@@ -39,29 +42,31 @@ std::string removeConsecutiveWhitespace( std::string buffer ) {
     return result;
 }
 
-std::vector<std::string> splitStringSep( std::string params , std::string sep )
+void splitStringSep(std::vector<std::string>    &params, std::string sep )
 {
-    std::vector<std::string>        splittedParams;
+    std::string                     tmp;
     size_t                          startPos = 0;
     size_t                          endPos = 0;
     int                             sepLength = sep.length();
     std::string                     result;
 
     if (params.empty())
-        return (splittedParams);
-
-    while ((endPos = params.find(sep, startPos)) != std::string::npos)
+        return;
+    tmp = params.at(0);
+    params.clear();
+    while ((endPos = tmp.find(sep, startPos)) != std::string::npos)
     {
-        result = params.substr(startPos, endPos - startPos); // on substr juste avant \r\n
+        result = tmp.substr(startPos, endPos - startPos); // on substr juste avant \r\n
         std::cout << "Splitted String Sep result = " << result << std::endl;
         startPos = endPos + sepLength; // on avance startPos apres \r\n
-        splittedParams.push_back(result); // on ajoute notre str au vector
+        params.push_back(result); // on ajoute notre str au vector
+        result.clear();
     }
-
-    return (splittedParams);
+    tmp.clear();
 }
 
-std::vector<std::string> splitString( std::string params ) {
+std::vector<std::string> splitString( std::string params )
+ {
 
     std::vector<std::string>        splittedParams;
     char                            whitespace = 32;

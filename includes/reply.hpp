@@ -45,7 +45,7 @@
 /* 375 */ # define RPL_MOTDSTART(server) (":- " + server + " Message of the day - \r\n") // (MOTD)
 /* 376 */ # define RPL_ENDOFMOTD() (":End of MOTD command\r\n") // (MOTD)
 
-/* 381 */ # define RPL_YOUREOPER() (":You are now an IRC operator \r\n") // (OPER)
+/* 381 */ # define RPL_YOUREOPER() (" : You are now an IRC operator \r\n") // (OPER)
 /* 392 */ # define RPL_USERSSTART() (":UserID Terminal Host \r\n") // (USERS)
 /* 393 */ # define RPL_USERS(username, ttyline, hostname) (":" + username + " " + ttyline + " " + hostname + "\r\n") // (USERS)
 /* 394 */ # define RPL_ENDOFUSERS() (":End of users \r\n") // (USERS)
@@ -92,7 +92,7 @@
 /* 461 */ # define ERR_NEEDMOREPARAMS(command) (command + " :Not enough parameters \r\n") // (USER, JOIN, PART, TOPIC, INVITE, OPER, PASS)
 /* 462 */ # define ERR_ALREADYREGISTRED() (":Unauthorized command (already registered) \r\n") // (USER, PASS)
 
-/* 464 */ # define ERR_PASSWDMISMATCH() (":Password incorrect \r\n") // (OPER)
+/* 464 */ # define ERR_PASSWDMISMATCH() (":Password incorrect\r\n") // (OPER)
 
 /* 471 */ # define ERR_CHANNELISFULL(channel) (channel + " :Cannot join channel (+l)\r\n") // (JOIN)
 
