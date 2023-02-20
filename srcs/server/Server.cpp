@@ -44,9 +44,11 @@ Server::Server( void ) : _port(0),
     _commandMap["PING"] = &ping;
     _commandMap["OPER"] = &oper;
     _commandMap["QUIT"] = &quit;
+    _commandMap["NAMES"] = &names;
+    _commandMap["PRIVMSG"] = &sendPrivMsg;
+    // _commandMap["MODE"] = &mode;
     
     // _commandMap['PASS'] = &checkPass;
-    // _commandMap['PRIVMSG'] = &sendPrivMsg;
     // return ;
 }
 
@@ -128,6 +130,7 @@ void    Server::setChannels( Channel* channel )
         std::cout << channels[channelName]->getChannelName() << " is now in the server public channels map ! His channelOperator is : " <<  channels[channelName]->getChannelOperator() << std::endl;
     }
 }
+
 
 bool    Server::channelIsOkToJoin( Channel& channel )
 {

@@ -1,47 +1,31 @@
 #include "commands.hpp"
 
+// :hey!gsd@127.0.0.1 JOIN #hey
 void    sendJoinRpl( User &user, std::string channelName )
 {
-    std::string symbol;
+    // std::string irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
+    // std::string rpl1 = ":" + user.getUserNick() + irssi + " JOIN " + channelName + "\r\n";
     std::string rpl = ":" + user.getUserNick() + " JOIN " + channelName + "\r\n";
-    std::string rplThree;
-    std::string rplOne;
-    std::string nickNames;
-// :hey!gsd@127.0.0.1 JOIN #hey
-    if (user.getUserChannel().getChannelOperator() == user.getUserNick())
-        symbol = "@";
-    else
-        symbol = "";
-
-    if (user.getUserChannel().getChannelMembers().size() > 1)
-    {
-        nickNames = user.getUserChannel().getAllMembersName();
-        symbol = "@";
-    }
-    else
-        nickNames = user.getUserNick();
-
-    rplThree = sendMessage3(353, user, *user.getServer(), channelName, symbol, nickNames);
-    rplOne = sendMessage1(366, user, *user.getServer(), channelName);
 
     if (user.getUserChannel().getChannelMembers().size() > 1)
         user.getUserChannel().sendMessageToEveryone(rpl, user.getUserFd());
 
     send(user.getUserFd(), rpl.c_str(), rpl.size(), 0);
-    send(user.getUserFd(), rplThree.c_str(), rplThree.size(), 0);
-    send(user.getUserFd(), rplOne.c_str(), rplOne.size(), 0);
+    names(channelName, user);
 }
 
 void    joinChannel( std::string channelName, User &user )
 {
     std::string errorMessage;
-    // si le user fait deja parti d'un channel
 
     std::cout << "CHANNEL NAME received in JOIN.cpp" << channelName << std::endl;
 
     if (!user.getIsUserRegistered())
         return;
 
+    // CHECKER SI USER IS NOT BANNED FROM CHANNEL
+
+    // si le user fait deja parti d'un channel
     if (!(user.getChannelName().empty()))
     {
         errorMessage = sendMessage1(405, user, *user.getServer(), channelName);
@@ -100,3 +84,16 @@ void    joinChannel( std::string channelName, User &user )
 // 332 RPL_TOPIC ------------- we don't do TOPIC
 // 474 ERR_BANNEDFROMCHAN ---- we don't allow operators to ban people
 // 437 ERR_UNAVAILRESOURCE --- we don't do it
+
+
+// 13:46 -!- louisea [] has joined #hey
+// 13:46 [Users #hey]
+// 13:46 [ louisea] 
+// 13:46 -!- Irssi: #hey: Total of 1 nicks [1 ops, 0 halfops, 0 voices, 0 normal]
+
+
+                                                                                                  
+// 13:47 -!- louisea [~lmarecha@2169-197b-3cad-ad79-a88.210.62.ip] has joined #hey
+// 13:47 [Users #hey]
+// 13:47 [@louisea] 
+// 13:47 -!- Irssi: #hey: Total of 1 nicks [1 ops, 0 halfops, 0 voices, 0 normal]

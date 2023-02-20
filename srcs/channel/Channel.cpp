@@ -68,8 +68,19 @@ std::string         Channel::getAllMembersName( void ) const
     std::string                     membersNames;
 
     for (it = _channelMembers.begin(); it != _channelMembers.end(); it++)
-        membersNames += (*it)->getUserNick() + " ";
+    {
+        if ((*it)->getUserNick() == _channelOperator)
+        {
+            std::cout << "I'M AN OPERATOR BITCHES" << std::endl;
+            membersNames += "@";
+        }
+        else
+            membersNames += " ";
+        membersNames += (*it)->getUserNick();
+        membersNames += " ";
+    }
     
+    std::cout << membersNames << std::endl;
     return (membersNames);
 }
 

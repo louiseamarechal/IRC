@@ -23,7 +23,7 @@ void    partChannel(std::string params, User &user)
     std::string                 partMessage;
     std::vector<std::string>    splittedParams;
     std::string                 errorMessage;
-    std::string rpl = ":" + user.getUserNick() + " PART " + channelName + "\r\n";
+    std::string rpl;
 
     if (params.empty())
     {
@@ -34,6 +34,8 @@ void    partChannel(std::string params, User &user)
 
     splittedParams = splitString(params);
     channelName = splittedParams[0];
+    
+    rpl = ":" + user.getUserNick() + " PART " + channelName + "\r\n";
 
     std::cout << "PART ------ Splitted Params size : " << (int)splittedParams.size() << std::endl;
     if (splittedParams.size() > 1)
@@ -56,6 +58,10 @@ void    partChannel(std::string params, User &user)
 
      if (user.getUserChannel().getChannelMembers().size() > 1)
         user.getUserChannel().sendMessageToEveryone(rpl, user.getUserFd());
+    
+    // std::string irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
+
+    send(user.getUserFd(), rpl.c_str(), rpl.size(), 0);
     user.clearChannel(); // clear channelName + _userChannel pointe sur NULL
     user.getServer()->channels[channelName]->removeChannelMembers(user); // remove User de _channelMembers + delete le channel dans server
 }
