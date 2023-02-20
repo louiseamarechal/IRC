@@ -28,5 +28,7 @@ std::string                 toUpper( std::string str );
 // std::vector<std::string>    splitStringSep( std::string params , std::string sep );
 bool                        isACommand(std::string buffer);
 void                        splitStringSep( std::vector<std::string>    &params, std::string sep );
+bool                        isInVectorList( std::string target, std::vector<std::string> stringVector );
+
 
 #endif

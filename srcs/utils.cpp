@@ -115,3 +115,19 @@ bool    isACommand(std::string buffer)
 
     return (false);
 }
+
+bool    isInVectorList( std::string target, std::vector<std::string> stringVector )
+{
+    std::vector<std::string>::iterator   it;
+
+    for (it = stringVector.begin(); it != stringVector.end(); it++)
+    {
+        if (*it == target)
+        {
+            std::cout << "isInVectorList : " << *it << " = " << target << std::endl;
+            return (true);
+        }
+    }
+    std::cout << "isInVectorList : " << target << " -> Not found !" << std::endl;
+    return (false);
+}
