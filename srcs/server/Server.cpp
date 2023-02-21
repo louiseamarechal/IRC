@@ -47,7 +47,6 @@ Server::Server( void ) : _port(0),
     _commandMap["NAMES"] = &names;
     _commandMap["PRIVMSG"] = &sendPrivMsg;
     // _commandMap["MODE"] = &mode;
-    displayMap(_commandMap, "commandMap");
     // _commandMap['PASS'] = &checkPass;
     // return ;
 }
@@ -89,7 +88,7 @@ std::vector<std::string>    Server::getChannelNames() const { return (_channelNa
 
 // std::map<std::string, Channel*> Server::getChannels( void ) const { return (_channels); };
 
-std::map<std::string, void (*)(std::string params, User &user)>    Server::getCommandMap(void) const { return (_commandMap);}
+std::map<std::string, void (*)(std::string params, User &user)> Server::getCommandMap(void) const { return (_commandMap);}
 
 /*************************************************************************************/
 /*                              SETTERS                                              */
@@ -448,7 +447,3 @@ int    Server::runServer( void )
 	}
     return (0);
 }
-
-
-
-	
