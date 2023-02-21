@@ -53,11 +53,11 @@ class Server
         
         int                                                             runServer( void );
         int                                                             createSocket( void );
-        sockaddr_in                                             bindSocket( int serverSocket );
-        void                        removeUser( int i );
-        void                        addUser( int fd);
-        int                         acceptconnexion(int server_fd);
-        static void                  sigintHandler(int sig);
+        sockaddr_in                                                     bindSocket( int serverSocket );
+        void                                                            removeUser( int i );
+        void                                                            addUser( int fd);
+        int                                                             acceptconnexion(int server_fd);
+        static void                                                     sigintHandler(int sig);
         // void                         disconnect_all(void);
         
         void                                                            removeNickList(std::string oldNick);

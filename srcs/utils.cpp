@@ -108,15 +108,15 @@ std::string toUpper( std::string str ) {
 
 bool    isACommand(std::string buffer, Server& server)
 {
-    if (buffer.empty() || server.getCommandMap().empty())
+    std::map<std::string, void (*)(std::string params, User &user)> commandMap = server.getCommandMap();
+
+    if (buffer.empty() || commandMap.empty())
         return (false);
-    
-    displayMap(server.getCommandMap(),"commandMap");
-    
+
     std::string bigBuf = toUpper(buffer);
     std::map<std::string, void (*)(std::string params, User &user)>::iterator   it;
 
-    for (it = server.getCommandMap().begin(); it != server.getCommandMap().end(); it++)
+    for (it = commandMap.begin(); it != commandMap.end(); it++)
     {
         if (it->first == bigBuf)
             return (true);
