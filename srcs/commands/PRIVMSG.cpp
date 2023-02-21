@@ -19,12 +19,10 @@ std::vector<std::string> splitPrivmsgBuffer( std::string params )
                 if (*it == whitespace)
                     result.erase(result.size() - 1); // remove whitespace at the end of result
                 splittedParams.push_back(result); // add result to the vector
-                std::cout << "splitPrivmsgBuffer Result =  " << result << std::endl;
                 break;
         };
     }
     params.erase(0, result.size());
-    std::cout << "splitPrivmsgBuffer Params =  " << params << std::endl;
     splittedParams.push_back(params);
     return (splittedParams);
 }
