@@ -112,7 +112,7 @@ bool    isACommand(std::string buffer, Server& server)
     std::map<std::string, void (*)(std::string params, User &user)>::iterator   it;
 
     if (buffer.empty() || server.getCommandMap().empty())
-        return;
+        return (false);
 
     for (it = server.getCommandMap().begin(); it != server.getCommandMap().end(); it++)
     {
