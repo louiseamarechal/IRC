@@ -3,22 +3,22 @@
 // :hey!gsd@127.0.0.1 JOIN #hey
 void    sendJoinRpl( User &user, std::string channelName )
 {
-    // std::string irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
-    // std::string rpl1 = ":" + user.getUserNick() + irssi + " JOIN " + channelName + "\r\n";
-    std::string rpl = ":" + user.getUserNick() + " JOIN " + channelName + "\r\n";
+    std::string irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
+    std::string rpl = ":" + user.getUserNick() + irssi + " JOIN " + channelName + "\r\n";
+    // std::string rpl = ":" + user.getUserNick() + " JOIN " + channelName + "\r\n";
 
     if (user.getUserChannel().getChannelMembers().size() > 1)
         user.getUserChannel().sendMessageToEveryone(rpl, user.getUserFd());
 
     send(user.getUserFd(), rpl.c_str(), rpl.size(), 0);
+    std::cout << "[SEND] from Server to User FD#" << user.getUserFd() << " : " << rpl << std::endl;
     names(channelName, user);
 }
 
 void    joinChannel( std::string channelName, User &user )
 {
     std::string errorMessage;
-
-    std::cout << "CHANNEL NAME received in JOIN.cpp" << channelName << std::endl;
+    std::cout << "JOIN COMMAND: " << std::endl;
 
     if (!user.getIsUserRegistered())
         return;
@@ -39,8 +39,6 @@ void    joinChannel( std::string channelName, User &user )
         send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
         return;
     }
-    std::cout << "JUST BEFORE CHANNEL CREATION, DID I MAKE IT HERE ?" << std::endl;
-    // std::cout << user.getServer()->channels.empty
 
     if ( user.getServer()->channels[channelName] == NULL )// si le channel n'existe pas encore
     {
@@ -51,8 +49,6 @@ void    joinChannel( std::string channelName, User &user )
             return;
         }
         Channel  *newChannel = new Channel(channelName, *user.getServer(), user);
-
-        std::cout << "CHANNEL NAME IN JOIN: " << newChannel->getChannelName() << std::endl;
 
         // ajouter le channel a userChannel (il est ajoute a _channelMembers dans le constructeur + designe as channelOperator & channelCreator)
         user.setUserChannel(newChannel);

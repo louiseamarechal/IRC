@@ -25,6 +25,8 @@ void    partChannel(std::string params, User &user)
     std::string                 errorMessage;
     std::string rpl;
 
+    std::cout << "PART COMMAND:" << std::endl;
+
     if (params.empty())
     {
         errorMessage = sendMessage1(461, user, *user.getServer(), "PART");
@@ -34,14 +36,14 @@ void    partChannel(std::string params, User &user)
 
     splittedParams = splitString(params);
     channelName = splittedParams[0];
-    
-    rpl = ":" + user.getUserNick() + " PART " + channelName + "\r\n";
+    std::string irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
+    rpl = ":" + user.getUserNick() + irssi + " PART " + channelName + "\r\n";
 
-    std::cout << "PART ------ Splitted Params size : " << (int)splittedParams.size() << std::endl;
+    std::cout << "Splitted Params size : " << (int)splittedParams.size() << std::endl;
     if (splittedParams.size() > 1)
         partMessage = splittedParams[1];
 
-    std::cout << "PART ----- Channel Name : " << channelName << std::endl;
+    std::cout << "Channel Name : " << channelName << std::endl;
     if (user.getServer()->channels[channelName] == NULL) // channel n'existe pas
     {
         errorMessage = sendMessage1(403, user, *user.getServer(), channelName);
@@ -62,6 +64,7 @@ void    partChannel(std::string params, User &user)
     // std::string irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
 
     send(user.getUserFd(), rpl.c_str(), rpl.size(), 0);
+    std::cout << "[SEND] from Server to User FD#" << user.getUserFd() << " : " << rpl << std::endl;
     user.clearChannel(); // clear channelName + _userChannel pointe sur NULL
     user.getServer()->channels[channelName]->removeChannelMembers(user); // remove User de _channelMembers + delete le channel dans server
 }
