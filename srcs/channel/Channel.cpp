@@ -24,7 +24,7 @@ Channel::Channel( std::string name, Server& server, User& user ) : _channelMembe
         return;
     }
 
-    std::cout << "Channel created ! " << _channelName << std::endl;
+    std::cout << "Channel created : " << _channelName << std::endl;
 
     addChannelMembers(user);
     server.setChannels(this);
@@ -112,11 +112,14 @@ void    Channel::addChannelMembers( User& user )
 void    Channel::sendMessageToEveryone( std::string buffer, int fd )
 {
     std::vector<User*>::iterator    it = _channelMembers.begin();
-
+    
     while (it != _channelMembers.end())
     {
         if ((*it)->getUserFd() != fd)
+        {
+            std::cout << "[SEND] from Server to User FD#" << (*it)->getUserFd() << " : " << buffer << std::endl;
             send((*it)->getUserFd(), buffer.c_str(), buffer.size(), 0);
+        }
         it++;
     }
 }
@@ -144,9 +147,9 @@ void    Channel::removeChannelMembers( User& user )
     {
         if ((*it)->getUserNick() == userNick)
         {
-            std::cout << "I'm about to remove this user from _channelMembers : " << (*it)->getUserNick() << std::endl;
+            std::cout << "Removing user " << (*it)->getUserNick() << " from _channelMembers ..." << std::endl;
             it = _channelMembers.erase(it); // récupère l'itérateur de l'élément suivant
-            std::cout << "User has been removed from the _channslMembers vector." << std::endl;
+            std::cout << "Removed from the _channelMembers vector." << std::endl;
         }
         else
         {
@@ -157,7 +160,7 @@ void    Channel::removeChannelMembers( User& user )
 
 bool    channelNameFormatIsOk( std::string name )
 {
-    std::cout << "name[0]" << name[0] << std::endl;
+    // std::cout << "name[0]" << name[0] << std::endl;
     if ( name.length() > 200 || name.length() < 1 )
     {
         std::cout << "It's a length issue ! Whuuut " << std::endl;
