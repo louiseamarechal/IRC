@@ -47,7 +47,7 @@ Server::Server( void ) : _port(0),
     _commandMap["NAMES"] = &names;
     _commandMap["PRIVMSG"] = &sendPrivMsg;
     // _commandMap["MODE"] = &mode;
-    
+    displayMap(_commandMap, "commandMap");
     // _commandMap['PASS'] = &checkPass;
     // return ;
 }
@@ -156,7 +156,7 @@ void    Server::sendMessageToAllChannelMembers( std::string buffer, int fd )
     std::vector<std::string> splittedBufferWhiteSpace;
 
     splittedBuffer.push_back(buffer);
-    splitStringSep(splittedBuffer, "\r\n");
+   splitStringSep(splittedBuffer, "\r\n");
 
     splittedBufferWhiteSpace = splitString(splittedBuffer[0]);
 

@@ -108,11 +108,13 @@ std::string toUpper( std::string str ) {
 
 bool    isACommand(std::string buffer, Server& server)
 {
-    std::string bigBuf = toUpper(buffer);
-    std::map<std::string, void (*)(std::string params, User &user)>::iterator   it;
-
     if (buffer.empty() || server.getCommandMap().empty())
         return (false);
+    
+    displayMap(server.getCommandMap(),"commandMap");
+    
+    std::string bigBuf = toUpper(buffer);
+    std::map<std::string, void (*)(std::string params, User &user)>::iterator   it;
 
     for (it = server.getCommandMap().begin(); it != server.getCommandMap().end(); it++)
     {
@@ -137,4 +139,13 @@ bool    isInVectorList( std::string target, std::vector<std::string> stringVecto
     }
     std::cout << "isInVectorList : " << target << " -> Not found !" << std::endl;
     return (false);
+}
+
+template <class T, class U>
+void    displayMap(const std::map<T, U>& map, const std::string& name)
+{
+    for (typename std::map<T, U>::const_iterator it = map.begin(); it != map.end(); it++)
+    {
+        std::cout << name << "[" << it->first << "] = " << it->second << std::endl;
+    }
 }

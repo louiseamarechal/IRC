@@ -29,6 +29,7 @@ std::string                 toUpper( std::string str );
 bool                        isACommand(std::string buffer, Server& server);
 void                        splitStringSep( std::vector<std::string>    &params, std::string sep );
 bool                        isInVectorList( std::string target, std::vector<std::string> stringVector );
-
+template <class T, class U>
+void                        displayMap(const std::map<T, U>& map, const std::string& name);
 
 #endif
