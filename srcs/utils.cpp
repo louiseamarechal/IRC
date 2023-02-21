@@ -106,12 +106,35 @@ std::string toUpper( std::string str ) {
     return (upperCaseStr);
 }
 
-bool    isACommand(std::string buffer)
+bool    isACommand(std::string buffer, Server& server)
 {
     std::string bigBuf = toUpper(buffer);
+    std::map<std::string, void (*)(std::string params, User &user)>::iterator   it;
 
-    if (bigBuf == "NICK" || bigBuf == "USER" || bigBuf == "USERHOST" || bigBuf == "MOTD" || bigBuf == "JOIN" || bigBuf == "PART")
-        return (true);
+    if (buffer.empty() || server.getCommandMap().empty())
+        return;
 
+    for (it = server.getCommandMap().begin(); it != server.getCommandMap().end(); it++)
+    {
+        if (it->first == bigBuf)
+            return (true);
+    }
+
+    return (false);
+}
+
+bool    isInVectorList( std::string target, std::vector<std::string> stringVector )
+{
+    std::vector<std::string>::iterator   it;
+
+    for (it = stringVector.begin(); it != stringVector.end(); it++)
+    {
+        if (*it == target)
+        {
+            std::cout << "isInVectorList : " << *it << " = " << target << std::endl;
+            return (true);
+        }
+    }
+    std::cout << "isInVectorList : " << target << " -> Not found !" << std::endl;
     return (false);
 }

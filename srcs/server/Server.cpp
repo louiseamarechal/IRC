@@ -44,9 +44,11 @@ Server::Server( void ) : _port(0),
     _commandMap["PING"] = &ping;
     _commandMap["OPER"] = &oper;
     _commandMap["QUIT"] = &quit;
+    _commandMap["NAMES"] = &names;
+    _commandMap["PRIVMSG"] = &sendPrivMsg;
+    // _commandMap["MODE"] = &mode;
     
     // _commandMap['PASS'] = &checkPass;
-    // _commandMap['PRIVMSG'] = &sendPrivMsg;
     // return ;
 }
 
@@ -129,6 +131,7 @@ void    Server::setChannels( Channel* channel )
     }
 }
 
+
 bool    Server::channelIsOkToJoin( Channel& channel )
 {
     std::string channelName = channel.getChannelName();
@@ -157,7 +160,7 @@ void    Server::sendMessageToAllChannelMembers( std::string buffer, int fd )
 
     splittedBufferWhiteSpace = splitString(splittedBuffer[0]);
 
-    if (isACommand(splittedBuffer[0]))
+    if (isACommand(splittedBufferWhiteSpace[0], *this))
         return;
 
     std::map< int, User* >::iterator    it = _userMap.find(fd);

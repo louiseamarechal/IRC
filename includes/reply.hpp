@@ -37,7 +37,7 @@
 /* 341 */ # define RPL_INVITING(channel, nick) (channel + " " + nick + "\r\n") // (INVITE)
 
 /* 352 */ // (a retravailler) # define RPL_WHOREPLY(channel, user, host, server, nick, hopcount, real_name) ("<channel> <user> <host> <server> <nick> ( "H" / "G" > ["*"] [ ( "@" / "+" ) ]:<hopcount> <real_name> \r\n") // (WHO)
-/* 353 */ # define RPL_NAMREPLY(channel, symbol, nick) (channel + " :" + symbol + nick + "\r\n") // (NAMES & JOIN) :master.ircgod.com 353 louise = #channel1 :@louise
+/* 353 */ # define RPL_NAMREPLY(channel, nickList) ("= " + channel + " :" + nickList + "\r\n") // (NAMES & JOIN) :master.ircgod.com 353 louise = #channel1 :@louise
 /* 366 */ # define RPL_ENDOFNAMES(channel) (channel + " :End of NAMES list \r\n") // (NAMES)
 /* 369 */ # define RPL_ENDOFWHOWAS(nick) (nick + " :End of WHOWAS"+ "\r\n") // (WHOWAS)
 
@@ -62,7 +62,8 @@
 /* 404 */ # define ERR_CANNOTSENDTOCHAN(channel_name) (channel_name + " :Cannot send to channel \r\n") // (PRIVMSG)
 /* 405 */ # define ERR_TOOMANYCHANNELS(channel_name) (channel_name + " :You have joined too many channels\r\n") // (JOIN)
 /* 406 */ # define ERR_WASNOSUCHNICK(nickname) (nickname + " :There was no such nickname \r\n") // (WHOWAS)
-/* 407 */ # define ERR_TOOMANYTARGETS(target, error_code, message) (target + " :" + error_code + " recipients. " + message + "\r\n") // (JOIN, PRIVMSG)
+// /* 407 */ # define ERR_TOOMANYTARGETS(target, error_code, message) (target + " :" + error_code + " recipients. " + message + "\r\n") // (JOIN, PRIVMSG)
+/* 407 */ # define ERR_TOOMANYTARGETS(target) (target + " :" + " too many recipients. Please only send to 1 channel/user.\r\n") // (JOIN, PRIVMSG)
 
 /* 409 */ # define ERR_NOORIGIN() (":No origin specified \r\n") // (PING, PONG) (- PING or PONG message missing the originator parameter.)
 

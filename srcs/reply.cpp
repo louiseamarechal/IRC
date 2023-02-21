@@ -119,7 +119,7 @@ std::string    formatMessage(int code, User &user, Server &server, std::string s
         // case 352:
         //     return (prefix + RPL_WHOREPLY())
         case 353:
-            return (prefix + RPL_NAMREPLY(str1, str2, str3));
+            return (prefix + RPL_NAMREPLY(str1, str2));
         case 366:
             return (prefix + RPL_ENDOFNAMES(str1));
             // return (prefix + RPL_ENDOFNAMES(channel));
@@ -167,7 +167,7 @@ std::string    formatMessage(int code, User &user, Server &server, std::string s
             return (prefix + ERR_WASNOSUCHNICK(str1));
             // return (prefix + ERR_WASNOSUCHNICK(nickname));
         case 407:
-            return (prefix + ERR_TOOMANYTARGETS(str1, str2, str3));
+            return (prefix + ERR_TOOMANYTARGETS(str1));
             // return (prefix + ERR_TOOMANYTARGETS(target, error_code, message));
         case 409:
             return (prefix + ERR_NOORIGIN());

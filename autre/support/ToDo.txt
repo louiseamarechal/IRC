@@ -33,18 +33,24 @@ Jacinthe :
     - gerer les doublons dans NICK
     - interdire NICK sans params
 
-LouiseA :
-    - gerer le pb avec recv (cf Alex)
-
-TBC :
-    - creer Classe channel
-    - faire les commandes restantes
-    - revoir User -> est-ce qu'on fait une structure pour les donnees ?
-
-MARDI APREM - REUNION AU SOMMET 14h -- TBC
-    TOPIC : CHANNEL
-
-
 A faire JAcinthe :
 penser a bien verifier quand on quitte avec un user de supprimer de la liste des usernick pour pas bloquer!
 regarder au niveau des sorties pour egager tout proprement.
+
+TO DO VACS :
+- LEAKS a trouver
+
+- QUIT dresser un protocole détaillé de ce qu'on doit faire en quittant
+
+- removeUser() pouvoir lui passer le FD du User en paramètre
+
+- OPER ajouter la fonction KILL?
+(si oui adapter error message de JOIN)
+
+-Réparer Channel sur IRSSI
+   -NAMES
+   -MODE
+   -PART
+   -JOIN
+   - PRVMSG
+   - (NOTICE)
