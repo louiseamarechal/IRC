@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <unistd.h>
 #include "user/User.hpp"
-#include "../includes/utils.hpp"
+#include "utils.hpp"
 #include <sys/epoll.h> // for epoll_create1(), epoll_ctl(), struct epoll_event
 #include <iostream>       // std::cout
 #include <string> 
@@ -88,16 +88,19 @@ const std::map< int, User* >&   Server::getUserMap( void ) const { return (_user
 
 const   User&   Server::getUser( std::string nickName ) const
 {
-    std::map< int, User* >::const_iterator    it = _userMap.begin();
-
-    while (it != _userMap.end())
+    std::map< int, User* >::const_iterator    it;
+    
+    std::cout << "GET USER -> nickname = " << nickName << std::endl;
+    for( it = _userMap.begin(); it != _userMap.end(); it++)
     {
-        if (it->second->getUserNick() == nickName)
+        // displayMap(_userMap, "userMap");
+        std::cout << "it->first = " << it->first << std::endl;
+        std::cout << "(*it).second->getUserNick() = " << (*it).second->getUserNick() << std::endl;
+        if ((*it).second->getUserNick() == nickName)
             return (*it->second);
-        it++;
     }
 
-    throw std::user("Utilisateur non trouvé : " + nickName);
+    throw (std::exception());
 }
 
 const std::map<std::string, void (*)(std::string params, User &user)>& Server::getCommandMap(void) const { return (_commandMap); }
@@ -262,6 +265,8 @@ void    Server::removeUser( int i )
 
 void    Server::addUser( int fd) 
 {  
+    if (fd < 0)
+        return;
     g_fdList.push_back(fd);
     if ( _nbUsers < _maxUsers && _userMap[fd] == NULL)
     {

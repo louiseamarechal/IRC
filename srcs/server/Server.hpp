@@ -16,14 +16,15 @@
 #include <fcntl.h>
 #include <map>
 #include <vector>
+#include <exception>
 #include "user/User.hpp"
 #include "commands.hpp"
 #include "channel/Channel.hpp"
-
+#include "utils.hpp"
 
 class User;
 class Channel;
-
+class exception;
 
 class Server 
 {

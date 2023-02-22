@@ -88,8 +88,8 @@ void    sendPrivMsg( std::string params, User& user )
     else
     {
         const User&   userTarget = user.getServer()->getUser(msgTarget);
-
         std::cout << "I Found the userTarget look at his fd: " << userTarget.getUserFd() <<std::endl;
+
         // if (user.getChannelName() != )
         // sinon target = user
         // check if user exists -> ERR_NOSUCHNICK
