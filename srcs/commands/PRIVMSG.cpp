@@ -5,7 +5,7 @@ std::vector<std::string> splitPrivmsgBuffer( std::string params )
 
     std::vector<std::string>        splittedParams;
     char                            whitespace = 32;
-    std::string::iterator           it;
+    std::string::iterator           it = params.begin();
     std::string                     result;
 
     if (params.empty())
@@ -23,6 +23,8 @@ std::vector<std::string> splitPrivmsgBuffer( std::string params )
         };
     }
     params.erase(0, result.size());
+    while (params[0] == whitespace || params[0] == ':')
+        params.erase(0, 1);
     splittedParams.push_back(params);
     return (splittedParams);
 }
@@ -64,8 +66,8 @@ void    sendPrivMsg( std::string params, User& user )
     }
 
     // PRIVMSG #hey :hey
-
-    rpl = "PRIVMSG " + msgTarget + " :" + splittedBufer[1]; 
+    std::string irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
+    rpl = ":" + user.getUserNick() + irssi + " PRIVMSG " + msgTarget + " :" + splittedBufer[1] + "\r\n"; 
     std::cout << "PRIVMSG - message = " << splittedBufer[1] << std::endl;
     std::cout << "PRIVMSG - rpl = " << rpl << std::endl;
 
@@ -79,18 +81,23 @@ void    sendPrivMsg( std::string params, User& user )
 
     if (msgTarget[0] == '#' || msgTarget[0] == '&') // target = channel
     {
+        std::cout << "Target is a Channel, here's the proof : " << msgTarget[0] << std::endl;
         user.getServer()->sendMessageToAllChannelMembers(rpl, user.getUserFd());
         return;
     }
-    // else
-    // {
+    else
+    {
+        const User&   userTarget = user.getServer()->getUser(msgTarget);
+
+        std::cout << "I Found the userTarget look at his fd: " << userTarget.getUserFd() <<std::endl;
+        // if (user.getChannelName() != )
         // sinon target = user
         // check if user exists -> ERR_NOSUCHNICK
         // check if both user are in same channel -> ERR_CANNOTSENDTOCHAN
         // find userFD
         // send message to that user only
-    //     return;
-    // }
+        // return;
+    }
 
     //Check si buffer.empty()
         // si oui : ERR_NORECIPIENT
