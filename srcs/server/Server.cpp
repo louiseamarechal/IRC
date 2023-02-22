@@ -84,11 +84,23 @@ std::vector<std::string>    Server::getNickList() const { return (_nickList); }
 
 std::vector<std::string>    Server::getChannelNames() const { return (_channelNames); }
 
-// Channel*                    Server::getChannel( std::string channelName ) const { return (_channels[channelName]); }
+const std::map< int, User* >&   Server::getUserMap( void ) const { return (_userMap); }
 
-// std::map<std::string, Channel*> Server::getChannels( void ) const { return (_channels); };
+const   User&   Server::getUser( std::string nickName ) const
+{
+    std::map< int, User* >::const_iterator    it = _userMap.begin();
 
-std::map<std::string, void (*)(std::string params, User &user)> Server::getCommandMap(void) const { return (_commandMap);}
+    while (it != _userMap.end())
+    {
+        if (it->second->getUserNick() == nickName)
+            return (*it->second);
+        it++;
+    }
+
+    throw std::user("Utilisateur non trouvé : " + nickName);
+}
+
+const std::map<std::string, void (*)(std::string params, User &user)>& Server::getCommandMap(void) const { return (_commandMap); }
 
 /*************************************************************************************/
 /*                              SETTERS                                              */
@@ -156,10 +168,9 @@ void    Server::sendMessageToAllChannelMembers( std::string buffer, int fd )
 
     splittedBuffer.push_back(buffer);
     splitStringSep(splittedBuffer, "\r\n");
-    std::cout << "buffer = " << buffer << std::endl;
-    std::cout << "splittedBuffer[0] = " << splittedBuffer[0] << std::endl;
     splittedBufferWhiteSpace = splitString(splittedBuffer[0]);
-    std::cout << "splittedBufferWhiteSpace[0] = " << splittedBufferWhiteSpace[0] << std::endl;
+    
+    // if (isACommand(splittedBufferWhiteSpace[0], *this) && splittedBufferWhiteSpace[0] != "PRIVMSG")
     if (isACommand(splittedBufferWhiteSpace[0], *this))
         return;
 

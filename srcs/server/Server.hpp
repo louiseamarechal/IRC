@@ -43,7 +43,9 @@ class Server
         std::vector<std::string>                                        getChannelNames(void)   const;
         // std::map< std::string, Channel* >                               getChannels( void ) const;
         // Channel*                                                        getChannel( std::string channelName ) const;
-        std::map<std::string, void (*)(std::string params, User &user)> getCommandMap(void)   const;
+        const std::map< int, User* >&                                   getUserMap( void ) const;
+        const User&                                                     getUser( std::string nickName ) const;
+        const std::map<std::string, void (*)(std::string params, User &user)>& getCommandMap(void)   const;
 
         void                                                            setPort( int port);
         void                                                            setPassword( std::string password );

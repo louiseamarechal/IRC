@@ -156,7 +156,8 @@ void User::handleCommand(std::string buffer)
     std::cout << "Handle Command -- Params = " << params <<std::endl;
     std::cout << "savoir si la commande correspond  a un vrai truc == " << getServer()->getCommandMap().count(command) << std::endl;
     if (getServer()->getCommandMap().count(command) > 0)
-        getServer()->getCommandMap()[command](params, *this);
+        getServer()->getCommandMap().at(command)(params, *this);
+        // getServer()->getCommandMap()[command](params, *this); // plus possible de faire ca car on renvoi une const &
 }
 
 void    User::clearChannel( void )
