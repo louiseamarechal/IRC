@@ -53,6 +53,12 @@ void splitStringSep(std::vector<std::string>    &params, std::string sep )
     if (params.empty())
         return;
     tmp = params.at(0);
+    if (tmp.find(sep, startPos) == std::string::npos)
+    {
+        params.push_back(tmp);
+        return ;
+    }
+    std::cout << "TMP = " << tmp << std::endl;
     params.clear();
     while ((endPos = tmp.find(sep, startPos)) != std::string::npos)
     {

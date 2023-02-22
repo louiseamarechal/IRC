@@ -155,10 +155,11 @@ void    Server::sendMessageToAllChannelMembers( std::string buffer, int fd )
     std::vector<std::string> splittedBufferWhiteSpace;
 
     splittedBuffer.push_back(buffer);
-   splitStringSep(splittedBuffer, "\r\n");
-
+    splitStringSep(splittedBuffer, "\r\n");
+    std::cout << "buffer = " << buffer << std::endl;
+    std::cout << "splittedBuffer[0] = " << splittedBuffer[0] << std::endl;
     splittedBufferWhiteSpace = splitString(splittedBuffer[0]);
-
+    std::cout << "splittedBufferWhiteSpace[0] = " << splittedBufferWhiteSpace[0] << std::endl;
     if (isACommand(splittedBufferWhiteSpace[0], *this))
         return;
 
