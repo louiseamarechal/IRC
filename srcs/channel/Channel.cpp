@@ -24,7 +24,7 @@ Channel::Channel( std::string name, Server& server, User& user ) : _channelMembe
         return;
     }
 
-    std::cout << "Channel created : " << _channelName << std::endl;
+    std::cout << "[CHANNEL] - Channel created : " << _channelName << std::endl;
 
     addChannelMembers(user);
     server.setChannels(this);
@@ -48,7 +48,7 @@ Channel&    Channel::operator=( Channel const & rhs )
 
 Channel::~Channel( void ) 
 { 
-    std::cout << "Destroying Channel : " << _channelName << std::endl;
+    std::cout << "[CHANNEL] - Destroying Channel : " << _channelName << std::endl;
     return;
 }
 
@@ -70,17 +70,13 @@ std::string         Channel::getAllMembersName( void ) const
     for (it = _channelMembers.begin(); it != _channelMembers.end(); it++)
     {
         if ((*it)->getUserNick() == _channelOperator)
-        {
-            std::cout << "I'M AN OPERATOR BITCHES" << std::endl;
             membersNames += "@";
-        }
         else
             membersNames += " ";
         membersNames += (*it)->getUserNick();
         membersNames += " ";
     }
     
-    std::cout << membersNames << std::endl;
     return (membersNames);
 }
 
@@ -98,13 +94,13 @@ void    Channel::addChannelMembers( User& user )
     {
         if ((*it)->getUserNick() == userNick)
         {
-            std::cout << "User is already in the _channelMembers vector" << std::endl;
+            std::cout << "[addChannelMembers] - User is already in the _channelMembers vector" << std::endl;
             return;
         }
     }
 
     _channelMembers.push_back(&user);
-    std::cout << user.getUserNick() << " is now part of the _channelMembers List" << std::endl;
+    std::cout << "[addChannelMembers] - " << user.getUserNick() << " is now part of the _channelMembers List" << std::endl;
     
     return;
 }
@@ -117,7 +113,7 @@ void    Channel::sendMessageToEveryone( std::string buffer, int fd )
     {
         if ((*it)->getUserFd() != fd)
         {
-            std::cout << "[SEND] from Server to User FD#" << (*it)->getUserFd() << " : " << buffer << std::endl;
+            std::cout << "[sendMessageToEveryone] from Server to User FD#" << (*it)->getUserFd() << " : " << buffer << std::endl;
             send((*it)->getUserFd(), buffer.c_str(), buffer.size(), 0);
         }
         it++;
@@ -129,7 +125,7 @@ void    Channel::removeChannelMembers( User& user )
     if (_channelMembers.size() == 1) // last member of the channel
     {
         _channelMembers.clear();
-        std::cout << "Last member left the Channel ! _channelMembers.size() is now : " << _channelMembers.size() << std::endl;
+        std::cout << "[removeChannelMembers] - Last member left the Channel ! _channelMembers.size() is now : " << _channelMembers.size() << std::endl;
         _server.deleteChannel(this);
         return ;
     }
@@ -147,9 +143,9 @@ void    Channel::removeChannelMembers( User& user )
     {
         if ((*it)->getUserNick() == userNick)
         {
-            std::cout << "Removing user " << (*it)->getUserNick() << " from _channelMembers ..." << std::endl;
+            std::cout << "[removeChannelMembers] - Removing user " << (*it)->getUserNick() << " from _channelMembers ..." << std::endl;
             it = _channelMembers.erase(it); // récupère l'itérateur de l'élément suivant
-            std::cout << "Removed from the _channelMembers vector." << std::endl;
+            std::cout << "[removeChannelMembers] - Removed from the _channelMembers vector." << std::endl;
         }
         else
         {
@@ -163,17 +159,17 @@ bool    channelNameFormatIsOk( std::string name )
     // std::cout << "name[0]" << name[0] << std::endl;
     if ( name.length() > 200 || name.length() < 1 )
     {
-        std::cout << "It's a length issue ! Whuuut " << std::endl;
+        std::cout << "[channelNameFormatIsOk] - It's a length issue ! Whuuut " << std::endl;
         return (false);
     }
     if ( (name.find(',') != std::string::npos) || (name.find(7) != std::string::npos) || (name.find(' ') != std::string::npos))
     {
-        std::cout << "I found a , or a 7char ! Whuuut " << std::endl;
+        std::cout << "[channelNameFormatIsOk] - I found a , or a 7char ! Whuuut " << std::endl;
         return (false);
     }
     if (name[0] != '#' && name[0] != '&') // '#' = channel available across IRC network -> '&' available on local server only
     {
-        std::cout << "First char is not ok ! Whut whut ! Show me what u got : " << name[0] << std::endl;
+        std::cout << "[channelNameFormatIsOk] - First char is not ok ! Whut whut ! Show me what u got : " << name[0] << std::endl;
         return (false);
     }
     

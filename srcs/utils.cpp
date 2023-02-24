@@ -58,12 +58,12 @@ void splitStringSep(std::vector<std::string>    &params, std::string sep )
         params.push_back(tmp);
         return ;
     }
-    std::cout << "TMP = " << tmp << std::endl;
+    // std::cout << "TMP = " << tmp << std::endl;
     params.clear();
     while ((endPos = tmp.find(sep, startPos)) != std::string::npos)
     {
         result = tmp.substr(startPos, endPos - startPos); // on substr juste avant \r\n
-        std::cout << "Splitted String Sep result = " << result << std::endl;
+        std::cout << "[SPLITTED STRING SEP] result = " << result << std::endl;
         startPos = endPos + sepLength; // on avance startPos apres \r\n
         params.push_back(result); // on ajoute notre str au vector
         result.clear();
@@ -107,8 +107,6 @@ std::string toUpper( std::string str ) {
     for (it = str.begin(); it != str.end(); it++)
         upperCaseStr += toupper(*it);
     
-    std::cout << "toUpperCase = " << upperCaseStr << std::endl;
-
     return (upperCaseStr);
 }
 
@@ -139,11 +137,11 @@ bool    isInVectorList( std::string target, std::vector<std::string> stringVecto
     {
         if (*it == target)
         {
-            std::cout << "isInVectorList : " << *it << " = " << target << std::endl;
+            std::cout << "\n[IS IN VECTOR LIST] : " << *it << " = " << target << std::endl;
             return (true);
         }
     }
-    std::cout << "isInVectorList : " << target << " -> Not found !" << std::endl;
+    std::cout << "[IS IN VECTOR LIST] : " << target << " -> Not found !" << std::endl;
     return (false);
 }
 

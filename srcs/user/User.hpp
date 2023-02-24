@@ -68,4 +68,6 @@ class User
         std::string                             _channelName;
 };
 
+std::ostream&	operator<<(std::ostream& os, User const & rhs);
+
 #endif
