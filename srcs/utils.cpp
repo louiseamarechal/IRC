@@ -120,6 +120,8 @@ bool    isACommand(std::string buffer, Server& server)
     std::string bigBuf = toUpper(buffer);
     std::map<std::string, void (*)(std::string params, User &user)>::const_iterator   it;
 
+    if (bigBuf == "MODE") // message envoye par irssi quand on JOIN (recu par les utilisateurs dans le channel si on fait pas ca)
+        return (true);
     for (it = server.getCommandMap().begin(); it != server.getCommandMap().end(); it++)
     {
         if (it->first == bigBuf)
