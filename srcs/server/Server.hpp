@@ -16,14 +16,15 @@
 #include <fcntl.h>
 #include <map>
 #include <vector>
+#include <exception>
 #include "user/User.hpp"
 #include "commands.hpp"
 #include "channel/Channel.hpp"
-
+#include "utils.hpp"
 
 class User;
 class Channel;
-
+class exception;
 
 class Server 
 {
@@ -43,7 +44,9 @@ class Server
         std::vector<std::string>                                        getChannelNames(void)   const;
         // std::map< std::string, Channel* >                               getChannels( void ) const;
         // Channel*                                                        getChannel( std::string channelName ) const;
-        std::map<std::string, void (*)(std::string params, User &user)> getCommandMap(void)   const;
+        const std::map< int, User* >&                                   getUserMap( void ) const;
+        const User&                                                     getUser( std::string nickName ) const;
+        const std::map<std::string, void (*)(std::string params, User &user)>& getCommandMap(void)   const;
 
         void                                                            setPort( int port);
         void                                                            setPassword( std::string password );
@@ -53,18 +56,18 @@ class Server
         
         int                                                             runServer( void );
         int                                                             createSocket( void );
-        sockaddr_in                                             bindSocket( int serverSocket );
-        void                        removeUser( int i );
-        void                        addUser( int fd);
-        int                         acceptconnexion(int server_fd);
-        static void                  sigintHandler(int sig);
+        sockaddr_in                                                     bindSocket( int serverSocket );
+        void                                                            removeUser( int i );
+        void                                                            addUser( int fd);
+        int                                                             acceptconnexion(int server_fd);
+        static void                                                     sigintHandler(int sig);
         // void                         disconnect_all(void);
         
         void                                                            removeNickList(std::string oldNick);
         bool                                                            channelIsOkToJoin( Channel& channel );
         void                                                            sendMessageToAllChannelMembers( std::string buffer, int fd );
         void                                                            deleteChannel( Channel* channel );
-        
+        void                                                            sendPrivMessages( std::string buffer, int userFd, int targetFd );
         std::map< std::string, Channel* >                               channels;
         
     private :

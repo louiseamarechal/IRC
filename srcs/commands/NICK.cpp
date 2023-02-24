@@ -3,13 +3,13 @@
 
 void    setNick(std::string nick, User &user)
 {
-    std::cout << "Set Nick -- nick = " << nick << std::endl;
+    std::cout << "[NICK] - Set Nick -- nick = " << nick << std::endl;
 
    std::vector<std::string> nicklist = user.getServer()->getNickList();
    if (isNickformatok(nick) == false)
     {
         send(user.getUserFd(), sendMessage1(432, user, *(user.getServer()), nick).c_str(), sendMessage1(432, user, *(user.getServer()), nick).size(), 0);
-        std::cout<<"NICKNAME == FALSE"<<std::endl;
+        std::cout<<"[NICK] - NICKNAME == FALSE"<<std::endl;
         return;
     }
     if (user.getIsUserRegistered() == true)
@@ -19,12 +19,12 @@ void    setNick(std::string nick, User &user)
         else
         {
             std::string tmp  = ":" + user.getUserNick() + " NICK :" + nick + "\r\n";
-            std::cout << "nickname will be changed" << std::endl;
+            std::cout << "[NICK] - nickname will be changed" << std::endl;
             user.getServer()->removeNickList(user.getUserNick());
-            std::cout<<"old nick removed"<<std::endl;
+            std::cout<<"[NICK] - old nick removed"<<std::endl;
             user.getServer()->setNickList(nick);
             user.setUserNick(nick);
-            std::cout<<"new nick set == "<<user.getUserNick()<< std::endl;
+            std::cout<<"[NICK] - new nick set == "<<user.getUserNick()<< std::endl;
             send(user.getUserFd(), tmp.c_str(), tmp.size(),0);
             return;
         }

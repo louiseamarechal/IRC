@@ -11,6 +11,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <fstream>
+#include <exception>
 #include "user/User.hpp"
 #include "server/Server.hpp"
 #include "channel/Channel.hpp"
@@ -19,6 +20,7 @@
 
 class Channel;
 class User;
+class exception;
 
 void                    setNick( std::string nick, User &user );
 void                    setUser( std::string params, User &user );

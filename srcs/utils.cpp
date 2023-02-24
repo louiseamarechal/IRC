@@ -53,11 +53,17 @@ void splitStringSep(std::vector<std::string>    &params, std::string sep )
     if (params.empty())
         return;
     tmp = params.at(0);
+    if (tmp.find(sep, startPos) == std::string::npos)
+    {
+        params.push_back(tmp);
+        return ;
+    }
+    // std::cout << "TMP = " << tmp << std::endl;
     params.clear();
     while ((endPos = tmp.find(sep, startPos)) != std::string::npos)
     {
         result = tmp.substr(startPos, endPos - startPos); // on substr juste avant \r\n
-        std::cout << "Splitted String Sep result = " << result << std::endl;
+        std::cout << "[SPLITTED STRING SEP] result = " << result << std::endl;
         startPos = endPos + sepLength; // on avance startPos apres \r\n
         params.push_back(result); // on ajoute notre str au vector
         result.clear();
@@ -101,19 +107,21 @@ std::string toUpper( std::string str ) {
     for (it = str.begin(); it != str.end(); it++)
         upperCaseStr += toupper(*it);
     
-    std::cout << "toUpperCase = " << upperCaseStr << std::endl;
-
     return (upperCaseStr);
 }
 
 bool    isACommand(std::string buffer, Server& server)
 {
-    std::string bigBuf = toUpper(buffer);
-    std::map<std::string, void (*)(std::string params, User &user)>::iterator   it;
+    // std::map<std::string, void (*)(std::string params, User &user)> commandMap = server.getCommandMap();
 
     if (buffer.empty() || server.getCommandMap().empty())
         return (false);
 
+    std::string bigBuf = toUpper(buffer);
+    std::map<std::string, void (*)(std::string params, User &user)>::const_iterator   it;
+
+    if (bigBuf == "MODE") // message envoye par irssi quand on JOIN (recu par les utilisateurs dans le channel si on fait pas ca)
+        return (true);
     for (it = server.getCommandMap().begin(); it != server.getCommandMap().end(); it++)
     {
         if (it->first == bigBuf)
@@ -131,10 +139,19 @@ bool    isInVectorList( std::string target, std::vector<std::string> stringVecto
     {
         if (*it == target)
         {
-            std::cout << "isInVectorList : " << *it << " = " << target << std::endl;
+            std::cout << "\n[IS IN VECTOR LIST] : " << *it << " = " << target << std::endl;
             return (true);
         }
     }
-    std::cout << "isInVectorList : " << target << " -> Not found !" << std::endl;
+    std::cout << "[IS IN VECTOR LIST] : " << target << " -> Not found !" << std::endl;
     return (false);
+}
+
+template <class T, class U>
+void    displayMap(const std::map<T, U>& map, const std::string& name)
+{
+    for (typename std::map<T, U>::const_iterator it = map.begin(); it != map.end(); it++)
+    {
+        std::cout << name << "[" << it->first << "] = " << it->second << std::endl;
+    }
 }

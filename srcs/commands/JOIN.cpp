@@ -1,6 +1,5 @@
 #include "commands.hpp"
 
-// :hey!gsd@127.0.0.1 JOIN #hey
 void    sendJoinRpl( User &user, std::string channelName )
 {
     std::string irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
@@ -11,14 +10,13 @@ void    sendJoinRpl( User &user, std::string channelName )
         user.getUserChannel().sendMessageToEveryone(rpl, user.getUserFd());
 
     send(user.getUserFd(), rpl.c_str(), rpl.size(), 0);
-    std::cout << "[SEND] from Server to User FD#" << user.getUserFd() << " : " << rpl << std::endl;
+    std::cout << "[SEND][JOIN] from Server to User FD#" << user.getUserFd() << " : " << rpl << std::endl;
     names(channelName, user);
 }
 
 void    joinChannel( std::string channelName, User &user )
 {
     std::string errorMessage;
-    std::cout << "JOIN COMMAND: " << std::endl;
 
     if (!user.getIsUserRegistered())
         return;
