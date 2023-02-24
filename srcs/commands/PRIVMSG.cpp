@@ -29,95 +29,93 @@ std::vector<std::string> splitPrivmsgBuffer( std::string params )
     return (splittedParams);
 }
 
-void    sendPrivMsg( std::string params, User& user )
+void    sendErrorPvmsg(int code, User& user, std::string param)
 {
     std::string errorMessage;
-    std::string msgTarget;
-    std::string rpl;
+
+    if (code == 412)
+        errorMessage = sendMessage(code, user, *user.getServer());
+    else
+        errorMessage = sendMessage1(code, user, *user.getServer(), param);
+    
+    send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+}
+
+bool    isEverythingOkPrivMsg( std::string params, User& user)
+{
     std::vector<std::string> splittedBufer;
+    std::string msgTarget;
 
     if (params.empty())
     {
-        errorMessage = sendMessage1(411, user, *user.getServer(), "PRIVMSG");
-        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0); // ERR_NORECIPIENT
-        send(user.getUserFd(), sendMessage(412, user, *user.getServer()).c_str(), sendMessage(412, user, *user.getServer()).size(), 0); // ERR_NOTEXTTOSEND
-        return;
+        sendErrorPvmsg(412, user, ""); // ERR_NOTEXTTOSEND
+        sendErrorPvmsg(411, user, "PRIVMSG"); // ERR_NORECIPIENT
+        return (false);
     }
 
-    params = removeConsecutiveWhitespace(params);
-    splittedBufer = splitPrivmsgBuffer(params);
-
-    msgTarget = splittedBufer[0];
-    std::cout << "PRIVMSG - msgTarget = " << msgTarget << std::endl;
+    splittedBufer = splitPrivmsgBuffer(removeConsecutiveWhitespace(params));
 
     if (splittedBufer.size() != 2 )
     {
         if (splittedBufer.size() < 2)
-        {
-            errorMessage = sendMessage(412, user, *user.getServer());
-            send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0); // ERR_NOTEXTTOSEND
-        }
+            sendErrorPvmsg(412, user, ""); // ERR_NOTEXTTOSEND
         else if (splittedBufer.size() > 2)
-        {
-            errorMessage = sendMessage1(407, user, *user.getServer(), splittedBufer[0]);
-            send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0); // ERR_NOTEXTTOSEND
-        }
-        return;
+            sendErrorPvmsg(407, user, splittedBufer[0]); // ERR_TOOMANYTARGETS
+
+        return (false);
     }
 
-    // PRIVMSG #hey :hey
-    std::string irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
-    rpl = ":" + user.getUserNick() + irssi + " PRIVMSG " + msgTarget + " :" + splittedBufer[1] + "\r\n"; 
-    std::cout << "PRIVMSG - message = " << splittedBufer[1] << std::endl;
-    std::cout << "PRIVMSG - rpl = " << rpl << std::endl;
+    msgTarget = splittedBufer[0];
 
-    // si user/channel n'existe pas -> ERR_NOSUCHNICK
-    if (!isInVectorList(msgTarget, user.getServer()->getNickList()) && !isInVectorList(msgTarget, user.getServer()->getChannelNames()))
+    if (!isInVectorList(msgTarget, user.getServer()->getNickList()) && !isInVectorList(msgTarget, user.getServer()->getChannelNames())) // si user/channel n'existe pas
     {
-        errorMessage = sendMessage1(401, user, *user.getServer(), msgTarget);
-        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0); // ERR_NOSUCHNICK
-        return;
+        sendErrorPvmsg(401, user, splittedBufer[0]);// ERR_NOSUCHNICK
+        return (false);
     }
+
+    if (splittedBufer[1].empty())
+    {
+        sendErrorPvmsg(412, user, ""); // ERR_NOTEXTTOSEND
+        return (false);
+    }
+
+    return (true);
+}
+
+void    sendPrivMsg( std::string params, User& user )
+{
+    std::string msgTarget;
+    std::string rpl;
+    std::string irssi;
+    std::vector<std::string> splittedBufer;
+
+    if (!isEverythingOkPrivMsg(params, user))
+        return;
+
+    splittedBufer = splitPrivmsgBuffer(removeConsecutiveWhitespace(params));
+    msgTarget = splittedBufer[0];
+    irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
+    rpl = ":" + user.getUserNick() + irssi + " PRIVMSG " + msgTarget + " :" + splittedBufer[1] + "\r\n"; 
+    
+    std::cout << "[PRIVMSG] - msgTarget = " << msgTarget << std::endl;
+    std::cout << "[PRIVMSG] - message = " << splittedBufer[1] << std::endl;
+    std::cout << "[PRIVMSG] - rpl = " << rpl << std::endl;
 
     if (msgTarget[0] == '#' || msgTarget[0] == '&') // target = channel
     {
-        std::cout << "Target is a Channel, here's the proof : " << msgTarget[0] << std::endl;
+        if (user.getChannelName() != msgTarget)  // si user est pas dans ce channel
+        {
+            sendErrorPvmsg(404, user, msgTarget); // ERR_CANNOTSENDTOCHAN
+            return;
+        }
         user.getServer()->sendMessageToAllChannelMembers(rpl, user.getUserFd());
-        return;
     }
     else
     {
         const User&   userTarget = user.getServer()->getUser(msgTarget);
-        std::cout << "I Found the userTarget look at his fd: " << userTarget.getUserFd() <<std::endl;
 
-        // if (user.getChannelName() != )
-        // sinon target = user
-        // check if user exists -> ERR_NOSUCHNICK
-        // check if both user are in same channel -> ERR_CANNOTSENDTOCHAN
-        // find userFD
-        // send message to that user only
-        // return;
+        user.getServer()->sendPrivMessages(rpl, user.getUserFd(), userTarget.getUserFd());
     }
-
-    //Check si buffer.empty()
-        // si oui : ERR_NORECIPIENT
-        // si non : split en deux variables -> msgTarget & message 
-            // check que msgTarget exists (user ou channel)
-                // si non : ERR_NOSUCHNICK (same pour les deux)
-                // si plus de 1 target : 
-                    // ERR_TOOMANYTARGETS
-            // si message.empty()
-                // ERR_NOTEXTTOSEND
-
-    // Used to send message to all users of a Channel
-        // check if the user is in this channel
-            // si non : ERR_CANNOTSENDTOCHAN
-        // send message to all personnes in the channel
-
-    // Used to send prvmsg to users
-        // check if both users are in the same channel
-        // send message only to that user
-
 }
 
 // ERR_NORECIPIENT

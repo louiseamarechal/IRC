@@ -67,7 +67,7 @@ class Server
         bool                                                            channelIsOkToJoin( Channel& channel );
         void                                                            sendMessageToAllChannelMembers( std::string buffer, int fd );
         void                                                            deleteChannel( Channel* channel );
-        
+        void                                                            sendPrivMessages( std::string buffer, int userFd, int targetFd );
         std::map< std::string, Channel* >                               channels;
         
     private :
