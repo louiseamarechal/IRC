@@ -23,7 +23,7 @@ void    partChannel(std::string params, User &user)
     std::string                 partMessage;
     std::vector<std::string>    splittedParams;
     std::string                 errorMessage;
-    std::string rpl;
+    std::string                 rpl;
 
     if (params.empty())
     {
