@@ -5,6 +5,12 @@ void    setNick(std::string nick, User &user)
 {
     std::cout << "[NICK] - Set Nick -- nick = " << nick << std::endl;
 
+    if (nick.empty() == true && user.getIsNickSet() == true)
+    {
+        std::string tmp = "Your nickname is : " + user.getUserNick() + "\n";
+        send(user.getUserFd(), tmp.c_str(), tmp.size(), 0);
+        return;
+    }
    std::vector<std::string> nicklist = user.getServer()->getNickList();
    if (isNickformatok(nick) == false)
     {
