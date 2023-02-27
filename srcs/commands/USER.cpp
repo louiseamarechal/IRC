@@ -9,6 +9,13 @@ void    setUser(std::string params, User &user)
     std::vector<std::string>    splittedParams;
     std::string                 errorMessage;
 
+    if (params.empty())
+    {
+        errorMessage = sendMessage1(461, user, *(user.getServer()), "USER");
+        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+        return;
+    }
+
     if (user.getIsUserRegistered() == true)
     {
         errorMessage = sendMessage(462, user, *(user.getServer()));
