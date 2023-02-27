@@ -7,8 +7,8 @@
 #include <iostream>       // std::cout
 #include <string> 
 
-Server*                 global_serv;
-std::vector<int>         g_fdList;
+// Server*                 global_serv;
+// std::vector<int>         g_fdList;
 
 /*************************************************************************************/
 /*                              CONSTRUCTORS                                         */
@@ -215,7 +215,6 @@ void    Server::deleteChannel( Channel* channel )
         }
     }
 
-    // je cherche le bon channel et je le supprime
     std::map<std::string, Channel*>::iterator itMap = channels.find(channelName);
 
     if (itMap != channels.end())
@@ -224,12 +223,10 @@ void    Server::deleteChannel( Channel* channel )
         delete itMap->second; // Libère la mémoire allouée pour l'objet Channel
         channels.erase(itMap);
     }
-    // itMap est un itérateur qui pointe versla clé channelName dans la map. 
-    // itMap->second, permet d'acceder à la valeur associée à la clé -> un pointeur vers l'objet Channel.
 }
 
 /*************************************************************************************/
-/*                              FUNCTIONS                                            */
+/*                            USER FUNCTIONS                                         */
 /*************************************************************************************/
 
 void    Server::removeUser( int i ) 
@@ -242,37 +239,11 @@ void    Server::removeUser( int i )
     _nbUsers--;
 }
 
-// PROPOSITON DE LEA :
-// void Server::removeUser(int clientFd) {
-//     // Trouver l'identifiant du client dans la table de hachage
-//     auto userIter = _userMap.find(clientFd);
-//     if (userIter == _userMap.end())
-//         return;
-
-//     // Supprimer l'entrée associée à ce client dans la table de hachage
-//     _userMap.erase(userIter);
-
-//     // Réduire le compteur de clients connectés
-//     _nbUsers--;
-
-//     // Fermer la socket associée au client déconnecté
-//     close(clientFd);
-
-//     // Mettre à jour la liste des descripteurs de fichiers pollfd
-//     for (int i = 0; i < _nbUsers; i++) {
-//         if (_fds[i].fd == clientFd) {
-//             for (int j = i; j < _nbUsers - 1; j++)
-//                 _fds[j] = _fds[j + 1];
-//             break;
-//         }
-//     }
-// }
-
 void    Server::addUser( int fd) 
 {  
     if (fd < 0)
         return;
-    g_fdList.push_back(fd);
+    // g_fdList.push_back(fd);
     if ( _nbUsers < _maxUsers && _userMap[fd] == NULL)
     {
         User  *newUser = new User(fd, this);
@@ -283,32 +254,68 @@ void    Server::addUser( int fd)
         std::cout << "[ADD USER] - Too many users ! " << std::endl;
 }
 
+/*************************************************************************************/
+/*                           SERVER FUNCTIONS                                        */
+/*************************************************************************************/
+
 // void    Server::disconnect_all(void)
 // {
 //     delete this;
 //     return;
 // }
-void Server::sigintHandler(int sig)
+void    Server::cDuPropre( void )
+{
+    std::map< int, User* > :: iterator              itUser;
+    std::map< std::string, Channel* > :: iterator   itChannel;
+
+    if (!_userMap.empty())
+    {
+        for (itUser = _userMap.begin(); itUser != _userMap.end(); itUser++)
+        {
+            std::cout << "[C DU PROPRE] - itUser->first : " << itUser->first << std::endl;
+            std::cout << "[C DU PROPRE] - itUser->second.fd : " << itUser->second->getUserFd() << std::endl;
+
+            close(itUser->first);
+            delete itUser->second;
+            // _userMap.erase(itUser);
+        }
+    }
+
+    if (!channels.empty())
+    {
+        for (itChannel = channels.begin(); itChannel != channels.end(); itChannel++)
+            delete itChannel->second;
+            // channels.erase(itChannel);
+    }
+
+    close(_serverFd);
+}    
+
+void    Server::sigintHandler(int sig)
 {
         (void)sig;
-        if (g_fdList.size() != 0)
-        {
-            for (size_t i = 0; i < g_fdList.size(); i++)
-            {
-                std::map< int, User* > :: iterator it = global_serv->_userMap.find(g_fdList[i]);
-                if (it != global_serv->_userMap.end())
-                {   
-                    delete it->second;
-                    global_serv->_userMap.erase(it);
-                    close(g_fdList[i]);
-                }
-            }
-        }
-        close (global_serv->_serverFd);
-        g_fdList.clear();
-        delete global_serv;
-        std::cout << "SIGINT reçu, arrêt du programme" << std::endl;
-        exit(0);
+        interrupt = true;
+        // if (g_fdList.size() != 0)
+        // {
+        //     for (size_t i = 0; i < g_fdList.size(); i++)
+        //     {
+        //         std::map< int, User* > :: iterator it = global_serv->_userMap.find(g_fdList[i]);
+        //         if (it != global_serv->_userMap.end())
+        //         {   
+        //             delete it->second;
+        //             global_serv->_userMap.erase(it);
+        //             close(g_fdList[i]);
+        //         }
+        //     }
+        // }
+        // close (global_serv->_serverFd);
+        // g_fdList.clear();
+        // delete global_serv;
+
+        // delete all channels
+
+        std::cout << "[SIGINT HANDLER] - SIGINT reçu, arrêt du programme" << std::endl;
+        // exit(0);
        
 }
 
@@ -401,7 +408,7 @@ int    Server::runServer( void )
     int                         nBytes;
     int                         event_count;
     int                         client_fd;
-    std::string                 data;
+    std::string                 data = "";
     std::vector<std::string>    splittedBuffer;
 
     _serverFd = createSocket();
@@ -418,7 +425,7 @@ int    Server::runServer( void )
     int epoll_fd = init_epoll(); 
     add_fd_to_poll(epoll_fd, _serverFd); //on ajoute le fd du server a la liste de poll;
     struct epoll_event events[100];   
-	while (1) 
+	while (interrupt != true) 
     {
 		std::cout << "\n[RUN SERVER] - Polling for input..."<<std::endl;
 		event_count = epoll_wait(epoll_fd, events, 1, -1);
@@ -433,18 +440,22 @@ int    Server::runServer( void )
                 add_fd_to_poll(epoll_fd, client_fd); //on ajoute le fd du nouvequ client a la liste de poll;
             }
             std::memset(buffer, 0, sizeof(buffer));
-			nBytes = recv(events[i].data.fd, buffer, sizeof(buffer), 0);
+			nBytes = recv(events[i].data.fd, buffer, 1023, 0);
+            // buffer[nBytes] = '\0';
             std::cout << "[RUN SERVER] - Buffer Server = " << buffer << std::endl;
             std::cout << "[RUN SERVER] - nBytes  = " << nBytes << std::endl;
             if (nBytes <= 0)
             {
                 removeUser(events[i].data.fd);
+                std::memset(buffer, 0, sizeof(buffer));
+                data.clear();
                 continue;
             }
             if (nBytes > 0)
             {
-                // buffer[nBytes] = '\0';
-                data.append(buffer, nBytes); // j'append les buffer a data (poentiellement des reliquas non recus au tour d'avant)
+                std::cout << "[SERVER DATA] = " << data << std::endl;
+                data += buffer;
+                // data.append(buffer, nBytes); // j'append les buffer a data (poentiellement des reliquas non recus au tour d'avant)
                 if (data.find("\r\n") == std::string::npos) // si je trouve pas de \r\n dans le buffer, je quitte la condition pour pouvoir l'append au tour d'apres
                     break;
                 if (data == "\r\n")
@@ -452,9 +463,8 @@ int    Server::runServer( void )
                     data.clear();
                     break;
                 }
-                std::cout << "[RUN SERVER] - Data Server (after append()) = " << data << std::endl;
-                
-                sendMessageToAllChannelMembers(data, events[i].data.fd);
+                std::cout << "[RUN SERVER] - Data Server (after append()) = " << data << std::endl;                
+                // sendMessageToAllChannelMembers(data, events[i].data.fd);
                 splittedBuffer.push_back(data);
                 data.clear();
                 splitStringSep(splittedBuffer, "\r\n");
@@ -467,5 +477,6 @@ int    Server::runServer( void )
             }
 		}
 	}
+    cDuPropre();
     return (0);
 }

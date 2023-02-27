@@ -61,6 +61,8 @@ class Server
         void                                                            addUser( int fd);
         int                                                             acceptconnexion(int server_fd);
         static void                                                     sigintHandler(int sig);
+
+        void                                                            cDuPropre( void );
         // void                         disconnect_all(void);
         
         void                                                            removeNickList(std::string oldNick);
@@ -96,7 +98,8 @@ class Server
 
 };
 
-extern Server*                  global_serv;
-extern std::vector<int>         g_fdList;
+// extern Server*                  global_serv;
+// extern std::vector<int>         g_fdList;
+extern bool interrupt;
 
 #endif
