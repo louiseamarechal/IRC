@@ -58,6 +58,7 @@ class Server
         int                                                             createSocket( void );
         sockaddr_in                                                     bindSocket( int serverSocket );
         void                                                            removeUser( int i );
+        void                                                            removeUserWithFd( int fd );
         void                                                            addUser( int fd);
         int                                                             acceptconnexion(int server_fd);
         static void                                                     sigintHandler(int sig);
