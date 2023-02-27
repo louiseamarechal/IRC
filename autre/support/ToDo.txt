@@ -63,3 +63,4 @@ TO DO VACS :
     -join marche pas sur nc-quit non plus;
     on peut set les meme mdp en passant par -n.
     - voir quand on se reco. 
+    - quand on fait user tout seul ca pete.
