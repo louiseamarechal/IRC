@@ -229,6 +229,14 @@ void    Server::deleteChannel( Channel* channel )
 /*                            USER FUNCTIONS                                         */
 /*************************************************************************************/
 
+void    Server::removeUserWithFd( int fd ) 
+{
+    delete _userMap[fd];
+    _userMap.erase(_userMap.find(fd));
+
+    _nbUsers--;
+}
+
 void    Server::removeUser( int i ) 
 {
     //ICI FAIRE BLOC TRY AND CATCH pourjeter une exception si on trouve pas le fd dans la mapde user utiliser Map.at() pour etre sure qu ca existe et que ca cree pas un truc random u'on supprime apres.
