@@ -83,6 +83,7 @@
 /* 436 */ //# define ERR_NICKCOLLISION do we use ? // (NICK)
 /* 437 */ # define ERR_UNAVAILRESOURCE(nick_channel) (nick_channel + " :Nick/channel is temporarily unavailable \r\n") // (NICK, JOIN)
 
+/* 441 */ # define ERR_USERNOTINCHANNEL(nick, channel) (nick + " " + channel + " :They aren’t on that channel\r\n")
 /* 442 */ # define ERR_NOTONCHANNEL(channel) (channel + " :You’re not on that channel\r\n") // (PART, INVITE, TOPIC)
 /* 443 */ # define ERR_USERONCHANNEL(user, channel) (user + " " + channel + " :is already on channel \r\n") // (INVITE)
 
@@ -103,6 +104,7 @@
 /* 476 */ # define ERR_BADCHANMASK(channel) (channel + " :Bad Channel Mask \r\n") // (JOIN)
 /* 477 */ # define ERR_NOCHANMODES(channel) (channel + " :Channel doesn’t support modes\r\n") // (TOPIC)
 
+/* 482 */ # define ERR_CHANOPRIVSNEEDED(channel) (channel + " :You’re not channel operator\r\n")
 /* 484 */ // # define ERR_RESTRICTED() (":Your connection is restricted! \r\n") // (mode +r) do we use ? // (NICK)
 
 /* 491 */ # define ERR_NOOPERHOST() (":No O-lines for your host \r\n") // (OPER)

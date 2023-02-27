@@ -199,6 +199,8 @@ std::string    formatMessage(int code, User &user, Server &server, std::string s
         case 437:
             return (prefix + ERR_UNAVAILRESOURCE(str1));
             // return (prefix + ERR_UNAVAILRESOURCE(nick/channel));
+        case 441:
+            return (prefix + ERR_USERNOTINCHANNEL(str1, str2));
         case 442:
             return (prefix + ERR_NOTONCHANNEL(str1));
             // return (prefix + ERR_NOTONCHANNEL(channel));
@@ -234,6 +236,8 @@ std::string    formatMessage(int code, User &user, Server &server, std::string s
         case 477:
             return (prefix +  ERR_NOCHANMODES(str1));
             // return (prefix +  ERR_NOCHANMODES(channel));
+        case 482:
+            return (prefix + ERR_CHANOPRIVSNEEDED(str1));
         // case 484:
         //     return (prefix + ERR_RESTRICTED());
         case 491:
