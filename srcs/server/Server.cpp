@@ -19,7 +19,7 @@ Server::Server( void ) : _port(0),
                         _serverName("JLA.irc.com"),
                         _password(""),
                         _creationDate("Wed Feb 8 15:53:25 2023"),
-                        _maxUsers(10),
+                        _maxUsers(100),
                         _serverFd(0)
                         // _nbUsers(0),
 

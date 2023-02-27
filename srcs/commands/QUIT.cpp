@@ -10,10 +10,11 @@ void    quit(std::string params, User &user)
        close(user.getUserFd());
        return;
     }
-    if (user.getUserNick() != "")
+    if (user.getUserNick().empty() == false)
         user.getServer()->removeNickList(user.getUserNick());
     std::cout<<"[QUIT] - closing FD = " << user.getUserFd() << std::endl;
-    close(user.getUserFd());
-    user.getServer()->removeUserWithFd(user.getUserFd());
+    //  user.getServer()->removeUserWithFd(user.getUserFd());
+     close(user.getUserFd());
+   
     // delete user;
 }

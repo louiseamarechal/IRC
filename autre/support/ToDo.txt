@@ -65,3 +65,6 @@ TO DO VACS :
     - voir quand on se reco. 
     - quand on fait user tout seul ca pete.
     -pb quand on sort de nc...
+    - on peut envoye un priv msg sans etre registered.
+    voir nc avec oper ..
+    --pk la ocnncetion saut au bout de 3 trucs ? quand on deco et reco avec nc
