@@ -54,3 +54,12 @@ TO DO VACS :
    -JOIN
    - PRVMSG
    - (NOTICE)
+
+
+   to do 27 fevrier :
+    - changer le mdp
+    - pb pour set le nick en premier sur nc.
+    - nick sas rien sur nc doit afficher le nick., et la ce nest pas le cas.
+    -join marche pas sur nc-quit non plus;
+    on peut set les meme mdp en passant par -n.
+    - voir quand on se reco. 
