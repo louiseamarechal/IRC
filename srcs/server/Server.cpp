@@ -340,7 +340,7 @@ int     Server::createSocket( void )
    
     setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &enable, sizeof(enable));
     
-    fcntl(serverSocket, F_GETFL, O_NONBLOCK);
+    fcntl(serverSocket, F_SETFL, O_NONBLOCK);
     signal(SIGINT, &Server::sigintHandler);
    return ( serverSocket );
 }
@@ -387,7 +387,7 @@ int    Server::acceptconnexion(int server_fd)
 static void    add_fd_to_poll(int epoll_fd, int fd)
 {
     struct epoll_event event;
-    event.events = EPOLLIN | EPOLLET;
+    event.events = EPOLLIN | EPOLLET | EPOLLRDHUP | EPOLLOUT;
     event.data.fd = fd;
 
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event)) //on ajoute le fd du server a la liste de poll;
@@ -443,6 +443,11 @@ int    Server::runServer( void )
          {
 			std::cout<< "[RUN SERVER] - Reading file descriptor " << events[i].data.fd << std::endl;
 			std::cout<< "[RUN SERVER] - server fd = " << _serverFd << std::endl;
+            if (events[i].events & EPOLLRDHUP)
+            {
+                quit("", *_userMap[events[i].data.fd]);
+                continue;
+            }
             if (events[i].data.fd == _serverFd)
             {
                 client_fd = acceptconnexion(_serverFd);
