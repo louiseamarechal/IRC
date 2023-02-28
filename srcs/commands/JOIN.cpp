@@ -19,7 +19,11 @@ void    joinChannel( std::string channelName, User &user )
     std::string errorMessage;
 
     if (!user.getIsUserRegistered())
+    {
+        errorMessage = sendMessage(451, user, *(user.getServer()));
+        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
         return;
+    }   
 
     // CHECKER SI USER IS NOT BANNED FROM CHANNEL
 

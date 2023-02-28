@@ -6,6 +6,13 @@ void    names( std::string channelName, User &user )
     std::string rplOne;
     std::string nickNames;
 
+    if (!user.getIsUserRegistered())
+    {
+      std::string errorMessage = sendMessage(451, user, *(user.getServer()));
+        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+        return;
+    } 
+
     if (user.getChannelName().empty())
         return;
 

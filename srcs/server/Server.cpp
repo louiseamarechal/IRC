@@ -275,6 +275,7 @@ void    Server::addUser( int fd)
 // }
 void    Server::cDuPropre( void )
 {
+    std::cout << " C DU PROOOOOOOOPRE" << std::endl;
     std::map< int, User* > :: iterator              itUser;
     std::map< std::string, Channel* > :: iterator   itChannel;
 
@@ -323,7 +324,7 @@ void    Server::sigintHandler(int sig)
         // delete global_serv;
 
         // delete all channels
-
+std::cout <<"[SIGINT HANDLER] interrupt = " << interrupt<< std::endl;
         std::cout << "[SIGINT HANDLER] - SIGINT reçu, arrêt du programme" << std::endl;
         // exit(0);
        
@@ -446,6 +447,9 @@ int    Server::runServer( void )
 			std::cout<< "[RUN SERVER] - server fd = " << _serverFd << std::endl;
             if (events[i].events & EPOLLRDHUP)
             {
+                std::cout<<"events[i].data.fd ==" << events[i].data.fd<<std::endl;
+                if (events[i].data.fd == _serverFd)
+                    break;
                 quit("", *_userMap[events[i].data.fd]);
                 continue;
             }

@@ -4,7 +4,9 @@ bool    isEverythingOkNotice( std::string params, User& user)
 {
     std::vector<std::string> splittedBufer;
     std::string msgTarget;
-
+    if (user.getIsUserRegistered() == false)
+        return (false);
+        
     if (params.empty())
         return (false);
 

@@ -88,7 +88,11 @@ void    sendPrivMsg( std::string params, User& user )
     std::string rpl;
     std::string irssi;
     std::vector<std::string> splittedBufer;
-
+    if (!user.getIsUserRegistered())
+    {
+        sendErrorPvmsg(451, user, "");
+        return;
+    } 
     if (!isEverythingOkPrivMsg(params, user))
         return;
 
