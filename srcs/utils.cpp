@@ -155,3 +155,10 @@ void    displayMap(const std::map<T, U>& map, const std::string& name)
         std::cout << name << "[" << it->first << "] = " << it->second << std::endl;
     }
 }
+
+void    printVector( std::vector<std::string> vector, std::string vectorName )
+{
+    std::cout << vectorName << " : " << std::endl;
+    for (std::vector<std::string>::iterator it = vector.begin(); it != vector.end(); it++)
+        std::cout << "\t- " << *it << std::endl;
+}

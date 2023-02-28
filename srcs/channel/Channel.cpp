@@ -109,14 +109,17 @@ void    Channel::sendMessageToEveryone( std::string buffer, int fd )
 {
     std::vector<User*>::iterator    it = _channelMembers.begin();
     
-    while (it != _channelMembers.end())
+    if (_channelMembers.size() > 1)
     {
-        if ((*it)->getUserFd() != fd)
+        while (it != _channelMembers.end())
         {
-            std::cout << "[sendMessageToEveryone] from Server to User FD#" << (*it)->getUserFd() << " : " << buffer << std::endl;
-            send((*it)->getUserFd(), buffer.c_str(), buffer.size(), 0);
+            if ((*it)->getUserFd() != fd)
+            {
+                std::cout << "[sendMessageToEveryone] from Server to User FD#" << (*it)->getUserFd() << " : " << buffer << std::endl;
+                send((*it)->getUserFd(), buffer.c_str(), buffer.size(), 0);
+            }
+            it++;
         }
-        it++;
     }
 }
 

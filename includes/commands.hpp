@@ -35,6 +35,6 @@ void                    joinChannel( std::string channelName, User &user );
 void                    partChannel( std::string str, User &user );
 void                    sendPrivMsg( std::string msgTarget, User& user );
 void                    names( std::string channelName, User &user );
-
+void                    kick( std::string params, User &user );
 
 #endif

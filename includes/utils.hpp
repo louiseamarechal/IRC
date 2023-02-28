@@ -36,4 +36,6 @@ bool                        isInVectorList( std::string target, std::vector<std:
 template <class T, class U>
 void                        displayMap(const std::map<T, U>& map, const std::string& name);
 
+void                        printVector( std::vector<std::string> vector, std::string vectorName );
+
 #endif
