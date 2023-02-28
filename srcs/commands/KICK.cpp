@@ -1,23 +1,18 @@
 #include "commands.hpp"
 
-    // std::vector<std::string>::iterator  it;
-    // std::string                         temp;
+static void sendErrorMessage(int code, User& user, std::string str1, std::string str2)
+{
+    std::string errorMessage;
 
-    // if (params.size() != 1)
-    // {
-    //     std::cout << "[KICK] - params.size() = " << params.size() << std::endl;
-    //     for (it = params.begin(); it != params.end(); it++)
-    //     {
-    //         temp = *it;
-    //         std::cout << "[KICK] - temp[temp.size() -1 ] == " << temp[temp.size() - 1] << std::endl;
-    //         if (temp[temp.size() - 1] != ',' && (it)++ != params.end())
-    //         {
-    //             std::cout << "[KICK] - format not good !" << std::endl;
-    //             return (false);
-    //         }
-    //     }
-    // }
-    // return (true);
+    if (str1.empty() && str2.empty())
+        errorMessage = sendMessage(code, user, *(user.getServer()));
+    else if (str2.empty())
+        errorMessage = sendMessage1(code, user, *(user.getServer()), str1);
+    else
+        errorMessage = sendMessage2(code, user, *(user.getServer()), str1, str2);
+
+    send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+}
 
 static bool isChannel(std::string param)
 {
@@ -64,17 +59,11 @@ static bool spltiAndCheckParams( std::vector<std::string> params, User& user, st
 
     if (!isChannel(*it))
     {
-        errorMessage = sendMessage1(476, user, *(user.getServer()), *it); // ERR_NEEDMOREPARAMS
-        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+        sendErrorMessage(476, user, *it, ""); // ERR_NEEDMOREPARAMS
         return (false);
     }
 
     *channel += *it;
-    // while (isChannel(*it) && it != params.end()) // tant que mon param commence par # || & je l'ajoute a mon vector channels
-    // {
-    //     (*channels).push_back(*it);
-    //     it++;
-    // }
     it++;
     std::cout << "[KICK] - (*it)[0] = " << (*it)[0] << std::endl;
     while (it != params.end())
@@ -124,15 +113,13 @@ void    kick( std::string params, User &user )
 
     if (user.getIsUserRegistered() == false)
     {
-        errorMessage = sendMessage(451, user, *(user.getServer())); // ERR_NOTREGISTERED
-        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+        sendErrorMessage(451, user, "", ""); // ERR_NOTREGISTERED
         return;
     }
 
     if (params.empty())
     {
-        errorMessage = sendMessage1(461, user, *(user.getServer()), "KICK"); // ERR_NEEDMOREPARAMS
-        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+        sendErrorMessage(461, user, "KICK", ""); // ERR_NEEDMOREPARAMS
         return;
     }
 
@@ -145,73 +132,66 @@ void    kick( std::string params, User &user )
         return;
     }
 
-    // printVector(channels, "Channels");
+    std::string temp;
+    for (it = users.begin(); it != users.end(); it++)
+    {
+        if (!((*it).empty()) && (*it)[(*it).size() - 1] == ',')
+            (*it).erase((*it).size() - 1, 1);
+    }
+
     printVector(users, "Users");
     std::cout << "[KICK] - comment = " << comment << std::endl;
 
     if (!isInVectorList(channel, user.getServer()->getChannelNames()))
     {
-        errorMessage = sendMessage1(403, user, *(user.getServer()), channel); // ERR_NOSUCHCHANNEL
-        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+        sendErrorMessage(403, user, channel, ""); // ERR_NOSUCHCHANNEL
         return;
     }
 
     if (user.getServer()->channels[channel]->getChannelOperator() != user.getUserNick())
     {
-        errorMessage = sendMessage1(482, user, *(user.getServer()), channel); // ERR_NOSUCHCHANNEL// ERR_CHANOPRIVSNEEDED
-        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+        sendErrorMessage(482, user, channel, ""); // ERR_NOSUCHCHANNEL// ERR_CHANOPRIVSNEEDED
         return;
     }
 
     std::vector<std::string>    nicklist = user.getServer()->getNickList();
     for (it = users.begin(); it != users.end(); it++)
     {
-        if (std::find(nicklist.begin(), nicklist.end(), *it) == nicklist.end()) // si user existe pas
+        if ((std::find(nicklist.begin(), nicklist.end(), *it) == nicklist.end()) || (user.getServer()->getUser(*it).getChannelName() != channel)) // si user existe pas
         {
-            errorMessage = sendMessage2(441, user, *(user.getServer()), *it, channel);// ERR_USERNOTINCHANNEL
-            send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+            sendErrorMessage(441, user, *it, channel);// ERR_USERNOTINCHANNEL
             return;
         }
-        else if (user.getServer()->getUser(*it).getChannelName() != channel) // si user pas dans le channel
-        {
-            errorMessage = sendMessage2(441, user, *(user.getServer()), *it, channel);// ERR_USERNOTINCHANNEL
-            send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
-            return;
-        }
+
     }
 
     if (user.getChannelName() != channel)
     {
-        errorMessage = sendMessage1(442, user, *(user.getServer()), channel); //ERR_NOTONCHANNEL
-        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+        sendErrorMessage(442, user, channel, ""); //ERR_NOTONCHANNEL
         return;
     }
 
     std::map<int, User*>    userMap = user.getServer()->getUserMap();
+    std::string             rpl;
 
     for (it = users.begin(); it != users.end(); it++)
     {
+
         for (std::map<int, User*>::iterator itMap = userMap.begin(); itMap != userMap.end(); itMap++)
         {
             if (*it == itMap->second->getUserNick())
             {
+                rpl = ":" + user.getUserNick() +  "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName() + " KICK " + channel + " " + *it + " " + comment + "\r\n";
+                // rpl = ":" + user.getUserLoggin() + " KICK " + channel + " " + *it + " " + comment + "\r\n";
+                user.getServer()->sendMessageToAllChannelMembers(rpl, user.getUserFd());
+                send(user.getUserFd(), rpl.c_str(), rpl.size(), 0);
+                // partChannel(channel + " " + *it, *(itMap->second));
                 itMap->second->clearChannel(); // clear channelName + _userChannel pointe sur NULL
                 user.getServer()->channels[channel]->removeChannelMembers(*(itMap)->second);// remove User de _channelMembers + delete le channel dans server
             }
         }
     }
 }
-    // remove Chanel du User
-    // 
-
-    // check if params.empty() -> ERR_NEEDMOREPARAMS
-    // divide the params with whitespaces as sep to get all the 
-    // check that there is at least 1 channel and the list of users to kick
-        // otherwise check that there is 1 channel per user 
-    // check that the channel exists -> ERR_NOSUCHCHANNEL
-    // check that the user using the cmd is OPER -> ERR_CHANOPRIVSNEEDED
-    // chack that the user he wants to kick is in a channel -> ERR_USERNOTINCHANNEL
-    // check that user asking to KICK is on channel -> ERR_NOTONCHANNEL
 
 // ERR_NEEDMOREPARAMS
 // ERR_BADCHANMASK
