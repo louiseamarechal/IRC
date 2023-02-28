@@ -26,7 +26,8 @@ SRCFILE		=	main.cpp \
 				commands/QUIT.cpp \
 				commands/NAMES.cpp \
 				commands/PRIVMSG.cpp \
-				commands/KICK.cpp
+				commands/KICK.cpp \
+				commands/NOTICE.cpp
 		
 CLASSFILE	=	server/Server.cpp \
 				user/User.cpp \

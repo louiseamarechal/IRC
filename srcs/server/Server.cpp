@@ -47,6 +47,7 @@ Server::Server( void ) : _port(0),
     _commandMap["NAMES"] = &names;
     _commandMap["PRIVMSG"] = &sendPrivMsg;
     _commandMap["KICK"] = &kick;
+    _commandMap["NOTICE"] = &notice;
     // _commandMap["MODE"] = &mode;
     // _commandMap['PASS'] = &checkPass;
     // return ;
