@@ -260,8 +260,6 @@ void    Server::addUser( int fd)
         _userMap[fd] = newUser;
         _nbUsers++;
     }
-    else
-        std::cout << "[ADD USER] - Too many users ! " << std::endl;
 }
 
 /*************************************************************************************/
@@ -449,8 +447,12 @@ int    Server::runServer( void )
             {
                 std::cout<<"events[i].data.fd ==" << events[i].data.fd<<std::endl;
                 if (events[i].data.fd == _serverFd)
+                {
+                    interrupt = true;
                     break;
-                quit("", *_userMap[events[i].data.fd]);
+                }
+                else
+                    quit("", *_userMap[events[i].data.fd]);
                 continue;
             }
             if (events[i].data.fd == _serverFd)
@@ -465,6 +467,7 @@ int    Server::runServer( void )
             std::cout << "[RUN SERVER] - nBytes  = " << nBytes << std::endl;
             if (nBytes <= 0)
             {
+                std::cout<<"je suis dans nbytes < 0 ptn de merde c'est pas la quej esuis cense etre...";
                 removeUser(events[i].data.fd);
                 std::memset(buffer, 0, sizeof(buffer));
                 data.clear();
