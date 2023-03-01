@@ -101,10 +101,6 @@ void    sendPrivMsg( std::string params, User& user )
     irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
     rpl = ":" + user.getUserNick() + irssi + " PRIVMSG " + msgTarget + " :" + splittedBufer[1] + "\r\n"; 
     
-    std::cout << "[PRIVMSG] - msgTarget = " << msgTarget << std::endl;
-    std::cout << "[PRIVMSG] - message = " << splittedBufer[1] << std::endl;
-    std::cout << "[PRIVMSG] - rpl = " << rpl << std::endl;
-
     if (msgTarget[0] == '#' || msgTarget[0] == '&') // target = channel
     {
         if (user.getChannelName() != msgTarget)  // si user est pas dans ce channel
@@ -121,12 +117,3 @@ void    sendPrivMsg( std::string params, User& user )
         user.getServer()->sendPrivMessages(rpl, user.getUserFd(), userTarget.getUserFd());
     }
 }
-
-// ERR_NORECIPIENT
-// ERR_CANNOTSENDTOCHAN
-// ERR_NOSUCHNICK
-// ERR_NOTEXTTOSEND
-// ERR_TOOMANYTARGETS
-// RPL_AWAY ----------- a voir si on fait
-// ERR_NOTOPLEVEL ----- a voir si on fait
-// ERR_WILDTOPLEVEL --- a voir si on fait

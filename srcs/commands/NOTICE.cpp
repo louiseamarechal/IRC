@@ -41,10 +41,6 @@ void    notice( std::string params, User& user )
     msgTarget = splittedBufer[0];
     irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
     rpl = ":" + user.getUserNick() + irssi + " NOTICE " + msgTarget + " :" + splittedBufer[1] + "\r\n"; 
-    
-    std::cout << "[PRIVMSG] - msgTarget = " << msgTarget << std::endl;
-    std::cout << "[PRIVMSG] - message = " << splittedBufer[1] << std::endl;
-    std::cout << "[PRIVMSG] - rpl = " << rpl << std::endl;
 
     if (msgTarget[0] == '#' || msgTarget[0] == '&') // target = channel
     {

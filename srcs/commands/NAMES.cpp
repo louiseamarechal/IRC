@@ -23,8 +23,4 @@ void    names( std::string channelName, User &user )
 
     send(user.getUserFd(), rplThree.c_str(), rplThree.size(), 0);
     send(user.getUserFd(), rplOne.c_str(), rplOne.size(), 0);
-
-    std::cout << "[NAMES][SEND] from Server to User FD#" << user.getUserFd() << " : " << rplThree;
-    std::cout << "[NAMES][SEND] from Server to User FD#" << user.getUserFd() << " : " << rplOne;
-    std::cout << "[NAMES] - " << channelName << " members are : " << nickNames << std::endl;
 }

@@ -15,7 +15,6 @@ int main( int argc, char **argv )
 
     Server  *serverJLA = new Server();
 
-    // global_serv = serverJLA;
     serverJLA->setPort(atoi(argv[1]));
     serverJLA->setPassword(argv[2]);
     serverJLA->runServer();

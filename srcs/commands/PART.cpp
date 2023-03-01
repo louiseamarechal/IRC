@@ -22,7 +22,7 @@ void    partChannel(std::string params, User &user)
         return;
     }
 
-    splittedParams = splitString(params);
+    splittedParams = splitString(removeConsecutiveWhitespace(params));
     channelName = splittedParams[0];
     std::string irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
     rpl = ":" + user.getUserNick() + irssi + " PART " + channelName + "\r\n";

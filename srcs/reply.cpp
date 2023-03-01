@@ -77,8 +77,6 @@ std::string    formatMessage(int code, User &user, Server &server, std::string s
             return (prefix + RPL_CREATED(str1));
         case 4:
             return (prefix + RPL_MYINFO(str1, str2, str3, str4));
-        // case 301:
-        //     return (prefix +) 
         case 311:
             return (prefix + RPL_WHOISUSER(str1, str2, str3, str4));
             // return (prefix + RPL_WHOISUSER(nick, user, host, real_name));
@@ -100,11 +98,6 @@ std::string    formatMessage(int code, User &user, Server &server, std::string s
         case 318:
             return (prefix + RPL_ENDOFWHOIS(str1));
             // return (prefix + RPL_ENDOFWHOIS(nick));
-        // case 319:
-        //     return (prefix + RPL_WHOISCHANNELS(str1));
-            // return (prefix + RPL_WHOISCHANNELS(nick));
-        // case 322:
-        //     return
         case 323:
             return (prefix + RPL_LISTEND());
         case 331:
@@ -240,8 +233,6 @@ std::string    formatMessage(int code, User &user, Server &server, std::string s
             return (prefix + ERR_NOPRIVILEGES());
         case 482:
             return (prefix + ERR_CHANOPRIVSNEEDED(str1));
-        // case 484:
-        //     return (prefix + ERR_RESTRICTED());
         case 491:
             return (prefix + ERR_NOOPERHOST());
     }
