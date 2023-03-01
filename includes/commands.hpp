@@ -37,6 +37,7 @@ void                        sendPrivMsg( std::string msgTarget, User& user );
 void                        names( std::string channelName, User &user );
 void                        kick( std::string params, User &user );
 void                        notice( std::string msgTarget, User& user );
+void                        kill(std::string params, User& user);
 std::vector<std::string>    splitPrivmsgBuffer( std::string params );
 
 #endif
