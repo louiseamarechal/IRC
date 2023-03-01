@@ -52,7 +52,7 @@ std::ostream&	operator<<(std::ostream& os, User const & rhs)
 
 User::~User( void )
 { 
-    std::cout<< "\n[USER] - destructor user called for ==" << getUserFd() <<std::endl;
+    std::cout<< "\n[USER] - destructor user called for FD#" << getUserFd() <<std::endl;
     return ; 
 }
 
@@ -147,9 +147,9 @@ void User::handleCommand(std::string buffer)
     }
     
     std::cout << "\n[HANDLE COMMAND] - Command = " << command << std::endl;
-    std::cout << "[HANDLE COMMAND] - Params = " << params <<std::endl;
+    std::cout << "[HANDLE COMMAND] - Params = " << removeConsecutiveWhitespace(params) <<std::endl;
     if (getServer()->getCommandMap().count(command) > 0)
-        getServer()->getCommandMap().at(command)(params, *this);
+        getServer()->getCommandMap().at(command)(removeConsecutiveWhitespace(params), *this);
 }
 
 void    User::clearChannel( void )

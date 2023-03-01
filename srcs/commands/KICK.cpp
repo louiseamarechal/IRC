@@ -156,6 +156,8 @@ void    kick( std::string params, User &user )
 
         for (std::map<int, User*>::iterator itMap = userMap.begin(); itMap != userMap.end(); itMap++)
         {
+            if (*it == user.getUserNick())
+                return;
             if (*it == itMap->second->getUserNick())
             {
                 rpl = ":" + user.getUserNick() +  "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName() + " KICK " + channel + " " + *it + " " + comment + "\r\n";

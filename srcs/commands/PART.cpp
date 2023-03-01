@@ -3,7 +3,7 @@
 void    partChannel(std::string params, User &user)
 {
     std::string                 channelName;
-    std::string                 partMessage;
+    std::string                 partMessage = "";
     std::vector<std::string>    splittedParams;
     std::string                 errorMessage;
     std::string                 rpl;
@@ -25,10 +25,11 @@ void    partChannel(std::string params, User &user)
     splittedParams = splitString(removeConsecutiveWhitespace(params));
     channelName = splittedParams[0];
     std::string irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
-    rpl = ":" + user.getUserNick() + irssi + " PART " + channelName + "\r\n";
 
     if (splittedParams.size() > 1)
-        partMessage = splittedParams[1];
+        partMessage = createMessage(splittedParams);
+
+    rpl = ":" + user.getUserNick() + irssi + " PART " + channelName + " " + partMessage + "\r\n";
 
     if (user.getServer()->channels[channelName] == NULL) // channel n'existe pas
     {
@@ -44,7 +45,7 @@ void    partChannel(std::string params, User &user)
         return;
     }
 
-     if (user.getUserChannel().getChannelMembers().size() > 1)
+    if (user.getUserChannel().getChannelMembers().size() > 1)
         user.getUserChannel().sendMessageToEveryone(rpl, user.getUserFd());
     
     send(user.getUserFd(), rpl.c_str(), rpl.size(), 0);
