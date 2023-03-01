@@ -51,13 +51,13 @@ Server::Server( void ) : _port(0),
     _commandMap["NOTICE"] = &notice;
     _commandMap["KILL"] = &kill;
     
-    std::cout << "\n[SERVER] - Server JLA.irc.com created !" << std::endl;
+    std::cout << MAG << "\n[SERVER CREATED]" << " - WELCOME TO JLA.IRC.COM -" << CRESET << std::endl;
     return ;
 }
 
 Server::~Server( void ) 
 { 
-    std::cout<< "\n[SERVER] - destructor server called"<<std::endl;
+    std::cout << MAG << "\n[SERVER KILLED] - BYE, SEE YOU SOON -" << CRESET << std::endl;
     return ;
 }
 
@@ -240,11 +240,6 @@ void    Server::addUser( int fd)
 /*                           SERVER FUNCTIONS                                        */
 /*************************************************************************************/
 
-// void    Server::disconnect_all(void)
-// {
-//     delete this;
-//     return;
-// }
 void    Server::cDuPropre( void )
 {
     std::map< int, User* > :: iterator              itUser;
@@ -274,7 +269,7 @@ void    Server::sigintHandler(int sig)
         (void)sig;
         interrupt = true;
  
-        std::cout << "[SIGINT HANDLER] - SIGINT reçu, arrêt du programme" << std::endl;
+        std::cout << RED << "[SIGINT HANDLER]" <<  CRESET << "- SIGINT reçu, arrêt du programme" << std::endl;
 }
 
 int     Server::createSocket( void )
@@ -323,7 +318,7 @@ int    Server::acceptconnexion(int server_fd)
         sendError("[ACCEPT CONNECTION] - Failed to accept incoming connection");
     else
     {
-        std::cout<< "\n[ACCEPT CONNECTION] - Accepted connection: fd #" << client_fd << std::endl;
+        std::cout << YEL << "\n[ACCEPT CONNECTION]" << CRESET << " - Accepted connection: fd #" << client_fd << std::endl;
         addUser(client_fd);
     }
     return(client_fd);
@@ -349,7 +344,7 @@ static int   init_epoll()
 
 	if (epoll_fd == -1) 
     {
-		fprintf(stderr, "[INIT EPOLL] - Failed to create epoll file descriptor\n");
+		std::cerr << "[INIT EPOLL] - Failed to create epoll file descriptor\n" << std::endl;
 		return 1;
 	}
     return (epoll_fd);

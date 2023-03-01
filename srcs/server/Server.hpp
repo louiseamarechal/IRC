@@ -1,5 +1,13 @@
-# ifndef SERVER_HPP
+#ifndef SERVER_HPP
 # define SERVER_HPP
+
+#define YEL "\e[0;33m"
+#define MAG "\e[0;35m"
+#define BLU "\e[0;34m"
+#define RED "\e[0;31m"
+#define GRN "\e[0;92m"
+// #define GRN "\e[0;32m"
+#define CRESET "\e[0m"
 
 #include <iostream>
 #include <sys/socket.h>
