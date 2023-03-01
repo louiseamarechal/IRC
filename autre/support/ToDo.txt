@@ -2,6 +2,5 @@
     - changer le mdp
 
 FINAL TO DO :
-    - revoir NAMES -> messages d'erreur etc
-    - OPER -> ajouter KILL + NOT REGISTERED RPL OPER
-    - PART ajouter NOT REGISTERED RPL OPER
+    - KILL -> recoit pas tout le message d'un coup + kill ok sans etre OPER
+    - server connection lost + reconnected, PING ?

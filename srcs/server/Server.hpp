@@ -86,6 +86,7 @@ class Server
         
         int                         _maxUsers;
         int                          _serverFd;
+        int                          _epollFd;
 
         
         std::vector< std::string >           _channelNames;

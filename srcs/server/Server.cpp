@@ -20,7 +20,8 @@ Server::Server( void ) : _port(0),
                         _password(""),
                         _creationDate("Wed Feb 8 15:53:25 2023"),
                         _maxUsers(100),
-                        _serverFd(0)
+                        _serverFd(0),
+                        _epollFd(0)
                         // _nbUsers(0),
 
 {
@@ -264,6 +265,7 @@ void    Server::cDuPropre( void )
             delete itChannel->second;
     }
 
+    close(_epollFd);
     close(_serverFd);
 }    
 
@@ -373,16 +375,16 @@ int    Server::runServer( void )
     // else
     //     std::cout << "[RUN SERVER] - Listening for incoming connections ..." << std::endl;
     // on init le epoll_fd. 
-    int epoll_fd = init_epoll(); 
-    add_fd_to_poll(epoll_fd, _serverFd); //on ajoute le fd du server a la liste de poll;
+    _epollFd = init_epoll(); 
+    add_fd_to_poll(_epollFd, _serverFd); //on ajoute le fd du server a la liste de poll;
     struct epoll_event events[100];   
 	while (interrupt != true) 
     {
 		// std::cout << "\n[RUN SERVER] - Polling for input..."<<std::endl;
-		event_count = epoll_wait(epoll_fd, events, 1, -1);
+		event_count = epoll_wait(_epollFd, events, 1, -1);
 		// std::cout << "[RUN SERVER] - " << event_count << " ready events" << std::endl;
 		for (int i = 0; i < event_count; i++)
-         {
+        {
 			// std::cout<< "[RUN SERVER] - Reading file descriptor " << events[i].data.fd << std::endl;
             if (events[i].events & EPOLLRDHUP)
             {
@@ -398,7 +400,7 @@ int    Server::runServer( void )
             if (events[i].data.fd == _serverFd)
             {
                 client_fd = acceptconnexion(_serverFd);
-                add_fd_to_poll(epoll_fd, client_fd); //on ajoute le fd du nouvequ client a la liste de poll;
+                add_fd_to_poll(_epollFd, client_fd); //on ajoute le fd du nouvequ client a la liste de poll;
             }
             std::memset(buffer, 0, sizeof(buffer));
 			nBytes = recv(events[i].data.fd, buffer, 1023, MSG_DONTWAIT);
