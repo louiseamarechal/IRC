@@ -37,5 +37,7 @@ template <class T, class U>
 void                        displayMap(const std::map<T, U>& map, const std::string& name);
 
 void                        printVector( std::vector<std::string> vector, std::string vectorName );
+std::string                 createMessage(  std::vector<std::string> splittedParams );
+
 
 #endif

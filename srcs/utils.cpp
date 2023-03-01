@@ -6,6 +6,22 @@ void   sendError( std::string message ) {
     std::cerr << message << std::endl;
 }
 
+std::string  createMessage(  std::vector<std::string> splittedParams )
+{
+    std::string message;
+
+    if (splittedParams.size() == 2)
+    {
+        message = splittedParams[1];
+        return (message);
+    }
+
+    for (size_t i = 1; i < splittedParams.size(); i++)
+        message += splittedParams[i] + " ";
+
+    return (message);
+}
+
 std::string removeConsecutiveWhitespace( std::string buffer ) {
 
     char                    whitespace = 32;
@@ -13,7 +29,7 @@ std::string removeConsecutiveWhitespace( std::string buffer ) {
     std::string::iterator   it = buffer.begin();
     
     if (buffer.empty())
-        return (NULL);
+        return (buffer);
 
     while ( *it == whitespace )
         buffer.erase(it);

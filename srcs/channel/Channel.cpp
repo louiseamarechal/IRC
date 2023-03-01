@@ -93,14 +93,10 @@ void    Channel::addChannelMembers( User& user )
     for (it = _channelMembers.begin(); it != _channelMembers.end(); it++)
     {
         if ((*it)->getUserNick() == userNick)
-        {
-            std::cout << "[addChannelMembers] - User is already in the _channelMembers vector" << std::endl;
             return;
-        }
     }
 
     _channelMembers.push_back(&user);
-    std::cout << "[addChannelMembers] - " << user.getUserNick() << " is now part of the _channelMembers List" << std::endl;
     
     return;
 }
@@ -114,10 +110,7 @@ void    Channel::sendMessageToEveryone( std::string buffer, int fd )
         while (it != _channelMembers.end())
         {
             if ((*it)->getUserFd() != fd)
-            {
-                std::cout << "[sendMessageToEveryone] from Server to User FD#" << (*it)->getUserFd() << " : " << buffer << std::endl;
                 send((*it)->getUserFd(), buffer.c_str(), buffer.size(), 0);
-            }
             it++;
         }
     }
@@ -128,7 +121,6 @@ void    Channel::removeChannelMembers( User& user )
     if (_channelMembers.size() == 1) // last member of the channel
     {
         _channelMembers.clear();
-        std::cout << "[removeChannelMembers] - Last member left the Channel ! _channelMembers.size() is now : " << _channelMembers.size() << std::endl;
         _server.deleteChannel(this);
         return ;
     }
@@ -145,15 +137,9 @@ void    Channel::removeChannelMembers( User& user )
     while (it != _channelMembers.end())
     {
         if ((*it)->getUserNick() == userNick)
-        {
-            std::cout << "[removeChannelMembers] - Removing user " << (*it)->getUserNick() << " from _channelMembers ..." << std::endl;
             it = _channelMembers.erase(it); // récupère l'itérateur de l'élément suivant
-            std::cout << "[removeChannelMembers] - Removed from the _channelMembers vector." << std::endl;
-        }
         else
-        {
             ++it;
-        }
     }
 }
 
@@ -161,20 +147,11 @@ bool    channelNameFormatIsOk( std::string name )
 {
     // std::cout << "name[0]" << name[0] << std::endl;
     if ( name.length() > 200 || name.length() < 1 )
-    {
-        std::cout << "[channelNameFormatIsOk] - It's a length issue ! Whuuut " << std::endl;
         return (false);
-    }
     if ( (name.find(',') != std::string::npos) || (name.find(7) != std::string::npos) || (name.find(' ') != std::string::npos))
-    {
-        std::cout << "[channelNameFormatIsOk] - I found a , or a 7char ! Whuuut " << std::endl;
         return (false);
-    }
     if (name[0] != '#' && name[0] != '&') // '#' = channel available across IRC network -> '&' available on local server only
-    {
-        std::cout << "[channelNameFormatIsOk] - First char is not ok ! Whut whut ! Show me what u got : " << name[0] << std::endl;
         return (false);
-    }
     
     return (true);
 }
