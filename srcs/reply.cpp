@@ -229,6 +229,8 @@ std::string    formatMessage(int code, User &user, Server &server, std::string s
         case 477:
             return (prefix +  ERR_NOCHANMODES(str1));
             // return (prefix +  ERR_NOCHANMODES(channel));
+        case 481:
+            return (prefix + ERR_NOPRIVILEGES());
         case 482:
             return (prefix + ERR_CHANOPRIVSNEEDED(str1));
         case 491:

@@ -48,9 +48,10 @@ Server::Server( void ) : _port(0),
     _commandMap["PRIVMSG"] = &sendPrivMsg;
     _commandMap["KICK"] = &kick;
     _commandMap["NOTICE"] = &notice;
-
+    _commandMap["KILL"] = &kill;
+    
     std::cout << "\n[SERVER] - Server JLA.irc.com created !" << std::endl;
-    // return ;
+    return ;
 }
 
 Server::~Server( void ) 
