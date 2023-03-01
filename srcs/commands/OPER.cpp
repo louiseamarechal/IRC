@@ -10,12 +10,17 @@ void oper(std::string params, User &user)
     std::string operuser = "lol";
     std::string password = "mdr";
 
+    if (!user.getIsUserRegistered())
+    {
+        std::string errorMessage = sendMessage(451, user, *(user.getServer()));
+        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+        return;
+    }   
     if (params.size() == 0)
-        sendMessage1(461, user, *user.getServer(), "OPER");
+        send(user.getUserFd(),sendMessage1(461, user, *user.getServer(), "OPER").c_str(), sendMessage1(461, user, *user.getServer(), "OPER").size(), 0);
     else 
     {
         tmp = splitString(params);
-        std::cout<<"[OPER] - tmp size ="<< tmp.size() << std::endl;
         if (tmp.size() < 2)
             send(user.getUserFd(), sendMessage1(461, user, *user.getServer(), "OPER").c_str(), sendMessage1(461, user, *user.getServer(), "OPER").size(), 0);
         if (tmp[0] != "lol") 
@@ -24,12 +29,9 @@ void oper(std::string params, User &user)
             send(user.getUserFd(),sendMessage(464, user, *user.getServer()).c_str(), sendMessage(464, user, *user.getServer()).size(), 0);
         else
         {
-            std::cout<< "[OPER] - oper successsssss " <<std::endl;
             user.setOper(true);
             send(user.getUserFd(), sendMessage(381, user, *user.getServer()).c_str(), sendMessage(381, user, *user.getServer()).size(), 0);
         }
     }
-
-    //peut etre ajouter l'histoire de mode + 'o' si on a envie ?
 }
 

@@ -104,6 +104,8 @@
 /* 476 */ # define ERR_BADCHANMASK(channel) (channel + " :Bad Channel Mask \r\n") // (JOIN)
 /* 477 */ # define ERR_NOCHANMODES(channel) (channel + " :Channel doesn’t support modes\r\n") // (TOPIC)
 
+/* 481 */ # define ERR_NOPRIVILEGES()(":Permission Denied- You're not an IRC operator\r\n") //KILL
+            
 /* 482 */ # define ERR_CHANOPRIVSNEEDED(channel) (channel + " :You’re not channel operator\r\n")
 /* 484 */ // # define ERR_RESTRICTED() (":Your connection is restricted! \r\n") // (mode +r) do we use ? // (NICK)
 
