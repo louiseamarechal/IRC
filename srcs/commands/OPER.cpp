@@ -15,7 +15,6 @@ void oper(std::string params, User &user)
     else 
     {
         tmp = splitString(params);
-        std::cout<<"[OPER] - tmp size ="<< tmp.size() << std::endl;
         if (tmp.size() < 2)
             send(user.getUserFd(), sendMessage1(461, user, *user.getServer(), "OPER").c_str(), sendMessage1(461, user, *user.getServer(), "OPER").size(), 0);
         if (tmp[0] != "lol") 
@@ -24,7 +23,6 @@ void oper(std::string params, User &user)
             send(user.getUserFd(),sendMessage(464, user, *user.getServer()).c_str(), sendMessage(464, user, *user.getServer()).size(), 0);
         else
         {
-            std::cout<< "[OPER] - oper successsssss " <<std::endl;
             user.setOper(true);
             send(user.getUserFd(), sendMessage(381, user, *user.getServer()).c_str(), sendMessage(381, user, *user.getServer()).size(), 0);
         }

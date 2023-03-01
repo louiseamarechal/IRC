@@ -6,16 +6,6 @@ void   sendError( std::string message ) {
     std::cerr << message << std::endl;
 }
 
-// void sigintHandler(int sig) {
-//         (void)sig;
-//         // Affiche un message et termine proprement le processus
-//         std::cout << "SIGINT reçu, arrêt du programme" << std::endl;
-//         // //ok gros tej les trucs pour eviter que ca leak;
-//         // tej tous les users;
-//         // tej le server;
-//         exit(0);
-// }
-
 std::string removeConsecutiveWhitespace( std::string buffer ) {
 
     char                    whitespace = 32;
@@ -63,7 +53,6 @@ void splitStringSep(std::vector<std::string>    &params, std::string sep )
     while ((endPos = tmp.find(sep, startPos)) != std::string::npos)
     {
         result = tmp.substr(startPos, endPos - startPos); // on substr juste avant \r\n
-        std::cout << "[SPLITTED STRING SEP] result = " << result << std::endl;
         startPos = endPos + sepLength; // on avance startPos apres \r\n
         params.push_back(result); // on ajoute notre str au vector
         result.clear();
@@ -138,12 +127,8 @@ bool    isInVectorList( std::string target, std::vector<std::string> stringVecto
     for (it = stringVector.begin(); it != stringVector.end(); it++)
     {
         if (*it == target)
-        {
-            std::cout << "\n[IS IN VECTOR LIST] : " << *it << " = " << target << std::endl;
             return (true);
-        }
     }
-    std::cout << "[IS IN VECTOR LIST] : " << target << " -> Not found !" << std::endl;
     return (false);
 }
 

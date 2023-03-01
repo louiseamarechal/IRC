@@ -34,17 +34,10 @@ static bool goodCommaPlacement(std::vector<std::string> vector)
     for (it = vector.begin(); it != vector.end(); it++)
     {
         temp = *it;
-        std::cout << "[KICK] - temp[temp.size() - 1] = " << temp[temp.size() - 1] << std::endl;
         if (temp[temp.size() - 1] != ',' && cmpt != vector.size())
-        {
-            std::cout << "[KICK] - comma with this bad boy : " << *it << std::endl;
             return (false);
-        }
         if (temp[temp.size() - 1] == ',' && cmpt == vector.size())
-        {
-            std::cout << "[KICK] - comma with this bad boy : " << *it << std::endl;
             return (false);
-        }
         temp.clear();
         cmpt++;
     }
@@ -65,7 +58,6 @@ static bool spltiAndCheckParams( std::vector<std::string> params, User& user, st
 
     *channel += *it;
     it++;
-    std::cout << "[KICK] - (*it)[0] = " << (*it)[0] << std::endl;
     while (it != params.end())
     {
         if ((*it)[0] == ':')
@@ -87,17 +79,11 @@ static bool spltiAndCheckParams( std::vector<std::string> params, User& user, st
     for (it = (*users).begin(); it != (*users).end(); it++)
     {
         if (isChannel(*it)) // si j'ai des channels dans mon vector users (donc que la commande a ete mal tapee au debut)
-        {
-            std::cout << "[KICK] - I have Channels in the User list, wrong cmd format !" << std::endl;
             return (false);
-        }
     }
 
     if (!goodCommaPlacement(*users) || (*channel)[(*channel).size() - 1] == ',') // verifier que , separe les differents channels et users
-    {
-        std::cout << "[KICK] - (*channel)[(*channel).size() - 1] == " << (*channel)[(*channel).size() - 1] << std::endl;
         return (false);
-    }
 
     return (true);
 }
@@ -107,7 +93,6 @@ void    kick( std::string params, User &user )
     std::vector<std::string>::iterator  it;
     std::vector< std::string >          splittedParams;
     std::vector< std::string >          users;
-    std::string                         errorMessage;
     std::string                         comment;
     std::string                         channel;
 
@@ -124,23 +109,15 @@ void    kick( std::string params, User &user )
     }
 
     splittedParams = splitString(removeConsecutiveWhitespace(params));
-    printVector(splittedParams, "Splitted Params");
 
     if (!spltiAndCheckParams(splittedParams, user, &channel, &users, &comment)) // check les virgules, l'ordre des parametres et le nb
-    {
-        std::cout << "[KICK] - Params Format not OK !" << std::endl;
         return;
-    }
 
-    std::string temp;
     for (it = users.begin(); it != users.end(); it++)
     {
         if (!((*it).empty()) && (*it)[(*it).size() - 1] == ',')
             (*it).erase((*it).size() - 1, 1);
     }
-
-    printVector(users, "Users");
-    std::cout << "[KICK] - comment = " << comment << std::endl;
 
     if (!isInVectorList(channel, user.getServer()->getChannelNames()))
     {
@@ -182,20 +159,11 @@ void    kick( std::string params, User &user )
             if (*it == itMap->second->getUserNick())
             {
                 rpl = ":" + user.getUserNick() +  "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName() + " KICK " + channel + " " + *it + " " + comment + "\r\n";
-                // rpl = ":" + user.getUserLoggin() + " KICK " + channel + " " + *it + " " + comment + "\r\n";
                 user.getServer()->sendMessageToAllChannelMembers(rpl, user.getUserFd());
                 send(user.getUserFd(), rpl.c_str(), rpl.size(), 0);
-                // partChannel(channel + " " + *it, *(itMap->second));
                 itMap->second->clearChannel(); // clear channelName + _userChannel pointe sur NULL
                 user.getServer()->channels[channel]->removeChannelMembers(*(itMap)->second);// remove User de _channelMembers + delete le channel dans server
             }
         }
     }
 }
-
-// ERR_NEEDMOREPARAMS
-// ERR_BADCHANMASK
-// ERR_USERNOTINCHANNEL
-// ERR_NOSUCHCHANNEL
-// ERR_CHANOPRIVSNEEDED
-// ERR_NOTONCHANNEL

@@ -12,7 +12,6 @@ void    quit(std::string params, User &user)
     }
     if (user.getUserNick().empty() == false)
         user.getServer()->removeNickList(user.getUserNick());
-    std::cout<<"[QUIT] - closing FD = " << user.getUserFd() << std::endl;
     close(user.getUserFd()); 
     user.getServer()->removeUserWithFd(user.getUserFd());
      

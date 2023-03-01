@@ -18,8 +18,8 @@ User::User(int fd, Server *server) : _userLoggin(""),
                                     _userChannel()
 { 
     
-    std::cout << "\n[USER] - New User created : fd = " << _userFd << std::endl;
-    std::cout << "[USER] - Server Name from User constructor : " << this->getServer()->getServerName() << "\n" << std::endl;
+    // std::cout << "\n[USER] - New User created : fd = " << _userFd << std::endl;
+    // std::cout << "[USER] - Server Name from User constructor : " << this->getServer()->getServerName() << "\n" << std::endl;
     return ;
 }
 
@@ -53,9 +53,8 @@ std::ostream&	operator<<(std::ostream& os, User const & rhs)
 User::~User( void )
 { 
     std::cout<< "\n[USER] - destructor user called for ==" << getUserFd() <<std::endl;
-    // delete this;
     return ; 
-} // supprimer les users ?
+}
 
 /*************************************************************************************/
 /*                              GETTERS                                              */
@@ -101,28 +100,17 @@ void    User::setIsNickSet(bool value) {
     
     _isNickSet = value;
 
-    if (value == true)
-        std::cout << "\n[SET IS NICK SET] - NICK is now set" << std::endl;
-
     if (_isNickSet == true && _isUserSet == true)
-    {
         setIsUserRegistered(true);
-        std::cout << "[SET IS NICK SET] - User has been set to status : REGISTERED " << std::endl;
-    }
+
 }
 
 void    User::setIsUserSet( bool value ) { 
     
     _isUserSet = value;
-    
-    if (value == true)
-        std::cout << "\n[SET IS USER SET] - USER is now set" << std::endl;
 
     if (_isNickSet == true && _isUserSet == true)
-    {
         setIsUserRegistered(true);    
-        std::cout << "[SET IS USER SET] - User status has been set to : REGISTERED " << std::endl;
-    }
 }
 
 void    User::setUserChannel( Channel* channel )
@@ -160,17 +148,12 @@ void User::handleCommand(std::string buffer)
     
     std::cout << "\n[HANDLE COMMAND] - Command = " << command << std::endl;
     std::cout << "[HANDLE COMMAND] - Params = " << params <<std::endl;
-    std::cout << "[HANDLE COMMAND] - savoir si la commande correspond  a un vrai truc == " << getServer()->getCommandMap().count(command) << std::endl;
     if (getServer()->getCommandMap().count(command) > 0)
         getServer()->getCommandMap().at(command)(params, *this);
-        // getServer()->getCommandMap()[command](params, *this); // plus possible de faire ca car on renvoi une const &
 }
 
 void    User::clearChannel( void )
 {
     _channelName.clear(); 
     _userChannel = NULL;
-
-    std::cout << "\n[USER][CLEAR CHANNEL] - _channelName = " << _channelName << std::endl;
-    std::cout << "[USER][CLEAR CHANNEL] - _userChannel = " << _userChannel << std::endl;
 }

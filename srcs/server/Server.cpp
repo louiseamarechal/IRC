@@ -48,21 +48,14 @@ Server::Server( void ) : _port(0),
     _commandMap["PRIVMSG"] = &sendPrivMsg;
     _commandMap["KICK"] = &kick;
     _commandMap["NOTICE"] = &notice;
-    // _commandMap["MODE"] = &mode;
-    // _commandMap['PASS'] = &checkPass;
+
+    std::cout << "\n[SERVER] - Server JLA.irc.com created !" << std::endl;
     // return ;
 }
 
 Server::~Server( void ) 
 { 
     std::cout<< "\n[SERVER] - destructor server called"<<std::endl;
-    // for (size_t i = 0; i < g_fdList.size(); i++)
-    // {
-    //     delete _userMap[g_fdList[i]];
-    //     close(g_fdList[i]);
-    // }   
-    // for (int i = 0; i < _nbUsers; i++)
-    //     delete _userMap[i];
     return ;
 }
 
@@ -121,10 +114,6 @@ void   Server::removeNickList(std::string oldNick)
     std::vector<std::string>::iterator it = std::find(_nickList.begin(), _nickList.end(), oldNick);
     if ( it != _nickList.end())
          _nickList.erase(it);
-    else 
-    {
-        std::cout<<"\n[REMOVE NICK LIST] - remove old nickname failed" << std::endl;
-    }
 }
 
 /*************************************************************************************/
@@ -137,10 +126,7 @@ void    Server::setChannels( Channel* channel )
 
     _channelNames.push_back(channelName);
     if (channels[channelName] == NULL)
-    {
         channels[channelName] = channel;
-        std::cout << "\n[SET CHANNELS] - " << channels[channelName]->getChannelName() << " is now in the server public channels map ! His channelOperator is : " <<  channels[channelName]->getChannelOperator() << std::endl;
-    }
 }
 
 
@@ -148,11 +134,6 @@ bool    Server::channelIsOkToJoin( Channel& channel )
 {
     std::string channelName = channel.getChannelName();
 
-    if (!(channel.getChannelMembers().empty()))
-    {
-        std::cout << "\n[CHANNEL IS OK TO JOIN] - Channels already has members" << std::endl;
-        
-    }
     if (channels[channelName] != NULL)
         return (true);
 
@@ -164,7 +145,6 @@ void    Server::sendPrivMessages( std::string buffer, int userFd, int targetFd )
     if (targetFd == _serverFd || targetFd == userFd)
         return;
 
-    // std::cout << "[SEND] from User FD#" << userFd << " to Target User FD#" << targetFd << " : " << buffer << std::endl;
     send(targetFd, buffer.c_str(), buffer.size(), 0);
 }
 
@@ -206,22 +186,15 @@ void    Server::deleteChannel( Channel* channel )
     while (it != _channelNames.end())
     {
         if (*it == channelName)
-        {
-            std::cout << "\n[DELETE CHANNEL] - About to remove this channel name from _channelNames : " << *it << "..." << std::endl;
             it = _channelNames.erase(it); // récupère l'itérateur de l'élément suivant
-            std::cout << "[DELETE CHANNEL] - Removed from the _channelNames vector." << std::endl;
-        }
         else
-        {
             ++it;
-        }
     }
 
     std::map<std::string, Channel*>::iterator itMap = channels.find(channelName);
 
     if (itMap != channels.end())
     {
-        std::cout << "[DELETE CHANNEL] - Removing channel " << channelName << " from the server public channels map !" << std::endl;
         delete itMap->second; // Libère la mémoire allouée pour l'objet Channel
         channels.erase(itMap);
     }
@@ -253,7 +226,6 @@ void    Server::addUser( int fd)
 {  
     if (fd < 0)
         return;
-    // g_fdList.push_back(fd);
     if ( _nbUsers < _maxUsers && _userMap[fd] == NULL)
     {
         User  *newUser = new User(fd, this);
@@ -273,7 +245,6 @@ void    Server::addUser( int fd)
 // }
 void    Server::cDuPropre( void )
 {
-    std::cout << " C DU PROOOOOOOOPRE" << std::endl;
     std::map< int, User* > :: iterator              itUser;
     std::map< std::string, Channel* > :: iterator   itChannel;
 
@@ -281,12 +252,8 @@ void    Server::cDuPropre( void )
     {
         for (itUser = _userMap.begin(); itUser != _userMap.end(); itUser++)
         {
-            std::cout << "[C DU PROPRE] - itUser->first : " << itUser->first << std::endl;
-            std::cout << "[C DU PROPRE] - itUser->second.fd : " << itUser->second->getUserFd() << std::endl;
-
             close(itUser->first);
             delete itUser->second;
-            // _userMap.erase(itUser);
         }
     }
 
@@ -294,7 +261,6 @@ void    Server::cDuPropre( void )
     {
         for (itChannel = channels.begin(); itChannel != channels.end(); itChannel++)
             delete itChannel->second;
-            // channels.erase(itChannel);
     }
 
     close(_serverFd);
@@ -304,28 +270,8 @@ void    Server::sigintHandler(int sig)
 {
         (void)sig;
         interrupt = true;
-        // if (g_fdList.size() != 0)
-        // {
-        //     for (size_t i = 0; i < g_fdList.size(); i++)
-        //     {
-        //         std::map< int, User* > :: iterator it = global_serv->_userMap.find(g_fdList[i]);
-        //         if (it != global_serv->_userMap.end())
-        //         {   
-        //             delete it->second;
-        //             global_serv->_userMap.erase(it);
-        //             close(g_fdList[i]);
-        //         }
-        //     }
-        // }
-        // close (global_serv->_serverFd);
-        // g_fdList.clear();
-        // delete global_serv;
-
-        // delete all channels
-std::cout <<"[SIGINT HANDLER] interrupt = " << interrupt<< std::endl;
+ 
         std::cout << "[SIGINT HANDLER] - SIGINT reçu, arrêt du programme" << std::endl;
-        // exit(0);
-       
 }
 
 int     Server::createSocket( void )
@@ -334,9 +280,7 @@ int     Server::createSocket( void )
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
     if (serverSocket < 0)
-        sendError("[CREATE SOCKET] - SFailed to create socket");
-    else
-        std::cout << "[CREATE SOCKET] - Socket created !" << std::endl;
+        sendError("[CREATE SOCKET] - Failed to create socket");
    
     setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &enable, sizeof(enable));
     
@@ -361,8 +305,6 @@ sockaddr_in Server::bindSocket( int serverSocket )
         sendError("[BIND SOCKET] - Failed to bind socket to port");
         throw std::exception();
     }
-    else
-        std::cout << "[BIND SOCKET] - Success, socket binded !" << std::endl;
 
     return ( serverAddress );
 } 
@@ -392,7 +334,7 @@ static void    add_fd_to_poll(int epoll_fd, int fd)
 
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event)) //on ajoute le fd du server a la liste de poll;
     {
-		std::cout<<"[ADD FD TO POLL] - Failed to add file descriptor to epoll"<<std::endl;
+		std::cout<< "[ADD FD TO POLL] - Failed to add file descriptor to epoll" << std::endl;
 		close(epoll_fd);
         throw std::exception();
 	}
@@ -402,7 +344,6 @@ static int   init_epoll()
 {
     int epoll_fd = epoll_create1(0); // on init le epoll_fd.
 
-    std::cout<< "[INIT EPOLL] - epoll_fd = " << epoll_fd<<std::endl;
 	if (epoll_fd == -1) 
     {
 		fprintf(stderr, "[INIT EPOLL] - Failed to create epoll file descriptor\n");
@@ -428,24 +369,22 @@ int    Server::runServer( void )
         sendError("[RUN SERVER] - Failed to listen for incoming connections");
         return 1;
     }
-    else
-        std::cout << "[RUN SERVER] - Listening for incoming connections ..." << std::endl;
+    // else
+    //     std::cout << "[RUN SERVER] - Listening for incoming connections ..." << std::endl;
     // on init le epoll_fd. 
     int epoll_fd = init_epoll(); 
     add_fd_to_poll(epoll_fd, _serverFd); //on ajoute le fd du server a la liste de poll;
     struct epoll_event events[100];   
 	while (interrupt != true) 
     {
-		std::cout << "\n[RUN SERVER] - Polling for input..."<<std::endl;
+		// std::cout << "\n[RUN SERVER] - Polling for input..."<<std::endl;
 		event_count = epoll_wait(epoll_fd, events, 1, -1);
-		std::cout << "[RUN SERVER] - " << event_count << " ready events" << std::endl;
+		// std::cout << "[RUN SERVER] - " << event_count << " ready events" << std::endl;
 		for (int i = 0; i < event_count; i++)
          {
-			std::cout<< "[RUN SERVER] - Reading file descriptor " << events[i].data.fd << std::endl;
-			std::cout<< "[RUN SERVER] - server fd = " << _serverFd << std::endl;
+			// std::cout<< "[RUN SERVER] - Reading file descriptor " << events[i].data.fd << std::endl;
             if (events[i].events & EPOLLRDHUP)
             {
-                std::cout<<"events[i].data.fd ==" << events[i].data.fd<<std::endl;
                 if (events[i].data.fd == _serverFd)
                 {
                     interrupt = true;
@@ -463,13 +402,10 @@ int    Server::runServer( void )
             std::memset(buffer, 0, sizeof(buffer));
 			nBytes = recv(events[i].data.fd, buffer, 1023, MSG_DONTWAIT);
             // buffer[nBytes] = '\0';
-            std::cout << "[RUN SERVER] - Buffer Server = " << buffer << std::endl;
-            std::cout << "[RUN SERVER] - nBytes  = " << nBytes << std::endl;
             if (nBytes < 0)
                 continue;
             if (nBytes == 0)
             {
-                std::cout<<"je suis dans nbytes < 0 ptn de merde c'est pas la quej esuis cense etre...";
                 removeUser(events[i].data.fd);
                 std::memset(buffer, 0, sizeof(buffer));
                 data.clear();
@@ -477,9 +413,7 @@ int    Server::runServer( void )
             }
             if (nBytes > 0)
             {
-                std::cout << "[SERVER DATA] = " << data << std::endl;
-                data += buffer;
-                // data.append(buffer, nBytes); // j'append les buffer a data (poentiellement des reliquas non recus au tour d'avant)
+                data += buffer; // j'append les buffer a data (poentiellement des reliquas non recus au tour d'avant)
                 if (data.find("\r\n") == std::string::npos) // si je trouve pas de \r\n dans le buffer, je quitte la condition pour pouvoir l'append au tour d'apres
                     break;
                 if (data == "\r\n")
@@ -487,16 +421,11 @@ int    Server::runServer( void )
                     data.clear();
                     break;
                 }
-                std::cout << "[RUN SERVER] - Data Server (after append()) = " << data << std::endl;                
-                // sendMessageToAllChannelMembers(data, events[i].data.fd);
                 splittedBuffer.push_back(data);
                 data.clear();
                 splitStringSep(splittedBuffer, "\r\n");
                 for (size_t j = 0; j < splittedBuffer.size(); j++)
-                {
-                      std::cout << "[RUN SERVER] - Command send to Handle Commande -- Server : " << splittedBuffer.at(j) << std::endl;
                     _userMap[events[i].data.fd]->handleCommand(splittedBuffer.at(j));
-                }
                 splittedBuffer.clear();
             }
 		}
