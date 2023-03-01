@@ -344,7 +344,7 @@ int     Server::createSocket( void )
     
     fcntl(serverSocket, F_SETFL, O_NONBLOCK);
     signal(SIGINT, &Server::sigintHandler);
-   return ( serverSocket );
+    return ( serverSocket );
 }
 
 sockaddr_in Server::bindSocket( int serverSocket ) 
@@ -389,7 +389,7 @@ int    Server::acceptconnexion(int server_fd)
 static void    add_fd_to_poll(int epoll_fd, int fd)
 {
     struct epoll_event event;
-    event.events = EPOLLIN | EPOLLET | EPOLLRDHUP | EPOLLOUT;
+    event.events = EPOLLIN | EPOLLET | EPOLLRDHUP ;
     event.data.fd = fd;
 
     if (epoll_ctl(epoll_fd, EPOLL_CTL_ADD, fd, &event)) //on ajoute le fd du server a la liste de poll;
@@ -459,11 +459,13 @@ int    Server::runServer( void )
                 add_fd_to_poll(epoll_fd, client_fd); //on ajoute le fd du nouvequ client a la liste de poll;
             }
             std::memset(buffer, 0, sizeof(buffer));
-			nBytes = recv(events[i].data.fd, buffer, 1023, 0);
+			nBytes = recv(events[i].data.fd, buffer, 1023, MSG_DONTWAIT);
             // buffer[nBytes] = '\0';
             std::cout << "[RUN SERVER] - Buffer Server = " << buffer << std::endl;
             std::cout << "[RUN SERVER] - nBytes  = " << nBytes << std::endl;
-            if (nBytes <= 0)
+            if (nBytes < 0)
+                continue;
+            if (nBytes == 0)
             {
                 removeUser(events[i].data.fd);
                 std::memset(buffer, 0, sizeof(buffer));
