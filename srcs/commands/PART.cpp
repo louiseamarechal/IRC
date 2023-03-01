@@ -1,22 +1,5 @@
 #include "commands.hpp"
 
-// only used if User is in a channel
-
-    // USER
-    // delete/remove _userChannel
-    // clear _channelName
-
-    // CHANEL
-    // remove User de _channelMembers
-        // clear _channelOperator ->  remplace par qui ?
-         // clear _channelCreator -> remplace par qui ?
-
-// if  User is the last Member of the Channel
-
-    // SERVER :
-    // delete server.channels
-    // remove de _channelNames
-
 void    partChannel(std::string params, User &user)
 {
     std::string                 channelName;
@@ -24,6 +7,13 @@ void    partChannel(std::string params, User &user)
     std::vector<std::string>    splittedParams;
     std::string                 errorMessage;
     std::string                 rpl;
+
+    if (user.getIsUserRegistered() == false)
+    {
+        errorMessage = sendMessage(451, user, *(user.getServer()));
+        send(user.getUserFd(), errorMessage.c_str(), errorMessage.size(), 0);
+        return;
+    }
 
     if (params.empty())
     {
@@ -37,11 +27,9 @@ void    partChannel(std::string params, User &user)
     std::string irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
     rpl = ":" + user.getUserNick() + irssi + " PART " + channelName + "\r\n";
 
-    std::cout << "[PART] - Splitted Params size : " << (int)splittedParams.size() << std::endl;
     if (splittedParams.size() > 1)
         partMessage = splittedParams[1];
 
-    std::cout << "[PART] - Channel Name : " << channelName << std::endl;
     if (user.getServer()->channels[channelName] == NULL) // channel n'existe pas
     {
         errorMessage = sendMessage1(403, user, *user.getServer(), channelName);
@@ -59,14 +47,8 @@ void    partChannel(std::string params, User &user)
      if (user.getUserChannel().getChannelMembers().size() > 1)
         user.getUserChannel().sendMessageToEveryone(rpl, user.getUserFd());
     
-    // std::string irssi = "!" + user.getUserLoggin() + "@" + user.getServer()->getServerName();
-
     send(user.getUserFd(), rpl.c_str(), rpl.size(), 0);
-    std::cout << "[PART][SEND] from Server to User FD#" << user.getUserFd() << " : " << rpl << std::endl;
     user.clearChannel(); // clear channelName + _userChannel pointe sur NULL
     user.getServer()->channels[channelName]->removeChannelMembers(user); // remove User de _channelMembers + delete le channel dans server
 }
 
-// 461 ERR_NEEDMOREPARAMS --- done
-// 442 ERR_NOTONCHANNEL ----- done
-// 403 ERR_NOSUCHCHANNEL ---- done
