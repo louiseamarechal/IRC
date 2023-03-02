@@ -10,6 +10,8 @@ void    quit(std::string params, User &user)
        close(user.getUserFd());
        return;
     }
+    if (!user.getChannelName().empty())
+        partChannel(user.getChannelName(), user);
     if (user.getUserNick().empty() == false)
         user.getServer()->removeNickList(user.getUserNick());
     close(user.getUserFd()); 
