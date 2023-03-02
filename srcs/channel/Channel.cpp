@@ -24,7 +24,7 @@ Channel::Channel( std::string name, Server& server, User& user ) : _channelMembe
         return;
     }
 
-    std::cout << "[CHANNEL] - Channel created : " << _channelName << std::endl;
+    std::cout << CYN << "[CHANNEL] - Channel created : " << CRESET << _channelName << std::endl;
 
     addChannelMembers(user);
     server.setChannels(this);
@@ -48,7 +48,7 @@ Channel&    Channel::operator=( Channel const & rhs )
 
 Channel::~Channel( void ) 
 { 
-    std::cout << "[CHANNEL] - Destroying Channel : " << _channelName << std::endl;
+    std::cout << CYN << "[CHANNEL] - Destroying Channel : " << CRESET << _channelName << std::endl;
     return;
 }
 
