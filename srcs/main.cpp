@@ -16,8 +16,8 @@ int main( int argc, char **argv )
     if (std::string(argv[2]) != "password")
     {
         std::cout << "Wrong Password, please try again !" << std::endl;
-        return (0);
-    }    
+        return (1);
+    }
 
     Server  *serverJLA = new Server();
 
