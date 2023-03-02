@@ -1,14 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Server.cpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/02 13:50:44 by jbouyer           #+#    #+#             */
+/*   Updated: 2023/03/02 13:52:04 by jbouyer          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "Server.hpp"
 #include <algorithm>
 #include <unistd.h>
 #include "user/User.hpp"
 #include "utils.hpp"
 #include <sys/epoll.h> // for epoll_create1(), epoll_ctl(), struct epoll_event
-#include <iostream>       // std::cout
+#include <iostream>       
 #include <string> 
 
-// Server*                 global_serv;
-// std::vector<int>         g_fdList;
 
 /*************************************************************************************/
 /*                              CONSTRUCTORS                                         */
@@ -22,7 +32,6 @@ Server::Server( void ) : _port(0),
                         _maxUsers(100),
                         _serverFd(0),
                         _epollFd(0)
-                        // _nbUsers(0),
 
 {
     _userMap = std::map<int, User*>();
@@ -216,7 +225,6 @@ void    Server::removeUserWithFd( int fd )
 
 void    Server::removeUser( int i ) 
 {
-    //ICI FAIRE BLOC TRY AND CATCH pourjeter une exception si on trouve pas le fd dans la mapde user utiliser Map.at() pour etre sure qu ca existe et que ca cree pas un truc random u'on supprime apres.
     delete _userMap[_fds[i].fd];
     _userMap.erase(_userMap.find(_fds[i].fd));
     _fds[i] = _fds[_nbUsers -  1];
@@ -367,8 +375,6 @@ int    Server::runServer( void )
         sendError("[RUN SERVER] - Failed to listen for incoming connections");
         return 1;
     }
-    // else
-    //     std::cout << "[RUN SERVER] - Listening for incoming connections ..." << std::endl;
     // on init le epoll_fd. 
     _epollFd = init_epoll(); 
     add_fd_to_poll(_epollFd, _serverFd); //on ajoute le fd du server a la liste de poll;
@@ -399,7 +405,6 @@ int    Server::runServer( void )
             }
             std::memset(buffer, 0, sizeof(buffer));
 			nBytes = recv(events[i].data.fd, buffer, 1023, MSG_DONTWAIT);
-            // buffer[nBytes] = '\0';
             if (nBytes < 0)
                 continue;
             if (nBytes == 0)

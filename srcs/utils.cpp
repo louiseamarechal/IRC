@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.cpp                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/02 13:53:19 by jbouyer           #+#    #+#             */
+/*   Updated: 2023/03/02 13:53:38 by jbouyer          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "utils.hpp"
 #include <unistd.h>
 #include <signal.h>
@@ -117,8 +129,6 @@ std::string toUpper( std::string str ) {
 
 bool    isACommand(std::string buffer, Server& server)
 {
-    // std::map<std::string, void (*)(std::string params, User &user)> commandMap = server.getCommandMap();
-
     if (buffer.empty() || server.getCommandMap().empty())
         return (false);
 

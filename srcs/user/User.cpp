@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   User.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/02 13:52:28 by jbouyer           #+#    #+#             */
+/*   Updated: 2023/03/02 13:52:43 by jbouyer          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "user/User.hpp"
 #include "server/Server.hpp"
 #include <string.h>
@@ -120,7 +132,6 @@ void    User::setUserChannel( Channel* channel )
     _channelName = channel->getChannelName();
 }
 
-// void    User::addUserToChannel( std::string channelName) { _server->addMemberToChannel(*this, channelName); }
 
 /*************************************************************************************/
 /*                              FUNCTIONS                                            */

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   User.hpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/03/02 13:52:48 by jbouyer           #+#    #+#             */
+/*   Updated: 2023/03/02 13:52:58 by jbouyer          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 # ifndef USER_HPP
 # define USER_HPP
 
@@ -40,7 +52,6 @@ class User
         std::string                             getUserFullName() const;
         std::string                             getChannelName() const;
         Channel&                                getUserChannel() const;
-        // void                                    addUserToChannel( std::string channelName );
         bool                                    getIsOper() const;
 
         void                                    setUserNick( std::string nick );
