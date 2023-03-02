@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   User.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 13:52:48 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/03/02 13:52:58 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/03/02 13:57:50 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,9 @@ class User
         void                                    clearChannel( void );
 
     private :
-        std::string                             _userLoggin; // jbouyer
-        std::string                             _userFullName; // Jacinthe Bouyer
-        std::string                             _userNick; // coucou
+        std::string                             _userLoggin;
+        std::string                             _userFullName;
+        std::string                             _userNick;
         int                                     _userFd; // user fd -> return de accept()
         bool                                    _isNickSet;
         bool                                    _isUserSet;

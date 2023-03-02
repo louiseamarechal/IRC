@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 13:48:55 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/03/02 13:48:56 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/03/02 14:01:43 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,8 @@ class Channel {
         void                            sendMessageToEveryone( std::string buffer, int fd );
 
     private :
-        // std::string                     _channelShortName;
         std::string                      _channelName;
-        std::vector<User*>               _channelMembers; // est ce que Map est le plus approprie ? -> acceder a un User via son nickname
+        std::vector<User*>               _channelMembers;
         Server&                          _server;
         User*                            _channelOperator;
         User*                            _channelCreator;

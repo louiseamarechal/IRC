@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 13:50:44 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/03/02 13:52:04 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/03/02 13:59:24 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <unistd.h>
 #include "user/User.hpp"
 #include "utils.hpp"
-#include <sys/epoll.h> // for epoll_create1(), epoll_ctl(), struct epoll_event
+#include <sys/epoll.h>
 #include <iostream>       
 #include <string> 
 
@@ -381,7 +381,6 @@ int    Server::runServer( void )
     struct epoll_event events[100];   
 	while (interrupt != true) 
     {
-		// std::cout << "\n[RUN SERVER] - Polling for input..."<<std::endl;
 		event_count = epoll_wait(_epollFd, events, 1, -1);
 		// std::cout << "[RUN SERVER] - " << event_count << " ready events" << std::endl;
 		for (int i = 0; i < event_count; i++)

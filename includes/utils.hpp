@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 13:48:33 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/03/02 13:48:37 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/03/02 14:07:27 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,9 @@
 #include <signal.h>
 
 void                        sendError( std::string message );
-// void                        sigintHandler( int sig );
-std::string                 removeConsecutiveWhitespace( std::string buffer ); // supprime les whitespaces qui se suivent + tous ceux au debut du mot et touc ceux a la fin a la fin : "     Hello  World !  " -> "Hello World !"
+std::string                 removeConsecutiveWhitespace( std::string buffer ); // supprime les whitespaces qui se suivent + tous ceux au debut du mot et touc ceux a la fin
 std::vector<std::string>    splitString( std::string params ); // split la string a chaque wihtespace
 std::string                 toUpper( std::string str );
-// std::vector<std::string>    splitStringSep( std::string params , std::string sep );
 bool                        isACommand(std::string buffer, Server& server);
 void                        splitStringSep( std::vector<std::string>    &params, std::string sep );
 bool                        isInVectorList( std::string target, std::vector<std::string> stringVector );

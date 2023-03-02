@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 13:48:47 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/03/02 13:48:50 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/03/02 14:02:49 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,6 @@ Channel::Channel( std::string name, Server& server, User& user ) : _channelMembe
                                                                 _channelOperator(&user), 
                                                                 _channelCreator(&user)
 {
-    // on set les attributs
-        // si format de name ok seuelement on set le name
-            // sinon TBC
-    
-    // on ajoute le channel operator a la liste des membres
-    // on set up le channel dans server (on l'ajoute a la liste des channels + on ajoute le nom a la channelName liste)
     if ( channelNameFormatIsOk(name))
         _channelName = name;
     else
@@ -152,7 +146,7 @@ void    Channel::removeChannelMembers( User& user )
     while (it != _channelMembers.end())
     {
         if ((*it)->getUserNick() == userNick)
-            it = _channelMembers.erase(it); // récupère l'itérateur de l'élément suivant
+            it = _channelMembers.erase(it);
         else
             ++it;
     }
@@ -160,12 +154,11 @@ void    Channel::removeChannelMembers( User& user )
 
 bool    channelNameFormatIsOk( std::string name )
 {
-    // std::cout << "name[0]" << name[0] << std::endl;
     if ( name.length() > 200 || name.length() < 1 )
         return (false);
     if ( (name.find(',') != std::string::npos) || (name.find(7) != std::string::npos) || (name.find(' ') != std::string::npos))
         return (false);
-    if (name[0] != '#' && name[0] != '&') // '#' = channel available across IRC network -> '&' available on local server only
+    if (name[0] != '#' && name[0] != '&')
         return (false);
     
     return (true);

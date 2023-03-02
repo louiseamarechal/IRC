@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   USER.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 13:50:36 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/03/02 13:50:37 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/03/02 13:59:41 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 void    setUser(std::string params, User &user)
 {
-    // std::string                 mode; // le mettre sistematiquement a 0 ?
-    // std::string                 unused; // sert a rien
     std::string                 realname;
     std::string                 formattedParams;
     std::vector<std::string>    splittedParams;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 13:52:21 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/03/02 13:52:23 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/03/02 14:08:04 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ class Server
         std::string                                                     getCreationDate( void ) const;
         std::vector<std::string>                                        getNickList(void)   const;
         std::vector<std::string>                                        getChannelNames(void)   const;
-        // std::map< std::string, Channel* >                               getChannels( void ) const;
-        // Channel*                                                        getChannel( std::string channelName ) const;
         const std::map< int, User* >&                                   getUserMap( void ) const;
         const User&                                                     getUser( std::string nickName ) const;
         const std::map<std::string, void (*)(std::string params, User &user)>& getCommandMap(void)   const;
@@ -83,14 +81,13 @@ class Server
         int                                                             acceptconnexion(int server_fd);
         static void                                                     sigintHandler(int sig);
 
-        void                                                            cDuPropre( void );
-        // void                         disconnect_all(void);
-        
+        void                                                            cDuPropre( void );        
         void                                                            removeNickList(std::string oldNick);
         bool                                                            channelIsOkToJoin( Channel& channel );
         void                                                            sendMessageToAllChannelMembers( std::string buffer, int fd );
         void                                                            deleteChannel( Channel* channel );
         void                                                            sendPrivMessages( std::string buffer, int userFd, int targetFd );
+        
         std::map< std::string, Channel* >                               channels;
         
     private :
@@ -105,11 +102,11 @@ class Server
         std::map< int, User* >      _userMap;
         
         int                         _maxUsers;
-        int                          _serverFd;
-        int                          _epollFd;
+        int                         _serverFd;
+        int                         _epollFd;
 
         
-        std::vector< std::string >           _channelNames;
+        std::vector< std::string >  _channelNames;
 
         //Commands
         std::map<std::string, void (*)(std::string params, User &user)> _commandMap;
@@ -120,8 +117,6 @@ class Server
 
 };
 
-// extern Server*                  global_serv;
-// extern std::vector<int>         g_fdList;
 extern bool interrupt;
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jbouyer <jbouyer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: lmarecha <lmarecha@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/02 13:53:19 by jbouyer           #+#    #+#             */
-/*   Updated: 2023/03/02 13:53:38 by jbouyer          ###   ########.fr       */
+/*   Updated: 2023/03/02 13:57:02 by lmarecha         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void splitStringSep(std::vector<std::string>    &params, std::string sep )
         params.push_back(tmp);
         return ;
     }
-    // std::cout << "TMP = " << tmp << std::endl;
     params.clear();
     while ((endPos = tmp.find(sep, startPos)) != std::string::npos)
     {
@@ -135,7 +134,7 @@ bool    isACommand(std::string buffer, Server& server)
     std::string bigBuf = toUpper(buffer);
     std::map<std::string, void (*)(std::string params, User &user)>::const_iterator   it;
 
-    if (bigBuf == "MODE") // message envoye par irssi quand on JOIN (recu par les utilisateurs dans le channel si on fait pas ca)
+    if (bigBuf == "MODE")
         return (true);
     for (it = server.getCommandMap().begin(); it != server.getCommandMap().end(); it++)
     {
