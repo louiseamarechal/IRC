@@ -13,13 +13,13 @@ int main( int argc, char **argv )
         return (1);
     }
 
-    Server  *serverJLA = new Server();
-
     if (std::string(argv[2]) != "password")
     {
         std::cout << "Wrong Password, please try again !" << std::endl;
-        return;
-    }    
+        return (0);
+    }
+
+    Server  *serverJLA = new Server();
 
     serverJLA->setPort(atoi(argv[1]));
     serverJLA->setPassword(argv[2]);

@@ -6,8 +6,8 @@
 
 Channel::Channel( std::string name, Server& server, User& user ) : _channelMembers(std::vector<User*>()),
                                                                 _server(server),
-                                                                _channelOperator(user.getUserNick()), 
-                                                                _channelCreator(user.getUserNick())
+                                                                _channelOperator(&user), 
+                                                                _channelCreator(&user)
 {
     // on set les attributs
         // si format de name ok seuelement on set le name
@@ -58,8 +58,8 @@ Channel::~Channel( void )
 
 std::string         Channel::getChannelName( void ) const { return (_channelName); }
 std::vector<User*>  Channel::getChannelMembers( void ) const { return (_channelMembers); }
-std::string         Channel::getChannelCreator( void ) const { return (_channelCreator); }
-std::string         Channel::getChannelOperator( void ) const { return (_channelOperator); }
+User*               Channel::getChannelCreator( void ) const { return (_channelCreator); }
+User*               Channel::getChannelOperator( void ) const { return (_channelOperator); }
 Server&             Channel::getChannelServer( void ) const { return (_server); }
 
 std::string         Channel::getAllMembersName( void ) const
@@ -67,9 +67,12 @@ std::string         Channel::getAllMembersName( void ) const
     std::vector<User*>::const_iterator    it;
     std::string                     membersNames;
 
+
     for (it = _channelMembers.begin(); it != _channelMembers.end(); it++)
     {
-        if ((*it)->getUserNick() == _channelOperator)
+        if (_channelOperator == NULL)
+            membersNames += " ";
+        else if ((*it)->getUserNick() == _channelOperator->getUserNick())
             membersNames += "@";
         else
             membersNames += " ";
@@ -128,11 +131,11 @@ void    Channel::removeChannelMembers( User& user )
     std::vector<User*>::iterator    it = _channelMembers.begin();
     std::string                     userNick = user.getUserNick();
 
-    if (_channelOperator == userNick)
-        _channelOperator.clear();
+    if (_channelOperator != NULL && _channelOperator->getUserNick() == userNick)
+        _channelOperator = NULL;
 
-    if (_channelCreator == userNick)
-        _channelCreator.clear();
+    if (_channelCreator != NULL && _channelCreator->getUserNick() == userNick)
+        _channelCreator = NULL;
 
     while (it != _channelMembers.end())
     {

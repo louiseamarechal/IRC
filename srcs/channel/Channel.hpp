@@ -20,8 +20,8 @@ class Channel {
         std::string                     getChannelName( void ) const;
         std::vector<User*>              getChannelMembers( void ) const;
         Server&                         getChannelServer( void ) const;
-        std::string                     getChannelOperator( void ) const;
-        std::string                     getChannelCreator( void ) const;
+        User*                           getChannelOperator( void ) const;
+        User*                           getChannelCreator( void ) const;
         std::string                     getAllMembersName( void ) const;
 
         void                            addChannelMembers( User& user );
@@ -30,11 +30,11 @@ class Channel {
 
     private :
         // std::string                     _channelShortName;
-        std::string                     _channelName;
-        std::vector<User*>              _channelMembers; // est ce que Map est le plus approprie ? -> acceder a un User via son nickname
-        Server&                         _server;
-        std::string                     _channelOperator;
-        std::string                     _channelCreator;
+        std::string                      _channelName;
+        std::vector<User*>               _channelMembers; // est ce que Map est le plus approprie ? -> acceder a un User via son nickname
+        Server&                          _server;
+        User*                            _channelOperator;
+        User*                            _channelCreator;
 
 };
 

@@ -125,7 +125,7 @@ void    kick( std::string params, User &user )
         return;
     }
 
-    if (user.getServer()->channels[channel]->getChannelOperator() != user.getUserNick())
+    if ((user.getServer()->channels[channel]->getChannelOperator() == NULL) || (user.getServer()->channels[channel]->getChannelOperator()->getUserNick() != user.getUserNick()))
     {
         sendErrorMessage(482, user, channel, ""); // ERR_NOSUCHCHANNEL// ERR_CHANOPRIVSNEEDED
         return;
