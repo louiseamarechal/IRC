@@ -20,6 +20,7 @@ User::User(int fd, Server *server) : _userLoggin(""),
     
     // std::cout << "\n[USER] - New User created : fd = " << _userFd << std::endl;
     // std::cout << "[USER] - Server Name from User constructor : " << this->getServer()->getServerName() << "\n" << std::endl;
+    std::cout << GRN << "[USER CONSTRUCTOR]" << CRESET << " - New User Created -> FD#" << _userFd << std::endl;
     return ;
 }
 
@@ -52,7 +53,7 @@ std::ostream&	operator<<(std::ostream& os, User const & rhs)
 
 User::~User( void )
 { 
-    std::cout<< "\n[USER] - destructor user called for FD#" << getUserFd() <<std::endl;
+    std::cout << GRN << "[USER DESTRUCTOR]" << CRESET << " - destructor user called for FD#" << _userFd <<std::endl;
     return ; 
 }
 
@@ -146,8 +147,8 @@ void User::handleCommand(std::string buffer)
         params = buffer.substr(position, buffer.size() - position);
     }
     
-    std::cout << "\n[HANDLE COMMAND] - Command = " << command << std::endl;
-    std::cout << "[HANDLE COMMAND] - Params = " << removeConsecutiveWhitespace(params) <<std::endl;
+    std::cout << BLU << "\n[HANDLE COMMAND]" << CRESET << " - Command = " << command << std::endl;
+    std::cout << BLU << "[HANDLE COMMAND]" << CRESET << " - Params = " << removeConsecutiveWhitespace(params) <<std::endl;
     if (getServer()->getCommandMap().count(command) > 0)
         getServer()->getCommandMap().at(command)(removeConsecutiveWhitespace(params), *this);
 }
